@@ -1,0 +1,8 @@
+-cp src/
+-main DemoPathfinding
+-swf-version 10
+-swf-header 600:600:40:FFFFFF
+-swf bin/DemoPathfinding.swf
+-D fdb
+-debug
+-cmd open bin/DemoPathfinding.swf

@@ -1,0 +1,7 @@
+-main DemoFromBitmap
+-swf-version 10
+-swf-header 600:600:40:FFFFFF
+-swf DemoFromBitmap.swf
+-D fdb
+-debug
+-cmd open DemoFromBitmap.swf
