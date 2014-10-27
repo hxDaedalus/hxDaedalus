@@ -213,7 +213,7 @@ class Potrace
         var edge : GraphEdge;
         var score : Float;
         var higherScore : Float;
-        var lowerScoreEdge : GraphEdge;
+        var lowerScoreEdge : GraphEdge = null;
         currNode = graph.node;
         while( ( cast((currNode.data), NodeData) ).index < minNodeIndex ){
             

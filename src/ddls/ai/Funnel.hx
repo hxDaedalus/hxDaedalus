@@ -184,8 +184,8 @@ class Funnel
         var i : Int;
         var j : Int;
         var k : Int;
-        var currEdge : Edge;
-        var currVertex : Vertex;
+        var currEdge : Edge = null;
+        var currVertex : Vertex = null;
         var direction : Int;
         
         // first we skip the first face and first edge if the starting point lies on the first interior edge:
@@ -702,8 +702,8 @@ class Funnel
         var dot : Float;
         
         var tangentsResult = new Array<Float>();
-        var pTangent1 : Point2D;
-        var pTangent2 : Point2D;
+        var pTangent1 : Point2D = null;
+        var pTangent2 : Point2D = null;
         
         while (needCheck)
         {

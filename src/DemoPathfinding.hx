@@ -8,7 +8,9 @@ import ddls.data.math.Point2D;
 import ddls.data.math.RandGenerator;
 import ddls.factories.RectMeshFactory;
 import ddls.view.SimpleView;
-
+#if openfl
+import openfl.Lib;
+#end
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.MouseEvent;
@@ -34,7 +36,8 @@ class DemoPathfinding extends Sprite
         // build a rectangular 2 polygons mesh of 600x600
         _mesh = RectMeshFactory.buildRectangle(600, 600);
         
-        
+		Lib.current.addChild(this);
+    
         // create a viewport
         _view = new SimpleView();
         addChild(_view.surface);

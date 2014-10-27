@@ -6,7 +6,9 @@ import ddls.data.DObject;
 import ddls.data.Vertex;
 import ddls.factories.RectMeshFactory;
 import ddls.view.SimpleView;
-
+#if openfl
+import openfl.Lib;
+#end
 import flash.display.Sprite;
 import flash.events.Event;
 
@@ -28,7 +30,8 @@ class DemoBasics extends Sprite
         // build a rectangular 2 polygons mesh of 600x400
         _mesh = RectMeshFactory.buildRectangle(600, 400);
         
-        
+		Lib.current.addChild(this);
+    
         // create a viewport
         _view = new SimpleView();
         addChild( _view.surface );
