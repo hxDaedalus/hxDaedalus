@@ -1,15 +1,14 @@
 package ddls.iterators;
 
 import ddls.data.Edge;
+import ddls.data.Face;
 import ddls.data.Vertex;
 
-class FromVertexToOutgoingEdges
+class VertexToHoldingFaces
 {
 	
 	private var _fromVertex:Vertex;
 	private var _nextEdge:Edge;
-	
-	public var realEdgesOnly:Bool = true;
 	
 	public function new()
 	{
@@ -21,36 +20,35 @@ class FromVertexToOutgoingEdges
 	{
 		_fromVertex = value;
 		_nextEdge = _fromVertex.edge;
-		while (realEdgesOnly && !_nextEdge.isReal)
-		{
-			_nextEdge = _nextEdge.rotLeftEdge;
-		}
 		return _fromVertex;
 	}
 	
-	private var _resultEdge:Edge;
-	public function next():Edge
+	
+	private var _resultFace:Face;
+	public function next():Face
 	{
 		if (_nextEdge != null)
 		{
-			_resultEdge = _nextEdge;
 			do
 			{
+				_resultFace = _nextEdge.leftFace;
 				_nextEdge = _nextEdge.rotLeftEdge;
 				if (_nextEdge == _fromVertex.edge)
 				{
 					_nextEdge = null;
+					if (!_resultFace.isReal)
+						_resultFace = null;
 					break;
 				}
 			}
-			while (realEdgesOnly && !_nextEdge.isReal);
+			while (!_resultFace.isReal);
 		}
 		else
 		{
-			_resultEdge = null;
+			_resultFace = null;
 		}
 		
-		return _resultEdge;
+		return _resultFace;
 	}
 	
 }

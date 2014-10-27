@@ -1,4 +1,9 @@
-package ddls.iterators;
-class FromEdgeToRotatedEdges{
-    public function new(){}
+package DDLS.iterators
+{
+	public class FromEdgeToRotatedEdges
+	{
+		public function FromEdgeToRotatedEdges()
+		{
+		}
+	}
 }

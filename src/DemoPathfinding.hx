@@ -3,14 +3,12 @@ import ddls.ai.EntityAI;
 import ddls.ai.PathFinder;
 import ddls.ai.trajectory.LinearPathSampler;
 import ddls.data.Mesh;
-import ddls.data.DObject;
+import ddls.data.Object;
 import ddls.data.math.Point2D;
 import ddls.data.math.RandGenerator;
 import ddls.factories.RectMeshFactory;
 import ddls.view.SimpleView;
-#if openfl
-import openfl.Lib;
-#end
+
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.MouseEvent;
@@ -18,41 +16,42 @@ import flash.events.MouseEvent;
 class DemoPathfinding extends Sprite
 {
     
-    private var _mesh : Mesh;
-    private var _view : SimpleView;
+    private var _mesh:Mesh;
+    private var _view:SimpleView;
     
-    private var _entityAI : EntityAI;
-    private var _pathfinder : PathFinder;
-    private var _path : Array<Float>;
-    private var _pathSampler : LinearPathSampler;
+    private var _entityAI:EntityAI;
+    private var _pathfinder:PathFinder;
+    private var _path:Array<Float>;
+    private var _pathSampler:LinearPathSampler;
     
-    public static function main(){
-        new DemoPathfinding();
-    }
-    
+	public static function main():Void 
+	{
+		flash.Lib.current.addChild(new DemoPathfinding());
+	}
+	
     public function new()
     {
         super();
+		
         // build a rectangular 2 polygons mesh of 600x600
         _mesh = RectMeshFactory.buildRectangle(600, 600);
-        
-		Lib.current.addChild(this);
-    
+
+		
         // create a viewport
         _view = new SimpleView();
         addChild(_view.surface);
         
         
         // pseudo random generator
-        var randGen : RandGenerator;
+        var randGen:RandGenerator;
         randGen = new RandGenerator();
         randGen.seed = 7259;  // put a 4 digits number here  
         
         // populate mesh with many square objects
-        var object : DObject;
-        var shapeCoords : Array<Float>;
+        var object:Object;
+        var shapeCoords:Array<Float>;
         for (i in 0...50){
-            object = new DObject();
+            object = new Object();
             shapeCoords = new Array<Float>();
             shapeCoords = [ -1, -1, 1, -1,
                              1, -1, 1, 1,
@@ -113,7 +112,7 @@ class DemoPathfinding extends Sprite
         stage.addEventListener(MouseEvent.CLICK, _onClick);
     }
     
-    private function _onClick(event : MouseEvent) : Void
+    private function _onClick(event:MouseEvent):Void
     {
         // find path !
         _pathfinder.findPath(stage.mouseX, stage.mouseY, _path);
@@ -128,7 +127,7 @@ class DemoPathfinding extends Sprite
         stage.addEventListener(Event.ENTER_FRAME, _onEnterFrame);
     }
     
-    private function _onEnterFrame(event : Event) : Void
+    private function _onEnterFrame(event:Event):Void
     {
         if (_pathSampler.hasNext) 
         {

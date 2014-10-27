@@ -4,7 +4,7 @@
 	<meta title="project" package="lib.daedalus.hx" version="1.0.0" company="daedalus" />
 	<app main="DemoBasics" path="bin" file="DemoBasics" />
 	<window background="#FFFFFF" fps="60" />
-	<window width="600" height="600" unless="mobile" />
+	<window width="600" height="400" unless="mobile" />
 	<window orientation="landscape" vsync="false" antialiasing="0" if="cpp" />
 	
 	<set name="SWF_VERSION" value="11.2" />

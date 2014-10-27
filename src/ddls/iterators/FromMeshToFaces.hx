@@ -1,33 +1,46 @@
-package ddls.iterators;
-import ddls.data.Face;
-import ddls.data.Mesh;
-import ddls.data.Vertex;
-
-class FromMeshToFaces {
-    public var fromMesh(never, set) : Mesh;
-    var _fromMesh : Mesh;
-    var _currIndex : Int;
-    var _resultFace : Face;
-    
-    public function new(){}
-    
-    function setFromMesh( value: Mesh ): Mesh {
-        _fromMesh = value;
-        _currIndex = 0;
-        return value;
-    }
-    
-    public function next() : Face
-    {
-        do {
-            if( _currIndex < _fromMesh._faces.length ){
-                _resultFace = _fromMesh._faces[ _currIndex ];
-                _currIndex++;
-            } else {
-                _resultFace = null;
-                break;
-            }
-        } while ( (!_resultFace.isReal) );
-        return _resultFace;
-    }
+package DDLS.iterators
+{
+	import DDLS.data.DDLSFace;
+	import DDLS.data.DDLSMesh;
+	import DDLS.data.DDLSVertex;
+	
+	public class FromMeshToFaces
+	{
+		
+		private var _fromMesh:DDLSMesh;
+		private var _currIndex:int;
+		
+		public function FromMeshToFaces()
+		{
+			
+		}
+		
+		public function set fromMesh(value:DDLSMesh):void
+		{
+			_fromMesh = value;
+			_currIndex = 0;
+		}
+		
+		private var _resultFace:DDLSFace;
+		public function next():DDLSFace
+		{
+			do
+			{
+				if (_currIndex < _fromMesh.__faces.length)
+				{
+					_resultFace = _fromMesh.__faces[_currIndex];
+					_currIndex++;
+				}
+				else
+				{
+					_resultFace = null;
+					break;
+				}
+			}
+			while (! _resultFace.isReal)
+			
+			return _resultFace;
+		}
+		
+	}
 }
