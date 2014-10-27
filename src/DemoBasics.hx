@@ -82,7 +82,7 @@ class DemoBasics extends Sprite
         // if you want to delete that object
         //_mesh.deleteObject(_object);
         
-        addEventListener(Event.ENTER_FRAME, _onEnterFrame);
+        flash.Lib.current.stage.addEventListener(Event.ENTER_FRAME, _onEnterFrame);
     }
     
     function _onEnterFrame(event:Event):Void {

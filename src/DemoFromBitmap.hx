@@ -6,7 +6,6 @@ import ddls.data.Object;
 import ddls.factories.BitmapObjectFactory;
 import ddls.factories.RectMeshFactory;
 import ddls.view.SimpleView;
-import openfl.system.System;
 
 import flash.display.Bitmap;
 import flash.display.Sprite;

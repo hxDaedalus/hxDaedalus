@@ -13,7 +13,7 @@ import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.MouseEvent;
 
-class DemoPathfinding extends Sprite
+class DemoPathFinding extends Sprite
 {
     
     private var _mesh:Mesh;
@@ -26,7 +26,7 @@ class DemoPathfinding extends Sprite
     
 	public static function main():Void 
 	{
-		flash.Lib.current.addChild(new DemoPathfinding());
+		flash.Lib.current.addChild(new DemoPathFinding());
 	}
 	
     public function new()
@@ -109,7 +109,7 @@ class DemoPathfinding extends Sprite
         
         
         // CLICK !!
-        stage.addEventListener(MouseEvent.CLICK, _onClick);
+        flash.Lib.current.stage.addEventListener(MouseEvent.CLICK, _onClick);
     }
     
     private function _onClick(event:MouseEvent):Void

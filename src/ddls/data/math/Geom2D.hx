@@ -75,7 +75,7 @@ class Geom2D
 		var objectContainer:Dynamic = null;
 		var relativPos:Int;
 		var numIter:Int = 0;
-		while (faceVisited[currFace] || !(objectContainer = isInFace(x, y, currFace)))
+		while (faceVisited[currFace] || (objectContainer = isInFace(x, y, currFace)) == null)
 		{
 			
 			numIter++;
