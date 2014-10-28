@@ -1,6 +1,6 @@
 -cp src/
 -main DemoBasics
--swf-version 10
+-swf-version 11.2
 -swf-header 600:400:60:FFFFFF
 -swf bin/DemoBasics.swf
 -D fdb
