@@ -50,7 +50,7 @@ class Geom2D
 		var currVertex:Vertex;
 		var currVertexPos:Point2D;
 		var distSquared:Float;
-		var minDistSquared:Float = Math.POSITIVE_INFINITY;	//TODO: watch this Number.MAX_VALUE
+		var minDistSquared:Float = Math.POSITIVE_INFINITY;
 		var closedVertex:Vertex = null;
 		for (i in 0...numSamples)
 		{
@@ -111,13 +111,18 @@ class Geom2D
 			return true;
 		
 		var loc:Dynamic = Geom2D.locatePosition(x, y, mesh);
+		var locVertex:Vertex;
+		var locEdge:Edge;
 		var face:Face;
-		if (Std.is(loc, Vertex))
-			face = cast loc.edge.leftFace;
-		else if (Std.is(loc, Edge))
-			face = loc.leftFace;
-		else
+		if (Std.is(loc, Vertex)) {
+			locVertex = cast loc;
+			face = locVertex.edge.leftFace;
+		} else if (Std.is(loc, Edge)) {
+			locEdge = cast loc;
+			face = locEdge.leftFace;
+		} else {
 			face = cast loc;
+		}
 		
 		// if a vertex is in the circle, a contrainst must intersect the circle
 		// because a vertex always belongs to a contrained edge
