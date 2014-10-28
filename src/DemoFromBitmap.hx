@@ -3,7 +3,9 @@ import ddls.data.DObject;
 import ddls.factories.BitmapObjectFactory;
 import ddls.factories.RectMeshFactory;
 import ddls.view.SimpleView;
-
+#if openfl
+import openfl.Lib;
+#end
 import flash.display.Bitmap;
 import flash.display.Sprite;
 import flash.display.BitmapData;
@@ -35,7 +37,8 @@ class DemoFromBitmap extends Sprite
         _bmp.y = 220;
         addChild( _bmp );
         
-        
+		flash.Lib.current.addChild(this);
+	
         // create a viewport
         _view = new SimpleView();
         addChild( _view.surface );
@@ -50,5 +53,5 @@ class DemoFromBitmap extends Sprite
         
         // display result mesh
         _view.drawMesh( _mesh );
-    }
+	}
 }

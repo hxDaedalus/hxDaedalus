@@ -6,8 +6,8 @@ class Vertex
     public var id(get, never) : Int;
     public var isReal(get, never) : Bool;
     public var pos(get, never) : Point2D;
-    public var fromConstraintSegments : Array<ConstraintSegment>;
-    public var edge : Edge;
+    public var fromConstraintSegments(get, set) : Array<ConstraintSegment>;
+    public var edge(get, set) : Edge;
 
     
     private static var INC : Int = 0;
@@ -47,7 +47,16 @@ class Vertex
         return _pos;
     }
     
+	private function get_fromConstraintSegments():Array<ConstraintSegment> 
+	{
+		return _fromConstraintSegments;
+	}
     
+	private function set_fromConstraintSegments(value:Array<ConstraintSegment>):Array<ConstraintSegment> 
+	{
+		return _fromConstraintSegments = value;
+	}
+	
     public function setDatas(edge : Edge, isReal : Bool = true) : Void
     {
         _isReal = isReal;
@@ -74,7 +83,16 @@ class Vertex
         _fromConstraintSegments = null;
     }
     
+	private function get_edge():Edge 
+	{
+		return _edge;
+	}
     
+	private function set_edge(value:Edge):Edge 
+	{
+		return _edge = value;
+	}
+
     public function toString(): String {
         return "ver_id " + _id;
     }

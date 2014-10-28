@@ -88,7 +88,7 @@ class AStar {
         
         var loc : Intersection;
         var locEdge : Edge;
-        var locVertex : Vertex;
+        var locVertex : Vertex = null;
         var distance : Float;
         var p1 : Point2D;
         var p2 : Point2D;
@@ -105,7 +105,7 @@ class AStar {
                 fromFace = locEdge.leftFace;
             case EFace( face ):
                 fromFace = face;
-            case ENull( isnull ):
+            case ENull:
                 //
         }
 
@@ -120,7 +120,7 @@ class AStar {
                 toFace = locVertex.edge.leftFace;
             case EFace( face ):
                 toFace = face;
-            case ENull( isnull ):
+            case ENull:
         }
         /*fromFace.colorDebug = 0xFF0000;
         toFace.colorDebug = 0xFF0000;
@@ -242,9 +242,9 @@ class AStar {
     }
     
     private function isWalkableByRadius( fromEdge : Edge, throughFace : Face, toEdge : Edge ) : Bool {
-        var vA : Vertex;  // the vertex on fromEdge not on toEdge  
-        var vB : Vertex;  // the vertex on toEdge not on fromEdge  
-        var vC : Vertex;  // the common vertex of the 2 edges (pivot)  
+        var vA : Vertex = null;  // the vertex on fromEdge not on toEdge  
+        var vB : Vertex = null;  // the vertex on toEdge not on fromEdge  
+        var vC : Vertex = null;  // the common vertex of the 2 edges (pivot)  
         
         // we identify the points
         var aOriginVertex = fromEdge.originVertex;

@@ -18,7 +18,7 @@ enum Intersection {
     EVertex( vertex: Vertex );
     EEdge( edge: Edge );
     EFace( face: Face );
-    ENull( isnull: Null<Float> );
+    ENull( );
 }
 /*
 use 
@@ -72,7 +72,7 @@ class Geom2D
         var currVertexPos : Point2D;
         var distSquared : Float;
         var minDistSquared : Float = Math.POSITIVE_INFINITY;
-        var closedVertex : Vertex;
+        var closedVertex : Vertex = null;
         for (i in 0...numSamples){
             currVertex = __samples[i];
             currVertexPos = currVertex.pos;
@@ -92,11 +92,11 @@ class Geom2D
         var faceVisited = new Map<Face,Bool>();
         var currEdge : Edge;
         var iterEdge : FromFaceToInnerEdges = new FromFaceToInnerEdges();
-        var objectContainer : Intersection;
+        var objectContainer : Intersection = ENull;
         var relativPos : Int;
         var numIter : Int = 0;
         //while ( faceVisited[ currFace ] || !(objectContainer = isInFace(x, y, currFace)) )
-        while ( faceVisited[ currFace ] || (objectContainer = isInFace(x, y, currFace)) != ENull( null ) )
+        while ( faceVisited[ currFace ] || (objectContainer = isInFace(x, y, currFace)).match(ENull) )
         {
             faceVisited[ currFace ];
             
@@ -112,7 +112,7 @@ class Geom2D
                 if (currEdge == null) 
                 {
                     trace("KILL PATH");
-                    return ENull( null );
+                    return ENull;
                 }
                 relativPos = getRelativePosition(x, y, currEdge);
             } while ((relativPos == 1 || relativPos == 0));
@@ -277,7 +277,7 @@ class Geom2D
         // remember polygons are triangle only,
         // and we suppose we have not degenerated flat polygons !
         
-        var result : Intersection;
+        var result : Intersection = ENull;
         
         var e1_2 = polygon.edge;
         var e2_3 = e1_2.nextLeftEdge;
@@ -644,8 +644,8 @@ class Geom2D
     
     public static function intersections2segments(s1p1x : Float, s1p1y : Float, s1p2x : Float, s1p2y : Float, s2p1x : Float, s2p1y : Float, s2p2x : Float, s2p2y : Float, posIntersection : Point2D = null, paramIntersection : Array<Float> = null, infiniteLineMode : Bool = false) : Bool
     {
-        var t1 : Float;
-        var t2 : Float;
+        var t1 : Float = 0;
+        var t2 : Float = 0;
         
         var result : Bool;
         var divisor : Float = (s1p1x - s1p2x) * (s2p1y - s2p2y) + (s1p2y - s1p1y) * (s2p1x - s2p2x);

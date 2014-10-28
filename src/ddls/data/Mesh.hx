@@ -148,7 +148,10 @@ class Mesh
             transfy1 = m.transformY(x1, y1);
             transfx2 = m.transformX(x2, y2);
             transfy2 = m.transformY(x2, y2);
-            
+            //trace(i + ": " + transfx1, transfy1, transfx2, transfy2);
+			if (i == 240) {
+				trace("240");
+			}
             segment = insertConstraintSegment(transfx1, transfy1, transfx2, transfy2);
             if (segment != null) 
             {
@@ -507,14 +510,14 @@ class Mesh
         var leftBoundingEdges : Array<Edge> = new Array<Edge>();
         var rightBoundingEdges : Array<Edge> = new Array<Edge>();
         
-        var currObjet : Dynamic;
+        var currObjet : Intersection;
         var pIntersect : Point2D = new Point2D();
         var edgeLeft : Edge;
         var newEdgeDownUp : Edge;
         var newEdgeUpDown : Edge;
         var done : Bool;
         currVertex = vertexDown;
-        currObjet = currVertex;
+        currObjet = EVertex(currVertex);
         while (true)
         {
             done = false;
@@ -559,7 +562,7 @@ class Mesh
                                 segment.addEdge(currEdge);
                                 vertexDown = currEdge.destinationVertex;
                                 tempEdgeDownUp.originVertex = vertexDown;
-                                currObjet = vertexDown;
+                                currObjet = EVertex(vertexDown);
                                 done = true;
                                 break;
                             }
@@ -594,7 +597,7 @@ class Mesh
                                     }
                                     currVertex.addFromConstraintSegment(segment);
                                     tempEdgeDownUp.originVertex = vertexDown;
-                                    currObjet = vertexDown;
+                                    currObjet = EVertex(vertexDown);
                                 }
                                 else 
                                 {
@@ -603,7 +606,7 @@ class Mesh
                                     leftBoundingEdges.unshift(currEdge.nextLeftEdge);
                                     rightBoundingEdges.push(currEdge.prevLeftEdge);
                                     currEdge = currEdge.oppositeEdge;  // we keep the edge from left to right  
-                                    currObjet = currEdge;
+                                    currObjet = EEdge(currEdge);
                                 }
                                 break;
                             }
@@ -650,7 +653,7 @@ class Mesh
 
                             vertexDown = edgeLeft.destinationVertex;
                             tempEdgeDownUp.originVertex = vertexDown;
-                            currObjet = vertexDown;
+                            currObjet = EVertex(vertexDown);
                         }
                         else 
                         {
@@ -688,7 +691,7 @@ class Mesh
                                     rightBoundingEdges.splice(0, rightBoundingEdges.length);
                                     vertexDown = currVertex;
                                     tempEdgeDownUp.originVertex = vertexDown;
-                                    currObjet = vertexDown;
+                                    currObjet = EVertex(vertexDown);
                                 }
                                 else 
                                 {
@@ -696,7 +699,7 @@ class Mesh
                                     intersectedEdges.push(edgeLeft);
                                     leftBoundingEdges.unshift(edgeLeft.nextLeftEdge);
                                     currEdge = edgeLeft.oppositeEdge;  // we keep the edge from left to right  
-                                    currObjet = currEdge;
+                                    currObjet = EEdge(currEdge);
                                 }
                             }
                             else 
@@ -735,7 +738,7 @@ class Mesh
                                     rightBoundingEdges.splice(0, rightBoundingEdges.length);
                                     vertexDown = currVertex;
                                     tempEdgeDownUp.originVertex = vertexDown;
-                                    currObjet = vertexDown;
+                                    currObjet = EVertex(vertexDown);
                                 }
                                 else 
                                 {
@@ -743,14 +746,14 @@ class Mesh
                                     intersectedEdges.push(edgeLeft);
                                     rightBoundingEdges.push(edgeLeft.prevLeftEdge);
                                     currEdge = edgeLeft.oppositeEdge;  // we keep the edge from left to right  
-                                    currObjet = currEdge;
+                                    currObjet = EEdge(currEdge);
                                 }
                             }
                         }
                     
                 case EFace( face ):
                     //
-                case ENull( isnull ):
+                case ENull:
                     //
             }
      
@@ -784,7 +787,7 @@ class Mesh
         //trace("deleteConstraintSegment id", segment.id);
         var i : Int;
         var vertexToDelete : Array<Vertex> = new Array<Vertex>();
-        var edge : Edge;
+        var edge : Edge = null;
         var vertex : Vertex;
         var fromConstraintSegment : Array<ConstraintSegment>;
         for (i in 0...segment.edges.length){
@@ -801,10 +804,13 @@ class Mesh
             vertex.removeFromConstraintSegment(segment);
             vertexToDelete.push(vertex);
         }
-        vertex = edge.destinationVertex;
-        vertex.removeFromConstraintSegment(segment);
-        vertexToDelete.push(vertex);
-        
+		
+		if (edge != null) {
+			vertex = edge.destinationVertex;
+			vertex.removeFromConstraintSegment(segment);
+			vertexToDelete.push(vertex);
+        }
+		
         //trace("clean the useless vertices");
         for (i in 0...vertexToDelete.length){
             deleteVertex(vertexToDelete[i]);
@@ -836,7 +842,7 @@ class Mesh
         __edgesToCheck.splice(0, __edgesToCheck.length);
         
         var inObject = Geom2D.locatePosition(x, y, this);
-        var newVertex : Vertex;
+        var newVertex : Vertex = null;
         
         switch( inObject ){
             case EVertex( vertex ):
@@ -845,7 +851,7 @@ class Mesh
                 newVertex = splitEdge(edge, x, y);
             case EFace( face ):
                 newVertex = splitFace(face, x, y);
-            case ENull( isnull ):
+            case ENull:
                 //
         }
         
@@ -1172,7 +1178,7 @@ class Mesh
     public function restoreAsDelaunay() : Void
     {
         var edge : Edge;
-        while (__edgesToCheck!=null)
+        while (__edgesToCheck.length > 0)
         {
             edge = __edgesToCheck.shift();
             if (edge.isReal && !edge.isConstrained && !Geom2D.isDelaunay(edge)) 
@@ -1214,10 +1220,10 @@ class Mesh
         var bound  = new Array<Edge>();
         
         // declares moved out of if loop so haxe compiler knows they exist?
-        var realA : Bool;
-        var realB : Bool;
-        var boundA: Array<Edge>;
-        var boundB: Array<Edge>;
+        var realA : Bool = false;
+        var realB : Bool = false;
+        var boundA: Array<Edge> = [];
+        var boundB: Array<Edge> = [];
         
         if (freeOfConstraint) 
         {
@@ -1264,8 +1270,8 @@ class Mesh
             /// TODO: Moved out of if loop so can be referenced later, not sure of full consequence
             boundA = new Array<Edge>();
             boundB = new Array<Edge>();
-            var constrainedEdgeA : Edge;
-            var constrainedEdgeB : Edge;
+            var constrainedEdgeA : Edge = null;
+            var constrainedEdgeB : Edge = null;
             var edgeA = new Edge();
             var edgeB = new Edge();
             /// TODO: Moved out of if loop so can be referenced later, not sure of full consequence
@@ -1468,8 +1474,8 @@ class Mesh
             var circumcenter  = new Point2D();
             var radiusSquared : Float;
             var distanceSquared : Float;
-            var isDelaunay : Bool;
-            var index : Int;
+            var isDelaunay : Bool = false;
+            var index : Int = 0;
             var i : Int;
             for (i in 2...bound.length){
                 vertexC = bound[i].originVertex;
@@ -1516,13 +1522,13 @@ class Mesh
             }  //trace("index", index, "on", bound.length);  
             
             
-            var edgeA : Edge;
-            var edgeAopp : Edge;
-            var edgeB : Edge;
-            var edgeBopp : Edge;
-            var boundA : Array<Edge>;
-            var boundM : Array<Edge>;
-            var boundB : Array<Edge>;
+            var edgeA : Edge = null;
+            var edgeAopp : Edge = null;
+            var edgeB : Edge = null;
+            var edgeBopp : Edge = null;
+            var boundA : Array<Edge> = [];
+            var boundM : Array<Edge> = [];
+            var boundB : Array<Edge> = [];
             
             if (index < (bound.length - 1)) 
             {

@@ -5,4 +5,7 @@
 -swf bin/DemoPathfinding.swf
 -D fdb
 -debug
--cmd open bin/DemoPathfinding.swf
+#mac
+#-cmd open bin/DemoPathfinding.swf
+#win
+#-cmd start bin/DemoPathfinding.swf
