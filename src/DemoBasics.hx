@@ -9,6 +9,10 @@ import ddls.view.SimpleView;
 #if openfl
 import openfl.Lib;
 #end
+// added this so I can run flash version from hxml file
+#if hxmlFlash
+import flash.Lib;
+#end
 import flash.display.Sprite;
 import flash.events.Event;
 

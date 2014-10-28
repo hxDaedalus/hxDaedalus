@@ -5,6 +5,7 @@
 -swf bin/DemoPathfinding.swf
 -D fdb
 -debug
+-D hxmlFlash
 #mac
 #-cmd open bin/DemoPathfinding.swf
 #win

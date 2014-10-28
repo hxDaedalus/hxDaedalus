@@ -5,7 +5,9 @@
 -swf bin/DemoFromBitmap.swf
 -D fdb
 -debug
+-D hxmlFlash
+-D testImage
 #mac
-#-cmd open DemoFromBitmap.swf
+#-cmd open bin/DemoFromBitmap.swf
 #win
-#-cmd start DemoFromBitmap.swf
+#-cmd start bin/DemoFromBitmap.swf

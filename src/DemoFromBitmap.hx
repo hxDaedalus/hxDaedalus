@@ -6,6 +6,10 @@ import ddls.view.SimpleView;
 #if openfl
 import openfl.Lib;
 #end
+// added this so I can run flash version from hxml file without openfl dependancy
+#if hxmlFlash
+import flash.Lib;
+#end
 import flash.display.Bitmap;
 import flash.display.Sprite;
 import flash.display.BitmapData;

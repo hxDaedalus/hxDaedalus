@@ -11,6 +11,10 @@ import ddls.view.SimpleView;
 #if openfl
 import openfl.Lib;
 #end
+// added this so I can run flash version from hxml file without openfl dependancy
+#if hxmlFlash
+import flash.Lib;
+#end
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.MouseEvent;
@@ -36,8 +40,8 @@ class DemoPathfinding extends Sprite
         // build a rectangular 2 polygons mesh of 600x600
         _mesh = RectMeshFactory.buildRectangle(600, 600);
         
-		Lib.current.addChild(this);
-    
+        Lib.current.addChild(this);
+        
         // create a viewport
         _view = new SimpleView();
         addChild(_view.surface);
