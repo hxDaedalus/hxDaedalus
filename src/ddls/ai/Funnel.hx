@@ -411,7 +411,7 @@ class Funnel
 				//trace("goal access right blocked");
 				// access blocked
 				funnelRight.shift();
-				for (k in 0...j + 1)	//TODO: j + 1 ?
+				for (k in 0...j + 1)
 				{
 					pathPoints.push(funnelRight[0]);
 					pathSides[funnelRight[0]] = -1;
@@ -803,8 +803,7 @@ class Funnel
 						adjustedPoints.splice((outer_i-1)*2-1, 2);
 						
 						tangentsResult.splice(0, tangentsResult.length);
-						//i--; //TODO: what's this??
-						trace("i-- ??");
+						//i--; //TODO: refactor this
 						outer_i--;
 					}
 				}

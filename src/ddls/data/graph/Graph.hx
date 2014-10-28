@@ -98,7 +98,6 @@ class Graph
 	
 	public function insertEdge(fromNode:GraphNode, toNode:GraphNode):GraphEdge
 	{
-		//TODO: check what's successorNodes
 		if (fromNode.successorNodes[toNode] != null)
 			return null;
 		

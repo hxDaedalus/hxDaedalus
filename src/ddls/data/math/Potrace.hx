@@ -137,7 +137,6 @@ class Potrace
 	
 	public static function buildGraph(shape:Array<Float>):Graph
 	{
-		//TODO: check casts in this class
 		var i:Int;
 		var graph:Graph = new Graph();
 		var node:GraphNode;
@@ -229,7 +228,6 @@ class Potrace
 			
 			polygon.push((currNode.data).point.x);
 			polygon.push((currNode.data).point.y);
-			//TODO: check this min value
 			higherScore = 0;
 			edge = currNode.outgoingEdge;
 			while (edge != null)

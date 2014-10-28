@@ -123,7 +123,7 @@ class Mesh
 	{
 		var positions:Array<String> = rec.split(';');
 		var i:Int = 0;
-		//TODO: check parseFloat
+
 		while (i < positions.length) {
 			insertConstraintSegment(Std.parseFloat(positions[i]), Std.parseFloat(positions[i + 1]), Std.parseFloat(positions[i + 2]), Std.parseFloat(positions[i + 3]));
 			i += 4;
@@ -1061,7 +1061,7 @@ class Mesh
 			{
 				edges = eLeft_Right.fromConstraintSegments[i].edges;
 				index = edges.indexOf(eLeft_Right);
-				//TODO: check conversion of AS3 splice()
+
 				if (index != -1) {
 					edges.splice(index, 1);
 					edges.insert(index, eLeft_Center);
@@ -1276,7 +1276,6 @@ class Mesh
 			boundB = new Array<Edge>();
 			var constrainedEdgeA:Edge = null;
 			var constrainedEdgeB:Edge = null;
-			//TODO: check if this is consistent with AS3 (bound_ and real_)
 			var edgeA:Edge = new Edge();
 			var edgeB:Edge = new Edge();
 			realA = false;
@@ -1391,7 +1390,7 @@ class Mesh
 		var verticesCleaned:Map<Vertex, Bool> = new Map();
 		var currEdge:Edge;
 		var outEdge:Edge;
-		//TODO: check dictionary usage
+
 		for (i in 0...edgesList.length)
 		{
 			currEdge = edgesList[i];
@@ -1481,8 +1480,7 @@ class Mesh
 			var distanceSquared:Float;
 			var isDelaunay:Bool = false;
 			var index:Int = 0;
-			//TODO: this i declared here is suspicious
-			var i:Int;
+
 			for (i in 2...bound.length)
 			{
 				vertexC = bound[i].originVertex;
