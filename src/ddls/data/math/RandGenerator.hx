@@ -5,13 +5,13 @@ class RandGenerator
 	
 	private var _originalSeed:UInt;
 	private var _currSeed:UInt;
-	private var _rangeMin:UInt;
-	private var _rangeMax:UInt;
+	private var _rangeMin:Int;
+	private var _rangeMax:Int;
 	
-	private var _numIter:UInt;
+	private var _numIter:Int;
 	private var _tempString:String;
 	
-	public function new(seed:UInt=1234, rangeMin:UInt=0, rangeMax:UInt=1)
+	public function new(seed:UInt=1234, rangeMin:Int=0, rangeMax:Int=1)
 	{
 		_originalSeed = _currSeed = seed;
 		_rangeMin = rangeMin;
@@ -24,13 +24,13 @@ class RandGenerator
 	private function get_seed():UInt { return _originalSeed; }
 	private function set_seed(value:UInt):UInt { return _originalSeed = _currSeed = value; }
 	
-	public var rangeMin(get, set):UInt;
-	private function get_rangeMin():UInt { return _rangeMin; }
-	private function set_rangeMin(value:UInt):UInt { return _rangeMin = value; }
+	public var rangeMin(get, set):Int;
+	private function get_rangeMin():Int { return _rangeMin; }
+	private function set_rangeMin(value:Int):Int { return _rangeMin = value; }
 	
-	public var rangeMax(get, set):UInt;
-	private function get_rangeMax():UInt { return _rangeMax; }
-	private function set_rangeMax(value:UInt):UInt { return _rangeMax = value; }
+	public var rangeMax(get, set):Int;
+	private function get_rangeMax():Int { return _rangeMax; }
+	private function set_rangeMax(value:Int):Int { return _rangeMax = value; }
 	
 	public function reset():Void
 	{
@@ -38,9 +38,10 @@ class RandGenerator
 		_numIter = 0;
 	}
 	
-	public function next():UInt
+	public function next():Int
 	{
-		_tempString = Std.string(_currSeed*_currSeed);
+		var _floatSeed:Float = _currSeed;
+		_tempString = Std.string(_floatSeed * _floatSeed);
 		
 		while (_tempString.length < 8)
 		{
@@ -49,7 +50,7 @@ class RandGenerator
 		
 		_currSeed = Std.parseInt(_tempString.substr(1, 5));
 		
-		var res:UInt = Math.round(_rangeMin + (_currSeed / 99999)*(_rangeMax - _rangeMin));
+		var res:Int = Math.round(_rangeMin + (_currSeed / 99999) * (_rangeMax - _rangeMin));
 		
 		if (_currSeed == 0)
 			_currSeed = _originalSeed+_numIter;

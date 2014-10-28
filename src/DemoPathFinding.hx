@@ -49,7 +49,8 @@ class DemoPathFinding extends Sprite
         var randGen:RandGenerator;
         randGen = new RandGenerator();
         randGen.seed = 7259;  // put a 4 digits number here  
-        
+		
+		
         // populate mesh with many square objects
         var object:Object;
         var shapeCoords:Array<Float>;
