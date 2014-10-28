@@ -9,6 +9,7 @@ import ddls.view.SimpleView;
 
 import flash.display.Sprite;
 import flash.events.Event;
+import flash.events.KeyboardEvent;
 
 
 class DemoBasics extends Sprite
@@ -82,7 +83,11 @@ class DemoBasics extends Sprite
         // if you want to delete that object
         //_mesh.deleteObject(_object);
         
-        flash.Lib.current.stage.addEventListener(Event.ENTER_FRAME, _onEnterFrame);
+        // animate
+		flash.Lib.current.stage.addEventListener(Event.ENTER_FRAME, _onEnterFrame);
+		
+		// key presses
+		flash.Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
     }
     
     function _onEnterFrame(event:Event):Void {
@@ -93,5 +98,16 @@ class DemoBasics extends Sprite
         
         // render mesh
         _view.drawMesh(_mesh);
+    }
+	
+	private function _onKeyDown(event:KeyboardEvent):Void
+    {
+		if (event.keyCode == 27) {	// ESC
+		#if flash
+			flash.system.System.exit(1);
+		#elseif sys
+			Sys.exit(1);
+		#end
+		}
     }
 }

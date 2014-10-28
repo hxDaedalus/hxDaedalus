@@ -9,6 +9,7 @@ import ddls.view.SimpleView;
 
 import flash.display.Bitmap;
 import flash.display.Sprite;
+import flash.events.KeyboardEvent;
 
 
 #if !html5
@@ -62,5 +63,19 @@ class DemoFromBitmap extends Sprite
 		
 		// display result mesh
 		_view.drawMesh(_mesh);
+		
+		// key presses
+		flash.Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
 	}
+	
+	private function _onKeyDown(event:KeyboardEvent):Void
+    {
+		if (event.keyCode == 27) {	// ESC
+		#if flash
+			flash.system.System.exit(1);
+		#elseif sys
+			Sys.exit(1);
+		#end
+		}
+    }
 }

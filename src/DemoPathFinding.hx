@@ -12,6 +12,7 @@ import ddls.view.SimpleView;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.MouseEvent;
+import flash.events.KeyboardEvent;
 
 class DemoPathFinding extends Sprite
 {
@@ -23,6 +24,8 @@ class DemoPathFinding extends Sprite
     private var _pathfinder:PathFinder;
     private var _path:Array<Float>;
     private var _pathSampler:LinearPathSampler;
+	
+	private var _newPath:Bool = false;
     
 	public static function main():Void 
 	{
@@ -70,11 +73,10 @@ class DemoPathFinding extends Sprite
             object.x = randGen.next();
             object.y = randGen.next();
             _mesh.insertObject(object);
-        }  // show result mesh on screen  
+        }
         
-        
-        
-        
+		
+		// show result mesh on screen
         _view.drawMesh(_mesh);
         
         
@@ -104,31 +106,45 @@ class DemoPathFinding extends Sprite
         // then configure the path sampler
         _pathSampler = new LinearPathSampler();
         _pathSampler.entity = _entityAI;
-        _pathSampler.samplingDistance = 5;
+        _pathSampler.samplingDistance = 7;
         _pathSampler.path = _path;
         
         
-        // CLICK !!
-        flash.Lib.current.stage.addEventListener(MouseEvent.CLICK, _onClick);
+        // click/drag
+        flash.Lib.current.stage.addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
+        flash.Lib.current.stage.addEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
+        
+		// animate
+		flash.Lib.current.stage.addEventListener(Event.ENTER_FRAME, _onEnterFrame);
+		
+		// key presses
+		flash.Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
     }
     
-    private function _onClick(event:MouseEvent):Void
+    private function _onMouseUp(event:MouseEvent):Void
     {
-        // find path !
-        _pathfinder.findPath(stage.mouseX, stage.mouseY, _path);
-        
-        // show path on screen
-        _view.drawPath(_path);
-        
-        // reset the path sampler to manage new generated path
-        _pathSampler.reset();
-        
-        // animate !
-        stage.addEventListener(Event.ENTER_FRAME, _onEnterFrame);
+		_newPath = false;
+    }
+    
+    private function _onMouseDown(event:MouseEvent):Void
+    {
+		_newPath = true;
     }
     
     private function _onEnterFrame(event:Event):Void
     {
+        if (_newPath) {
+			// find path !
+			_pathfinder.findPath(stage.mouseX, stage.mouseY, _path);
+			
+			// show path on screen
+			_view.drawPath(_path);
+			
+			// reset the path sampler to manage new generated path
+			_pathSampler.reset();
+        }
+        
+		// animate !
         if (_pathSampler.hasNext) 
         {
             // move entity
@@ -137,10 +153,16 @@ class DemoPathFinding extends Sprite
             // show entty new position on screen
             _view.drawEntity(_entityAI);
         }
-        else 
-        {
-            // animation is over
-            stage.removeEventListener(Event.ENTER_FRAME, _onEnterFrame);
-        }
+    }
+    
+	private function _onKeyDown(event:KeyboardEvent):Void
+    {
+		if (event.keyCode == 27) {	// ESC
+		#if flash
+			flash.system.System.exit(1);
+		#elseif sys
+			Sys.exit(1);
+		#end
+		}
     }
 }
