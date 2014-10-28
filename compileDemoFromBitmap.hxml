@@ -1,6 +1,6 @@
 -cp src/
 -main DemoFromBitmap
--swf-version 10
+-swf-version 11.2
 -swf-header 600:600:40:FFFFFF
 -swf bin/DemoFromBitmap.swf
 -D fdb

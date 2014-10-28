@@ -1,6 +1,6 @@
 -cp src/
 -main DemoPathfinding
--swf-version 10
+-swf-version 11.2
 -swf-header 600:600:40:FFFFFF
 -swf bin/DemoPathfinding.swf
 -D fdb
