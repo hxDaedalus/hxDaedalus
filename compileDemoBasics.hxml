@@ -1,12 +1,12 @@
 -cp src/
 -main DemoBasics
 -swf-version 11.2
--swf-header 600:600:40:FFFFFF
+-swf-header 600:400:60:FFFFFF
 -swf bin/DemoBasics.swf
 -D fdb
 -D hxmlFlash
 -debug
 #mac
-#-cmd open bin/DemoBasics.swf
+-cmd open bin/DemoBasics.swf
 #win
 #-cmd start bin/DemoBasics.swf

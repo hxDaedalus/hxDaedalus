@@ -1,11 +1,11 @@
 package ddls.ai;
 
 
-import ddls.data.DObject;
+import ddls.data.Object;
 
 class EntityAI
 {
-    public var approximateObject(get, never) : DObject;
+    public var approximateObject(get, never) : Object;
     public var angleFOV : Float;
     public var dirNormY : Float;
     public var dirNormX : Float;
@@ -22,7 +22,7 @@ class EntityAI
     private var _dirNormX : Float;
     private var _dirNormY : Float;
     private var _angleFOV : Float;
-    private var _approximateObject : DObject;
+    private var _approximateObject : Object;
     private static inline var NUM_SEGMENTS : Int = 6;
     
     public function new()
@@ -35,7 +35,7 @@ class EntityAI
     }
     
     public function buildApproximation() : Void {
-        _approximateObject = new DObject();
+        _approximateObject = new Object();
         _approximateObject.matrix.translate(x, y);
         var coordinates  = new Array<Float>();
         _approximateObject.coordinates = coordinates;
@@ -50,7 +50,7 @@ class EntityAI
         }
     }
     
-    private function get_approximateObject() : DObject
+    private function get_approximateObject() : Object
     {
         _approximateObject.matrix.identity();
         _approximateObject.matrix.translate(x, y);

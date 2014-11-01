@@ -26,7 +26,7 @@ class FromVertexToHoldingFaces {
                     if( !_resultFace.isReal ) _resultFace = null;
                     break;
                 }
-            } while ( (!_resultFace.isReal) );
+            } while ( !_resultFace.isReal );
         } else {
             _resultFace = null;
         }

@@ -1,13 +1,12 @@
 -cp src/
 -main DemoFromBitmap
 -swf-version 11.2
--swf-header 600:600:40:FFFFFF
+-swf-header 600:600:60:FFFFFF
 -swf bin/DemoFromBitmap.swf
--D fdb
--debug
--D hxmlFlash
--D testImage
+#-D fdb
+#-debug
+
 #mac
-#-cmd open bin/DemoFromBitmap.swf
+-cmd open bin/DemoFromBitmap.swf
 #win
 #-cmd start bin/DemoFromBitmap.swf

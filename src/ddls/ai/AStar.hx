@@ -13,9 +13,12 @@ import haxe.ds.StringMap;
 
 
 class AStar {
+    
     public var radius(get, set) : Float;
+    var _radius : Float;
     public var mesh(never, set) : Mesh;
     var _mesh : Mesh;
+    
     var closedFaces:  Map<Face,Bool>;
     var sortedOpenedFaces : Array<Face>;
     var openedFaces : Map<Face,Null<Bool>>;
@@ -26,8 +29,9 @@ class AStar {
     var scoreG : Map<Face,Float>;
     var scoreH : Map<Face,Float>;
     var predecessor : Map<Face,Face>;
+    
     var iterEdge : FromFaceToInnerEdges;
-    var _radius : Float;
+    
     var radiusSquared : Float;
     var diameter : Float;
     var diameterSquared : Float;
@@ -88,7 +92,7 @@ class AStar {
         
         var loc : Intersection;
         var locEdge : Edge;
-        var locVertex : Vertex = null;
+        var locVertex : Vertex;
         var distance : Float;
         var p1 : Point2D;
         var p2 : Point2D;

@@ -44,7 +44,8 @@ class BitmapMeshFactory
         var mesh : Mesh = RectMeshFactory.buildRectangle(bmpData.width, bmpData.height);
         for (i in 0...polygons.length){
             j = 0;
-            while (j < polygons[i].length - 2){mesh.insertConstraintSegment(polygons[i][j], polygons[i][j + 1], polygons[i][j + 2], polygons[i][j + 3]);
+            while (j < polygons[i].length - 2){
+                mesh.insertConstraintSegment(polygons[i][j], polygons[i][j + 1], polygons[i][j + 2], polygons[i][j + 3]);
                 j += 2;
             }
             mesh.insertConstraintSegment(polygons[i][0], polygons[i][1], polygons[i][j], polygons[i][j + 1]);

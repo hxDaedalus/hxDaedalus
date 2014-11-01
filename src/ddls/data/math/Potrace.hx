@@ -44,11 +44,11 @@ class Potrace
         var path = [ newX, newY ];
         dictPixelsDone[newX + "_" + newY] = true;
         
-        var curDir : Point = new Point(0, 1);
-        var newDir : Point = new Point();
+        var curDir = new Point(0, 1);
+        var newDir = new Point();
         var newPixelRow : Int;
         var newPixelCol : Int;
-        var count : Int = -1;
+        var count = -1;
         while (true)
         {
             if (debugBmp != null) 

@@ -1,12 +1,11 @@
 -cp src/
 -main DemoPathfinding
 -swf-version 11.2
--swf-header 600:600:40:FFFFFF
+-swf-header 600:600:60:FFFFFF
 -swf bin/DemoPathfinding.swf
 -D fdb
 -debug
--D hxmlFlash
 #mac
-#-cmd open bin/DemoPathfinding.swf
+-cmd open bin/DemoPathfinding.swf
 #win
-#-cmd start bin/DemoPathfinding.swf
+#-cmd start bin/DemoPathFinding.swf

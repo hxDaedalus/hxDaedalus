@@ -13,4 +13,5 @@
 	
 	<haxelib name="openfl" />
 	
+	<assets path="src/DemoFromBitmap.png" rename="TestImage" if="html5" />
 </project>

@@ -3,7 +3,7 @@ package ddls.data;
 
 import ddls.data.math.Matrix2D;
 
-class DObject {
+class Object {
     public var id(get, never) : Int;
     public var pivotX(get, set) : Float;
     public var pivotY(get, set) : Float;
@@ -202,10 +202,10 @@ class DObject {
     private function get_edges(): Array<Edge> {
         
         var res = new Array<Edge>();
-        
-        for( i in 0..._constraintShape.segments.length ){
-            for( j in 0..._constraintShape.segments[ i ].edges.length ){
-                res.push( _constraintShape.segments[ i ].edges[ j ] );
+        var seg = _constraintShape.segments;
+        for( i in 0...seg.length ){
+            for( j in 0...seg[ i ].edges.length ){
+                res.push( seg[ i ].edges[ j ] );
             }
         }
         

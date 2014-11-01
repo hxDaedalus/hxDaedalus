@@ -3,21 +3,20 @@ import ddls.ai.EntityAI;
 import ddls.ai.PathFinder;
 import ddls.ai.trajectory.LinearPathSampler;
 import ddls.data.Mesh;
-import ddls.data.DObject;
+import ddls.data.Object;
 import ddls.data.math.Point2D;
 import ddls.data.math.RandGenerator;
 import ddls.factories.RectMeshFactory;
 import ddls.view.SimpleView;
 #if openfl
 import openfl.Lib;
-#end
-// added this so I can run flash version from hxml file without openfl dependancy
-#if hxmlFlash
+#else
 import flash.Lib;
 #end
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.MouseEvent;
+import flash.events.KeyboardEvent;
 
 class DemoPathfinding extends Sprite
 {
@@ -30,18 +29,18 @@ class DemoPathfinding extends Sprite
     private var _path : Array<Float>;
     private var _pathSampler : LinearPathSampler;
     
-    public static function main(){
-        new DemoPathfinding();
+    private var _newPath:Bool = false;
+    
+    public static function main():Void {
+        flash.Lib.current.addChild(new DemoPathfinding());
     }
     
-    public function new()
-    {
+    public function new(){
         super();
         // build a rectangular 2 polygons mesh of 600x600
         _mesh = RectMeshFactory.buildRectangle(600, 600);
         
         Lib.current.addChild(this);
-        
         // create a viewport
         _view = new SimpleView();
         addChild(_view.surface);
@@ -53,10 +52,10 @@ class DemoPathfinding extends Sprite
         randGen.seed = 7259;  // put a 4 digits number here  
         
         // populate mesh with many square objects
-        var object : DObject;
+        var object : Object;
         var shapeCoords : Array<Float>;
         for (i in 0...50){
-            object = new DObject();
+            object = new Object();
             shapeCoords = new Array<Float>();
             shapeCoords = [ -1, -1, 1, -1,
                              1, -1, 1, 1,
@@ -113,39 +112,51 @@ class DemoPathfinding extends Sprite
         _pathSampler.path = _path;
         
         
-        // CLICK !!
-        stage.addEventListener(MouseEvent.CLICK, _onClick);
+        // click/drag
+        flash.Lib.current.stage.addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
+        flash.Lib.current.stage.addEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
+        
+        // animate
+        flash.Lib.current.stage.addEventListener(Event.ENTER_FRAME, _onEnterFrame);
+        
+        // key presses
+        flash.Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
     }
     
-    private function _onClick(event : MouseEvent) : Void
-    {
-        // find path !
-        _pathfinder.findPath(stage.mouseX, stage.mouseY, _path);
-        
-        // show path on screen
-        _view.drawPath(_path);
-        
-        // reset the path sampler to manage new generated path
-        _pathSampler.reset();
+    private function _onMouseUp( event: MouseEvent ): Void {
+            _newPath = false;
+    }
+    
+    private function _onMouseDown( event: MouseEvent ): Void {
+        _newPath = true;
+    }
+    
+    private function _onEnterFrame( event: Event ): Void {
+        if( _newPath ) {
+            // find path !
+            _pathfinder.findPath( stage.mouseX, stage.mouseY, _path );
+            // show path on screen
+            _view.drawPath( _path );
+            // reset the path sampler to manage new generated path
+            _pathSampler.reset();
+        }
         
         // animate !
-        stage.addEventListener(Event.ENTER_FRAME, _onEnterFrame);
-    }
-    
-    private function _onEnterFrame(event : Event) : Void
-    {
-        if (_pathSampler.hasNext) 
-        {
+        if( _pathSampler.hasNext ) {
             // move entity
-            _pathSampler.next();
-            
+            _pathSampler.next();            
             // show entty new position on screen
             _view.drawEntity(_entityAI);
         }
-        else 
-        {
-            // animation is over
-            stage.removeEventListener(Event.ENTER_FRAME, _onEnterFrame);
+    }
+    
+    private function _onKeyDown( event:KeyboardEvent ): Void {
+        if( event.keyCode == 27 ) {// ESC
+            #if flash
+                flash.system.System.exit(1);
+            #elseif sys
+                Sys.exit(1);
+            #end
         }
     }
 }

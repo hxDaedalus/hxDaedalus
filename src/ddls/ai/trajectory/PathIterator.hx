@@ -88,10 +88,8 @@ class PathIterator
         updateEntity();
         
         _hasPrev = false;
-        if (_path.length > 2) 
-            _hasNext = true
-        else 
-        _hasNext = false;
+        if (_path.length > 2) _hasNext = true
+        else _hasNext = false;
     }
     
     public function prev() : Bool
@@ -106,16 +104,14 @@ class PathIterator
         
         updateEntity();
         
-        if (_count == 0) 
-            _hasPrev = false;
+        if (_count == 0) _hasPrev = false;
         
         return true;
     }
     
     public function next() : Bool
     {
-        if (!_hasNext) 
-            return false;
+        if (!_hasNext) return false;
         _hasPrev = true;
         
         _count++;
@@ -124,16 +120,14 @@ class PathIterator
         
         updateEntity();
         
-        if ((_count + 1) * 2 == _path.length) 
-            _hasNext = false;
+        if ((_count + 1) * 2 == _path.length) _hasNext = false;
         
         return true;
     }
     
     private function updateEntity() : Void
     {
-        if (_entity == null) 
-            return;
+        if (_entity == null) return;
         
         _entity.x = _currentX;
         _entity.y = _currentY;

@@ -4,7 +4,7 @@ import ddls.data.Mesh;
 import ddls.data.Vertex;
 
 class FromMeshToFaces {
-    public var fromMesh(never, set) : Mesh;
+    public var fromMesh(never, set): Mesh;
     var _fromMesh : Mesh;
     var _currIndex : Int;
     var _resultFace : Face;
@@ -17,7 +17,7 @@ class FromMeshToFaces {
         return value;
     }
     
-    public function next() : Face
+    public function next(): Face
     {
         do {
             if( _currIndex < _fromMesh._faces.length ){

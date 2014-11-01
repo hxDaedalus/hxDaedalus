@@ -82,8 +82,7 @@ class Graph
     }
     
     public function insertEdge( fromNode: GraphNode, toNode: GraphNode ): GraphEdge {
-        if( fromNode.successorNodes[ toNode ] != null ) 
-            return null;
+        if( fromNode.successorNodes[ toNode ] != null ) return null;
         
         var edge = new GraphEdge();
         if( _edge != null ){

@@ -47,26 +47,22 @@ class Vertex
         return _pos;
     }
     
-	private function get_fromConstraintSegments():Array<ConstraintSegment> 
-	{
-		return _fromConstraintSegments;
-	}
+    private function get_fromConstraintSegments():Array<ConstraintSegment>{
+        return _fromConstraintSegments;
+    }
     
-	private function set_fromConstraintSegments(value:Array<ConstraintSegment>):Array<ConstraintSegment> 
-	{
-		return _fromConstraintSegments = value;
-	}
-	
+    private function set_fromConstraintSegments(value:Array<ConstraintSegment>):Array<ConstraintSegment> {
+        return _fromConstraintSegments = value;
+    }
+    
     public function setDatas(edge : Edge, isReal : Bool = true) : Void
     {
         _isReal = isReal;
         _edge = edge;
     }
     
-    public function addFromConstraintSegment(segment : ConstraintSegment) : Void
-    {
-        if (_fromConstraintSegments.indexOf(segment) == -1) 
-            _fromConstraintSegments.push(segment);
+    public function addFromConstraintSegment(segment : ConstraintSegment): Void {
+        if (_fromConstraintSegments.indexOf(segment) == -1) _fromConstraintSegments.push(segment);
     }
     
     public function removeFromConstraintSegment(segment : ConstraintSegment) : Void
@@ -83,15 +79,13 @@ class Vertex
         _fromConstraintSegments = null;
     }
     
-	private function get_edge():Edge 
-	{
-		return _edge;
-	}
+    private function get_edge():Edge {
+        return _edge;
+    }
     
-	private function set_edge(value:Edge):Edge 
-	{
-		return _edge = value;
-	}
+    private function set_edge(value:Edge):Edge {
+        return _edge = value;
+    }
 
     public function toString(): String {
         return "ver_id " + _id;

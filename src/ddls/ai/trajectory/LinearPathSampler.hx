@@ -74,22 +74,17 @@ class LinearPathSampler
     private function set_count(value : Int) : Int
     {
         _count = value;
-        if (_count < 0) 
-            _count = 0;
-        if (_count > countMax - 1) 
-            _count = countMax - 1;
+        if( _count < 0 ) _count = 0;
+        if(_count > countMax - 1) _count = countMax - 1;
         
-        if (_count == 0) 
-            _hasPrev = false
-        else 
-        _hasPrev = true;
-        if (_count == countMax - 1) 
-            _hasNext = false
-        else 
-        _hasNext = true;
+        if( _count == 0 ) _hasPrev = false
+        else _hasPrev = true;
         
-        _currentX = _preCompX[_count];
-        _currentY = _preCompY[_count];
+        if( _count == countMax - 1 ) _hasNext = false
+        else _hasNext = true;
+        
+        _currentX = _preCompX[ _count ];
+        _currentY = _preCompY[ _count ];
         updateEntity();
         return value;
     }
@@ -194,7 +189,7 @@ class LinearPathSampler
                     break;
             }
             else 
-            break;
+                break;
         }
         
         if (_iNext == 0) 
@@ -253,8 +248,7 @@ class LinearPathSampler
                 if (_iNext == _path.length) 
                     break;
             }
-            else 
-            break;
+            else break;
         }
         
         if (_iNext == _path.length) 

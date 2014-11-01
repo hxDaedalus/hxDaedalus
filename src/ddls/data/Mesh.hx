@@ -1,6 +1,6 @@
 package ddls.data;
 
-import ddls.data.DObject;
+import ddls.data.Object;
 import ddls.data.Vertex;
 
 import ddls.data.math.Geom2D;
@@ -24,19 +24,19 @@ class Mesh
     private static var INC : Int = 0;
     private var _id : Int;
     
-    private var _width : Float;
-    private var _height : Float;
-    private var _clipping : Bool;
+    private var _width : Float = 0;
+    private var _height : Float = 0;
+    private var _clipping : Bool = false;
     
-    public var _vertices : Array<Vertex>;
-    public var _edges : Array<Edge>;
-    public var _faces : Array<Face>;
-    private var _constraintShapes : Array<ConstraintShape>;
-    private var _objects : Array<DObject>;
+    public var _vertices : Array<Vertex>= null;
+    public var _edges : Array<Edge>= null;
+    public var _faces : Array<Face>= null;
+    private var _constraintShapes : Array<ConstraintShape>= null;
+    private var _objects : Array<Object>= null;
     
     // keep references of center vertex and bounding edges when split, useful to restore edges as Delaunay
-    private var __centerVertex : Vertex;
-    private var __edgesToCheck : Array<Edge>;
+    private var __centerVertex : Vertex= null;
+    private var __edgesToCheck : Array<Edge>= null;
     
     public function new( width: Float, height: Float )
     {
@@ -51,7 +51,7 @@ class Mesh
         _edges = new Array<Edge>();
         _faces = new Array<Face>();
         _constraintShapes = new Array<ConstraintShape>();
-        _objects = new Array<DObject>();
+        _objects = new Array<Object>();
         
         __edgesToCheck = new Array<Edge>();
     }
@@ -84,20 +84,15 @@ class Mesh
     
     public function dispose() : Void
     {
-        while (_vertices.length > 0)
-        _vertices.pop().dispose();
+        while (_vertices.length > 0) _vertices.pop().dispose();
         _vertices = null;
-        while (_edges.length > 0)
-        _edges.pop().dispose();
+        while (_edges.length > 0) _edges.pop().dispose();
         _edges = null;
-        while (_faces.length > 0)
-        _faces.pop().dispose();
+        while (_faces.length > 0) _faces.pop().dispose();
         _faces = null;
-        while (_constraintShapes.length > 0)
-        _constraintShapes.pop().dispose();
+        while (_constraintShapes.length > 0) _constraintShapes.pop().dispose();
         _constraintShapes = null;
-        while (_objects.length > 0)
-        _objects.pop().dispose();
+        while (_objects.length > 0) _objects.pop().dispose();
         _objects = null;
         
         __edgesToCheck = null;
@@ -119,7 +114,7 @@ class Mesh
         }
     }
     
-    public function insertObject(object : DObject) : Void
+    public function insertObject(object : Object) : Void
     {
         if (object.constraintShape!=null) deleteObject(object);
         
@@ -148,12 +143,9 @@ class Mesh
             transfy1 = m.transformY(x1, y1);
             transfx2 = m.transformX(x2, y2);
             transfy2 = m.transformY(x2, y2);
-            //trace(i + ": " + transfx1, transfy1, transfx2, transfy2);
-			if (i == 240) {
-				trace("240");
-			}
+            
             segment = insertConstraintSegment(transfx1, transfy1, transfx2, transfy2);
-            if (segment != null) 
+            if( segment != null ) 
             {
                 segment.fromShape = shape;
                 shape.segments.push(segment);
@@ -161,16 +153,15 @@ class Mesh
             i += 4;
         }
         
-        _constraintShapes.push(shape);
+        _constraintShapes.push( shape );
         object.constraintShape = shape;
         
-        if (!__objectsUpdateInProgress) 
-        {
+        if (!__objectsUpdateInProgress) {
             _objects.push(object);
         }
     }
     
-    public function deleteObject(object : DObject) : Void
+    public function deleteObject(object : Object) : Void
     {
         if (object.constraintShape == null ) return;
             
@@ -229,13 +220,9 @@ class Mesh
     
     public function deleteConstraintShape(shape : ConstraintShape) : Void
     {
-        for (i in 0...shape.segments.length){
-            deleteConstraintSegment(shape.segments[i]);
-        }
-        
+        for( i in 0...shape.segments.length ) deleteConstraintSegment(shape.segments[i]);
         shape.dispose();
-        
-        _constraintShapes.splice(_constraintShapes.indexOf(shape), 1);
+        _constraintShapes.splice( _constraintShapes.indexOf( shape ), 1);
     }
     
     public function insertConstraintSegment(x1 : Float, y1 : Float, x2 : Float, y2 : Float) : ConstraintSegment
@@ -307,8 +294,7 @@ class Mesh
                         newX2 = intersectPoint.x;
                         newY2 = intersectPoint.y;
                     }
-                    else 
-                    return null;
+                    else return null;
                 }
                 // if ends points are apart of the top-right corner
                 else if ((p1pos == 2 && p2pos == 4) || (p1pos == 4 && p2pos == 2)) 
@@ -324,8 +310,7 @@ class Mesh
                         newX2 = intersectPoint.x;
                         newY2 = intersectPoint.y;
                     }
-                    else 
-                    return null;
+                    else return null;
                 }
                 // if ends points are apart of the bottom-right corner
                 else if ((p1pos == 6 && p2pos == 4) || (p1pos == 4 && p2pos == 6)) 
@@ -341,8 +326,7 @@ class Mesh
                         newX2 = intersectPoint.x;
                         newY2 = intersectPoint.y;
                     }
-                    else 
-                    return null;
+                    else return null;
                 }
                 // if ends points are apart of the bottom-left corner
                 else if ((p1pos == 8 && p2pos == 6) || (p1pos == 6 && p2pos == 8)) 
@@ -358,8 +342,7 @@ class Mesh
                         newX2 = intersectPoint.x;
                         newY2 = intersectPoint.y;
                     }
-                    else 
-                    return null;
+                    else return null;
                 }
                 // other cases (could be optimized)
                 else 
@@ -406,40 +389,34 @@ class Mesh
                         }
                     }  // check left bound  
                     
-                    if (!secondDone && Geom2D.intersections2segments(x1, y1, x2, y2, 0, 0, 0, _height, intersectPoint)) 
-                    {
+                    if (!secondDone && Geom2D.intersections2segments(x1, y1, x2, y2, 0, 0, 0, _height, intersectPoint)) {
                         newX2 = intersectPoint.x;
                         newY2 = intersectPoint.y;
                     }
                     
-                    if (!firstDone) 
-                        return null;
+                    if (!firstDone) return null;
                 }
             }
             // one end point of segment is outside bounds and one is inside
             else 
             {
                 // if one point is outside top
-                if (p1pos == 2 || p2pos == 2) 
-                {
+                if (p1pos == 2 || p2pos == 2){
                     // intersection with top bound
                     Geom2D.intersections2segments(x1, y1, x2, y2, 0, 0, _width, 0, intersectPoint);
                 }
                 // if one point is outside right
-                else if (p1pos == 4 || p2pos == 4) 
-                {
+                else if (p1pos == 4 || p2pos == 4){
                     // intersection with right bound
                     Geom2D.intersections2segments(x1, y1, x2, y2, _width, 0, _width, _height, intersectPoint);
                 }
                 // if one point is outside bottom
-                else if (p1pos == 6 || p2pos == 6) 
-                {
+                else if (p1pos == 6 || p2pos == 6){
                     // intersection with bottom bound
                     Geom2D.intersections2segments(x1, y1, x2, y2, 0, _height, _width, _height, intersectPoint);
                 }
                 // if one point is outside left
-                else if (p1pos == 8 || p2pos == 8) 
-                {
+                else if (p1pos == 8 || p2pos == 8){
                     // intersection with left bound
                     Geom2D.intersections2segments(x1, y1, x2, y2, 0, 0, 0, _height, intersectPoint);
                 }
@@ -462,13 +439,10 @@ class Mesh
                     }
                 }
                 
-                if (p1pos == 0) 
-                {
+                if( p1pos == 0 ) {
                     newX1 = x1;
                     newY1 = y1;
-                }
-                else 
-                {
+                } else {
                     newX1 = x2;
                     newY1 = y2;
                 }
@@ -479,20 +453,12 @@ class Mesh
         
         
         
-        var vertexDown = insertVertex(newX1, newY1);
-        if (vertexDown == null) 
-            return null;
-        var vertexUp = insertVertex(newX2, newY2);
-        if (vertexUp == null) 
-            return null;
-        if (vertexDown == vertexUp) 
-            return null; // useful    //trace("vertices", vertexDown.id, vertexUp.id)  ;
-        
-        
-        
-        
-        
-        
+        var vertexDown = insertVertex( newX1, newY1 );
+        if( vertexDown == null ) return null;
+        var vertexUp = insertVertex( newX2, newY2 );
+        if( vertexUp == null ) return null;
+        if( vertexDown == vertexUp ) return null; 
+        // useful    //trace("vertices", vertexDown.id, vertexUp.id)  
         var iterVertexToOutEdges : FromVertexToOutgoingEdges = new FromVertexToOutgoingEdges();
         var currVertex : Vertex;
         var currEdge : Edge;
@@ -506,9 +472,9 @@ class Mesh
         tempEdgeDownUp.setDatas(vertexDown, tempSdgeUpDown, null, null, true, true);
         tempSdgeUpDown.setDatas(vertexUp, tempEdgeDownUp, null, null, true, true);
         
-        var intersectedEdges : Array<Edge> = new Array<Edge>();
-        var leftBoundingEdges : Array<Edge> = new Array<Edge>();
-        var rightBoundingEdges : Array<Edge> = new Array<Edge>();
+        var intersectedEdges = new Array<Edge>();
+        var leftBoundingEdges = new Array<Edge>();
+        var rightBoundingEdges = new Array<Edge>();
         
         var currObjet : Intersection;
         var pIntersect : Point2D = new Point2D();
@@ -805,11 +771,11 @@ class Mesh
             vertexToDelete.push(vertex);
         }
 		
-		if (edge != null) {
+		//if (edge != null) {
 			vertex = edge.destinationVertex;
 			vertex.removeFromConstraintSegment(segment);
 			vertexToDelete.push(vertex);
-        }
+        //}
 		
         //trace("clean the useless vertices");
         for (i in 0...vertexToDelete.length){
@@ -836,8 +802,7 @@ class Mesh
     public function insertVertex(x : Float, y : Float) : Vertex
     {
         //trace("insertVertex", x, y);
-        if (x < 0 || y < 0 || x > _width || y > _height) 
-            return null;
+        if (x < 0 || y < 0 || x > _width || y > _height) return null;
         
         __edgesToCheck.splice(0, __edgesToCheck.length);
         
@@ -846,13 +811,16 @@ class Mesh
         
         switch( inObject ){
             case EVertex( vertex ):
-                newVertex = vertex;
+                trace("inVertex", vertex.id);
+                //newVertex = vertex;
             case EEdge( edge ):
-                newVertex = splitEdge(edge, x, y);
+                trace("inEdge", edge);
+                //newVertex = splitEdge(edge, x, y);
             case EFace( face ):
-                newVertex = splitFace(face, x, y);
+                trace("inFace", face );
+                //newVertex = splitFace(face, x, y);
             case ENull:
-                //
+                trace( 'nothing!');
         }
         
         restoreAsDelaunay();
@@ -877,7 +845,7 @@ class Mesh
         var vLeft  = eLeft_Bot.originVertex;
         var vRight = eRight_Top.originVertex;
         
-        var fLeft= eBot_Top.leftFace;
+        var fLeft = eBot_Top.leftFace;
         var fRight  = eTop_Bot.leftFace;
         var fBot  = new Face();
         var fTop = new Face();
@@ -1019,10 +987,8 @@ class Mesh
         fTopRight.setDatas(eCenter_Right, fTop.isReal);
         
         // check the edge references of LEFT and RIGHT vertices
-        if (vLeft.edge == eLeft_Right) 
-            vLeft.setDatas(eLeft_Center);
-        if (vRight.edge == eRight_Left) 
-            vRight.setDatas(eRight_Center);  // set the new edge and face references for the 4 bounding edges  ;
+        if( vLeft.edge == eLeft_Right ) vLeft.setDatas(eLeft_Center);
+        if( vRight.edge == eRight_Left ) vRight.setDatas(eRight_Center);  // set the new edge and face references for the 4 bounding edges  ;
         
         
         
@@ -1054,15 +1020,15 @@ class Mesh
                 index = edges.indexOf(eLeft_Right);
                 if (index != -1) {
                     //TODO: check logic of insert
-                    edges.splice(index, 1);
-                    edges.insert(index, eLeft_Center);
-                    edges.insert(index+1,eCenter_Right);
+                    edges.splice( index, 1 );
+                    edges.insert( index, eLeft_Center );
+                    edges.insert( index+1, eCenter_Right );
                 } else { 
-                    var index2 = edges.indexOf(eRight_Left);
+                    var index2 = edges.indexOf(eRight_Left );
                     //TODO: check logic of insert
-                    edges.splice(index2, 1);
-                    edges.insert(index2, eRight_Center);
-                    edges.insert(index2, eCenter_Left);
+                    edges.splice( index2, 1);
+                    edges.insert( index2, eRight_Center );
+                    edges.insert( index2, eCenter_Left );
                 }
             }
             
@@ -1178,7 +1144,7 @@ class Mesh
     public function restoreAsDelaunay() : Void
     {
         var edge : Edge;
-        while (__edgesToCheck.length > 0)
+        while( __edgesToCheck.length > 0 )
         {
             edge = __edgesToCheck.shift();
             if (edge.isReal && !edge.isConstrained && !Geom2D.isDelaunay(edge)) 
@@ -1525,9 +1491,11 @@ class Mesh
             var edgeA : Edge = null;
             var edgeAopp : Edge = null;
             var edgeB : Edge = null;
-            var edgeBopp : Edge = null;
+            var edgeBopp : Edge;// = null;
             var boundA : Array<Edge> = [];
             var boundM : Array<Edge> = [];
+            
+            //TODO: is this correct??? should it be at **
             var boundB : Array<Edge> = [];
             
             if (index < (bound.length - 1)) 
@@ -1555,7 +1523,7 @@ class Mesh
                 boundB.push(edgeBopp);
                 triangulate(boundB, isReal);
             }
-            
+            // **
             if( index == 2 ) {
                 boundM = [ baseEdge, bound[1], edgeAopp ];
             } else if ( index == (bound.length - 1) ){ 
@@ -1579,32 +1547,18 @@ class Mesh
         7 | 6 | 5
         */
         
-        if (x <= 0) 
-        {
-            if (y <= 0) 
-                return 1
-            else if (y >= _height) 
-                return 7
-            else 
-            return 8;
-        }
-        else if (x >= _width) 
-        {
-            if (y <= 0) 
-                return 3
-            else if (y >= _height) 
-                return 5
-            else 
-            return 4;
-        }
-        else 
-        {
-            if (y <= 0) 
-                return 2
-            else if (y >= _height) 
-                return 6
-            else 
-            return 0;
+        if (x <= 0) {
+            if (y <= 0)             return 1
+            else if (y >= _height)  return 7
+            else                    return 8;
+        } else if (x >= _width) {
+            if (y <= 0)             return 3
+            else if (y >= _height)  return 5
+            else                    return 4;
+        } else {
+            if (y <= 0)             return 2
+            else if (y >= _height)  return 6
+            else                    return 0;
         }
     }
     

@@ -113,25 +113,17 @@ class RectMeshFactory
         segBot.fromShape = boundShape;
         segLeft.fromShape = boundShape;
         
-        boundShape.segments = [ segTop, segRight, segBot, segLeft ];
-        
-        mesh._vertices = [ vTL, vTR, vBR, vBL ];
-        mesh._edges = [ eTL_TR, eTR_TL, eTR_BR, eBR_TR, eBR_BL, eBL_BR, eBL_TL, eTL_BL, eTR_BL, eBL_TR, eTL_BR, eBR_TL ];
-        
-        var len = mesh._faces.length;
-        mesh._faces[ len ] = fTL_BL_TR;
-        mesh._faces[ (len+1) ] = fTR_BL_BR;
-        mesh._faces[ (len+2) ] = fTL_BR_BL;
-        mesh._faces[ (len+3) ] = fTL_TR_BR;
-        //mesh.__faces.push(fTL_BL_TR, fTR_BL_BR, fTL_BR_BL, fTL_TR_BR);
-        
+        for(f in [segTop, segRight, segBot, segLeft]) boundShape.segments.push(f);
+        for(f in [vTL, vTR, vBR, vBL]) mesh._vertices.push(f);
+        for(f in [eTL_TR, eTR_TL, eTR_BR, eBR_TR, eBR_BL, eBL_BR, eBL_TL, eTL_BL, eTR_BL, eBL_TR, eTL_BR, eBR_TL]) mesh._edges.push(f);
+        for( f in [fTL_BL_TR, fTR_BL_BR, fTL_BR_BL, fTL_TR_BR]) mesh._faces.push(f);
         mesh.__constraintShapes.push(boundShape);
+        var securityRect = new Array<Float>();
+        for( f in [0, 0, width, 0]) securityRect.push(f);
+        for( f in [width, 0, width, height]) securityRect.push(f);
+        for( f in [width, height, 0, height]) securityRect.push(f);
+        for( f in [0, height, 0, 0]) securityRect.push(f);
         
-        var securityRect : Array<Float> = new Array<Float>();
-        securityRect = securityRect.concat( [ 0, 0, width, 0 ] );
-        securityRect = securityRect.concat( [ width, 0, width, height ] );
-        securityRect = securityRect.concat( [ width, height, 0, height ] );
-        securityRect = securityRect.concat( [ 0, height, 0, 0 ] );
         mesh.clipping = false;
         mesh.insertConstraintShape(securityRect);
         mesh.clipping = true;

@@ -1,7 +1,7 @@
 package ddls.factories;
 
 
-import ddls.data.DObject;
+import ddls.data.Object;
 import ddls.data.graph.Graph;
 import ddls.data.math.Potrace;
 
@@ -10,11 +10,11 @@ import flash.display.Shape;
 
 class BitmapObjectFactory
 {
-    
+    public function new(){}
     public static function buildFromBmpData(    bmpData: BitmapData
                                             ,   debugBmp: BitmapData = null
                                             ,   debugShape : Shape = null
-                                            ) : DObject
+                                            ) : Object
     {
         var i : Int;
         var j : Int;
@@ -37,21 +37,23 @@ class BitmapObjectFactory
         
         
         
-        var obj : DObject = new DObject();
+        var obj : Object = new Object();
         for (i in 0...polygons.length){
             j = 0;
             while (j < polygons[i].length - 2)
             {   
-                obj.coordinates = obj.coordinates.concat([ polygons[i][j], polygons[i][j + 1], polygons[i][j + 2], polygons[i][j + 3] ]);
+                obj.coordinates.push(polygons[i][j]);
+                obj.coordinates.push(polygons[i][j + 1]);
+                obj.coordinates.push(polygons[i][j + 2]);
+                obj.coordinates.push(polygons[i][j + 3]);
                 j += 2;
             }
-            obj.coordinates = obj.coordinates.concat([polygons[i][0], polygons[i][1], polygons[i][j], polygons[i][j + 1] ]);
+            obj.coordinates.push(polygons[i][0]);
+            obj.coordinates.push(polygons[i][1]);
+            obj.coordinates.push(polygons[i][j]);
+            obj.coordinates.push(polygons[i][j + 1]);        
         }
-        
         return obj;
     }
-
-    public function new()
-    {
-    }
+    
 }

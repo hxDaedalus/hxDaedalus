@@ -2,30 +2,29 @@
 import ddls.data.ConstraintSegment;
 import ddls.data.ConstraintShape;
 import ddls.data.Mesh;
-import ddls.data.DObject;
+import ddls.data.Object;
 import ddls.data.Vertex;
 import ddls.factories.RectMeshFactory;
 import ddls.view.SimpleView;
 #if openfl
 import openfl.Lib;
-#end
-// added this so I can run flash version from hxml file
-#if hxmlFlash
+#else
 import flash.Lib;
 #end
 import flash.display.Sprite;
 import flash.events.Event;
-
+import flash.events.KeyboardEvent;
 
 class DemoBasics extends Sprite
 {
     
     private var _mesh : Mesh;
     private var _view : SimpleView;
-    private var _object : DObject;
+    private var _object : Object;
     
-    public static function main(){
-        new DemoBasics();
+    public static function main():Void 
+    {
+        flash.Lib.current.addChild(new DemoBasics());
     }
     
     public function new()
@@ -34,8 +33,7 @@ class DemoBasics extends Sprite
         // build a rectangular 2 polygons mesh of 600x400
         _mesh = RectMeshFactory.buildRectangle(600, 400);
         
-		Lib.current.addChild(this);
-    
+        
         // create a viewport
         _view = new SimpleView();
         addChild( _view.surface );
@@ -72,7 +70,7 @@ class DemoBasics extends Sprite
         // insert an object in mesh (a cross)
         var objectCoords : Array<Float> = new Array<Float>();
 
-        _object = new DObject();
+        _object = new Object();
         _object.coordinates = [ -50.,   0.,  50., 0.,
                                   0., -50.,   0., 50.,
                                 -30., -30.,  30., 30.,
@@ -87,16 +85,31 @@ class DemoBasics extends Sprite
         // if you want to delete that object
         //_mesh.deleteObject(_object);
         
-        addEventListener( Event.ENTER_FRAME, _onFrame );
+        // animate
+        flash.Lib.current.stage.addEventListener(Event.ENTER_FRAME, _onEnterFrame);
+        
+        // key presses
+        flash.Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
     }
     
-    function _onFrame( event: Event) : Void {
-        // objects can be transformed at any time
-        _object.rotation += 0.05;
+        function _onEnterFrame(event:Event):Void {
+            // objects can be transformed at any time
+            _object.rotation += 0.05;
+
+            _mesh.updateObjects();  // don't forget to update  
+
+            // render mesh
+            _view.drawMesh(_mesh);
+        }
         
-        _mesh.updateObjects();  // don't forget to update  
-        
-        // render mesh
-        _view.drawMesh(_mesh);
+        private function _onKeyDown(event:KeyboardEvent):Void
+        {
+            if (event.keyCode == 27) {	// ESC
+            #if flash
+                flash.system.System.exit(1);
+            #elseif sys
+                Sys.exit(1);
+            #end
+        }
     }
 }

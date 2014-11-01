@@ -40,25 +40,14 @@ class RandGenerator
     
     public function next() : Int
     {
-        _tempString = Std.string((_currSeed * _currSeed));
-        
-        while (_tempString.length < 8)
-        {
-            _tempString = "0" + _tempString;
-        }
-        
+        var _floatSeed:Float = _currSeed;
+        _tempString = Std.string((_floatSeed * _currSeed));
+        while (_tempString.length < 8) _tempString = "0" + _tempString; 
         _currSeed = Std.parseInt(_tempString.substr(1, 5));
-        
         var res : Int = Math.round(rangeMin + (_currSeed / 99999) * (rangeMax - rangeMin));
-        
-        if (_currSeed == 0) 
-            _currSeed = _originalSeed + _numIter;
-        
+        if( _currSeed == 0 ) _currSeed = _originalSeed + _numIter;
         _numIter++;
-        
-        if (_numIter == 200) 
-            reset();
-        
+        if( _numIter == 200 ) reset();
         return res;
     }
 }

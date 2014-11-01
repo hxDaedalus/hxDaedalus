@@ -65,7 +65,11 @@ class Geom2D
         var numSamples : Int = Std.int( Math.pow(mesh._vertices.length, 1 / 3) );
         _randGen.rangeMin = 0;
         _randGen.rangeMax = mesh._vertices.length - 1;
-        for (i in 0...numSamples){__samples.push(mesh._vertices[_randGen.next()]);
+        for (i in 0...numSamples){
+            var _rnd:Int = _randGen.next();
+            //TODO: Assert
+            if (_rnd < 0 || _rnd > mesh._vertices.length -1 || mesh._vertices == null) throw "null";
+            __samples.push(mesh._vertices[_rnd]);
         }
         
         var currVertex : Vertex;
@@ -125,17 +129,20 @@ class Geom2D
     
     public static function isCircleIntersectingAnyConstraint(x : Float, y : Float, radius : Float, mesh : Mesh) : Bool
     {
-        if (x <= 0 || x >= mesh.width || y <= 0 || y >= mesh.height) 
-            return true;
+        if (x <= 0 || x >= mesh.width || y <= 0 || y >= mesh.height) return true;
         
-        var loc : Dynamic = Geom2D.locatePosition(x, y, mesh);
+        var loc = Geom2D.locatePosition(x, y, mesh);
         var face : Face;
-        if (Std.is(loc, Vertex)) 
-            face = (try cast(loc, Vertex) catch(e:Dynamic) null).edge.leftFace
-        else if (Std.is(loc, Edge)) 
-            face = (try cast(loc, Edge) catch(e:Dynamic) null).leftFace
-        else 
-        face = try cast(loc, Face) catch(e:Dynamic) null;
+        switch( loc ){
+            case EVertex( vertex ):
+                face = vertex.edge.leftFace;
+            case EEdge( edge ):
+                face = edge.leftFace;
+            case EFace( face_ ):
+                face = face_;
+            case ENull:
+                face = null;
+        }
         
         // if a vertex is in the circle, a contrainst must intersect the circle
         // because a vertex always belongs to a contrained edge
