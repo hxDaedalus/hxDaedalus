@@ -41,7 +41,7 @@ class Funnel
     private var _poolPoints : Array<Point2D>;
     private var _currPoolPointsIndex : Int = 0;
     private var __point : Point2D;
-    public function get_point(x : Float = 0, y : Float = 0) : Point2D
+    public function getPoint(x : Float = 0, y : Float = 0) : Point2D
     {
         __point = _poolPoints[_currPoolPointsIndex];
         __point.setXY(x, y);
@@ -55,9 +55,9 @@ class Funnel
         
         return __point;
     }
-    public function get_copyPoint(pointToCopy : Point2D) : Point2D
+    public function getCopyPoint(pointToCopy : Point2D) : Point2D
     {
-        return get_point(pointToCopy.x, pointToCopy.y);
+        return getPoint(pointToCopy.x, pointToCopy.y);
     }
     
     private function get_radius() : Float
@@ -192,6 +192,7 @@ class Funnel
         
         
         // switch on intersection 
+		//TODO: check if this needs ENull (/not EEdge) checks
         switch( Geom2D.isInFace(fromX, fromY, listFaces[0]) )
         {
             case EEdge( edge ):
@@ -228,8 +229,8 @@ class Funnel
         var prevPoint : Point2D;
         var newPointA : Point2D;
         var newPointB : Point2D;
-        newPointA = get_copyPoint( currEdge.destinationVertex.pos );
-        newPointB = get_copyPoint( currEdge.originVertex.pos );
+        newPointA = getCopyPoint( currEdge.destinationVertex.pos );
+        newPointB = getCopyPoint( currEdge.originVertex.pos );
         
         pointsList.push(newPointA);
         pointsList.push(newPointB);
@@ -278,7 +279,7 @@ class Funnel
                 trace("IMPOSSIBLE TO IDENTIFY THE VERTEX !!!");
             }
             
-            newPointA = get_copyPoint(currVertex.pos);
+            newPointA = getCopyPoint(currVertex.pos);
             pointsList.push(newPointA);
             direction = - verticesDoneSide[ fromVertex ];
             pointSides[ newPointA ] = direction;
@@ -337,7 +338,7 @@ class Funnel
                         //trace("funnels are crossing");
                         
                         funnelLeft.shift();
-                        for (k in 0...j - 1 + 1){
+                        for (k in 0...j){
                             pathPoints.push(funnelLeft[0]);
                             pathSides[ funnelLeft[0] ] = 1;
                             funnelLeft.shift();
@@ -376,7 +377,7 @@ class Funnel
                     if (direction != 1) 
                     {
                         funnelRight.shift();
-                        for (k in 0...j - 1 + 1){
+                        for (k in 0...j){
                             pathPoints.push(funnelRight[0]);
                             pathSides[funnelRight[0] ] = -1;
                             funnelRight.shift();
@@ -387,8 +388,6 @@ class Funnel
                         funnelLeft.push(funnelRight[0] );
                         funnelLeft.push( currPos );
                         break;
-                        {j--;continue;
-                        }
                     }
                     j--;
                 }
@@ -564,13 +563,13 @@ class Funnel
             if (side2 == 1) 
             {
                 pTangent1 = p1;
-                pTangent2 = get_point(tangentsResult[2], tangentsResult[3]);
+                pTangent2 = getPoint(tangentsResult[2], tangentsResult[3]);
             }
             // p2 lies on the right funnel
             else 
             {
                 pTangent1 = p1;
-                pTangent2 = get_point(tangentsResult[0], tangentsResult[1]);
+                pTangent2 = getPoint(tangentsResult[0], tangentsResult[1]);
             }
         }
         // we apply radius to p1 only
@@ -581,13 +580,13 @@ class Funnel
             // p1 lies on the left funnel
             if (side1 == 1) 
             {
-                pTangent1 = get_point(tangentsResult[0], tangentsResult[1]);
+                pTangent1 = getPoint(tangentsResult[0], tangentsResult[1]);
                 pTangent2 = p2;
             }
             // p1 lies on the right funnel
             else 
             {
-                pTangent1 = get_point(tangentsResult[2], tangentsResult[3]);
+                pTangent1 = getPoint(tangentsResult[2], tangentsResult[3]);
                 pTangent2 = p2;
             }
         }
@@ -600,16 +599,16 @@ class Funnel
             {
                 Geom2D.tangentsParalCircleToCircle(_radius, p1.x, p1.y, p2.x, p2.y, tangentsResult);
                 // we keep the points of the right tangent
-                pTangent1 = get_point(tangentsResult[2], tangentsResult[3]);
-                pTangent2 = get_point(tangentsResult[4], tangentsResult[5]);
+                pTangent1 = getPoint(tangentsResult[2], tangentsResult[3]);
+                pTangent2 = getPoint(tangentsResult[4], tangentsResult[5]);
             }
             // both points lie on right funnel
             else if (side1 == -1 && side2 == -1) 
             {
                 Geom2D.tangentsParalCircleToCircle(_radius, p1.x, p1.y, p2.x, p2.y, tangentsResult);
                 // we keep the points of the left tangent
-                pTangent1 = get_point(tangentsResult[0], tangentsResult[1]);
-                pTangent2 = get_point(tangentsResult[6], tangentsResult[7]);
+                pTangent1 = getPoint(tangentsResult[0], tangentsResult[1]);
+                pTangent2 = getPoint(tangentsResult[6], tangentsResult[7]);
             }
             // 1st point lies on left funnel, 2nd on right funnel
             else if (side1 == 1 && side2 == -1) 
@@ -617,8 +616,8 @@ class Funnel
                 if (Geom2D.tangentsCrossCircleToCircle(_radius, p1.x, p1.y, p2.x, p2.y, tangentsResult)) 
                 {
                     // we keep the points of the right-left tangent
-                    pTangent1 = get_point(tangentsResult[2], tangentsResult[3]);
-                    pTangent2 = get_point(tangentsResult[6], tangentsResult[7]);
+                    pTangent1 = getPoint(tangentsResult[2], tangentsResult[3]);
+                    pTangent2 = getPoint(tangentsResult[6], tangentsResult[7]);
                 }
                 else 
                 {
@@ -634,8 +633,8 @@ class Funnel
                 if (Geom2D.tangentsCrossCircleToCircle(_radius, p1.x, p1.y, p2.x, p2.y, tangentsResult)) 
                 {
                     // we keep the points of the left-right tangent
-                    pTangent1 = get_point(tangentsResult[0], tangentsResult[1]);
-                    pTangent2 = get_point(tangentsResult[4], tangentsResult[5]);
+                    pTangent1 = getPoint(tangentsResult[0], tangentsResult[1]);
+                    pTangent2 = getPoint(tangentsResult[4], tangentsResult[5]);
                 }
                 else 
                 {
@@ -736,12 +735,12 @@ class Funnel
                             if (point2Side == 1) 
                             {
                                 pTangent1 = point0;
-                                pTangent2 = get_point(tangentsResult[2], tangentsResult[3]);
+                                pTangent2 = getPoint(tangentsResult[2], tangentsResult[3]);
                             }
                             else 
                             {
                                 pTangent1 = point0;
-                                pTangent2 = get_point(tangentsResult[0], tangentsResult[1]);
+                                pTangent2 = getPoint(tangentsResult[0], tangentsResult[1]);
                             }
                         }
                         else if (i == newPath.length - 1) 
@@ -751,13 +750,13 @@ class Funnel
                             // p1 lies on the left funnel
                             if (point0Side == 1) 
                             {
-                                pTangent1 = get_point(tangentsResult[0], tangentsResult[1]);
+                                pTangent1 = getPoint(tangentsResult[0], tangentsResult[1]);
                                 pTangent2 = point2;
                             }
                             // p1 lies on the right funnel
                             else 
                             {
-                                pTangent1 = get_point(tangentsResult[2], tangentsResult[3]);
+                                pTangent1 = getPoint(tangentsResult[2], tangentsResult[3]);
                                 pTangent2 = point2;
                             }
                         }
@@ -769,8 +768,8 @@ class Funnel
                                 //trace("point0Side == 1 && point2Side == -1");
                                 Geom2D.tangentsCrossCircleToCircle(_radius, point0.x, point0.y, point2.x, point2.y, tangentsResult);  // we keep the points of the right-left tangent  ;
                                 
-                                pTangent1 = get_point(tangentsResult[2], tangentsResult[3]);
-                                pTangent2 = get_point(tangentsResult[6], tangentsResult[7]);
+                                pTangent1 = getPoint(tangentsResult[2], tangentsResult[3]);
+                                pTangent2 = getPoint(tangentsResult[6], tangentsResult[7]);
                             }
                             // 1st point lies on right funnel, 2nd on left funnel
                             else if (point0Side == -1 && point2Side == 1) 
@@ -778,8 +777,8 @@ class Funnel
                                 //trace("point0Side == -1 && point2Side == 1");
                                 Geom2D.tangentsCrossCircleToCircle(_radius, point0.x, point0.y, point2.x, point2.y, tangentsResult);  // we keep the points of the right-left tangent  ;
                                 
-                                pTangent1 = get_point(tangentsResult[0], tangentsResult[1]);
-                                pTangent2 = get_point(tangentsResult[4], tangentsResult[5]);
+                                pTangent1 = getPoint(tangentsResult[0], tangentsResult[1]);
+                                pTangent2 = getPoint(tangentsResult[4], tangentsResult[5]);
                             }
                             // both points lie on left funnel
                             else if (point0Side == 1 && point2Side == 1) 
@@ -787,8 +786,8 @@ class Funnel
                                 //trace("point0Side == 1 && point2Side == 1");
                                 Geom2D.tangentsParalCircleToCircle(_radius, point0.x, point0.y, point2.x, point2.y, tangentsResult);
                                 // we keep the points of the right tangent
-                                pTangent1 = get_point(tangentsResult[2], tangentsResult[3]);
-                                pTangent2 = get_point(tangentsResult[4], tangentsResult[5]);
+                                pTangent1 = getPoint(tangentsResult[2], tangentsResult[3]);
+                                pTangent2 = getPoint(tangentsResult[4], tangentsResult[5]);
                             }
                             // both points lie on right funnel
                             else if (point0Side == -1 && point2Side == -1) 
@@ -796,8 +795,8 @@ class Funnel
                                 //trace("point0Side == -1 && point2Side == -1");
                                 Geom2D.tangentsParalCircleToCircle(_radius, point0.x, point0.y, point2.x, point2.y, tangentsResult);
                                 // we keep the points of the right tangent
-                                pTangent1 = get_point(tangentsResult[0], tangentsResult[1]);
-                                pTangent2 = get_point(tangentsResult[6], tangentsResult[7]);
+                                pTangent1 = getPoint(tangentsResult[0], tangentsResult[1]);
+                                pTangent2 = getPoint(tangentsResult[6], tangentsResult[7]);
                             }
                         }
                         var temp = ( i - 2) * 2;
@@ -815,6 +814,7 @@ class Funnel
                         i--;
                     }
                 }
+				i++;
             }
         }
     }
@@ -885,6 +885,7 @@ class Funnel
             }
             if (pointInArea) 
             {
+                encirclePoints.splice(index, 0);
                 encirclePoints.insert(index, new Point2D(xToCheck, yToCheck));
                 index++;
             }

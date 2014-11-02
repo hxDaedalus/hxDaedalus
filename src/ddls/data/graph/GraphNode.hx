@@ -1,6 +1,7 @@
 package ddls.data.graph;
 
 import ddls.data.Edge;
+import ddls.data.math.Potrace.NodeData;
 
 class GraphNode
 {
@@ -9,7 +10,7 @@ class GraphNode
     public var next(get, set) : GraphNode;
     public var outgoingEdge(get, set) : GraphEdge;
     public var successorNodes(get, set) : Map<GraphNode,GraphEdge>;
-    public var data(get, set) : Dynamic;
+    public var data(get, set) : NodeData;
 
     
     private static var INC : Int = 0;
@@ -21,7 +22,7 @@ class GraphNode
     private var _outgoingEdge : GraphEdge;
     private var _successorNodes : Map<GraphNode,GraphEdge>;
     
-    private var _data : Dynamic;
+    private var _data : NodeData;
     
     public function new()
     {
@@ -90,12 +91,12 @@ class GraphNode
     
     //TODO: Dynamic oh dear :( must try to change!
     
-    private function get_data(): Dynamic
+    private function get_data(): NodeData
     {
         return _data;
     }
     
-    private function set_data( value: Dynamic ) : Dynamic
+    private function set_data( value: NodeData ) : NodeData
     {
         _data = value;
         return value;

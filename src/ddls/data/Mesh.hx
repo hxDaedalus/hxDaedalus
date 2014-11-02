@@ -176,7 +176,7 @@ class Mesh
         }
     }
     
-    private var __objectsUpdateInProgress : Bool;
+    private var __objectsUpdateInProgress : Bool = false;
     public function updateObjects() : Void
     {
         __objectsUpdateInProgress = true;
@@ -200,7 +200,7 @@ class Mesh
     public function insertConstraintShape(coordinates : Array<Float>) : ConstraintShape
     {
         var shape : ConstraintShape = new ConstraintShape();
-        var segment : ConstraintSegment;
+        var segment : ConstraintSegment = null;
         
         var i : Int = 0;
         while (i < coordinates.length){
@@ -811,16 +811,16 @@ class Mesh
         
         switch( inObject ){
             case EVertex( vertex ):
-                trace("inVertex", vertex.id);
-                //newVertex = vertex;
+                //trace("inVertex", vertex.id);
+                newVertex = vertex;
             case EEdge( edge ):
-                trace("inEdge", edge);
-                //newVertex = splitEdge(edge, x, y);
+                //trace("inEdge", edge);
+                newVertex = splitEdge(edge, x, y);
             case EFace( face ):
-                trace("inFace", face );
-                //newVertex = splitFace(face, x, y);
+                //trace("inFace", face );
+                newVertex = splitFace(face, x, y);
             case ENull:
-                trace( 'nothing!');
+                //trace( 'nothing!');
         }
         
         restoreAsDelaunay();
@@ -1357,12 +1357,12 @@ class Mesh
         for (i in 0...edgesList.length){
             currEdge = edgesList[i];
             //
-            if (verticesCleaned[currEdge.originVertex]!= null) 
+            if (verticesCleaned[currEdge.originVertex]== null) 
             {
                 currEdge.originVertex.edge = currEdge.prevLeftEdge.oppositeEdge;
                 verticesCleaned[currEdge.originVertex] = true;
             }
-            if (verticesCleaned[currEdge.destinationVertex]!=null) 
+            if (verticesCleaned[currEdge.destinationVertex]==null) 
             {
                 currEdge.destinationVertex.edge = currEdge.nextLeftEdge;
                 verticesCleaned[currEdge.destinationVertex] = true;
@@ -1427,10 +1427,10 @@ class Mesh
         else 
         {
             //trace("the hole has", bound.length, "edges");
-            for (i in 0...bound.length){
+            /*for (i in 0...bound.length){
                 //trace("  - edge", i, ":", bound[i].originVertex.id, "->", bound[i].destinationVertex.id);
                 
-            }
+            }*/
             
             var baseEdge = bound[0];
             var vertexA = baseEdge.originVertex;
@@ -1492,11 +1492,11 @@ class Mesh
             var edgeAopp : Edge = null;
             var edgeB : Edge = null;
             var edgeBopp : Edge;// = null;
-            var boundA : Array<Edge> = [];
-            var boundM : Array<Edge> = [];
+            var boundA : Array<Edge>;
+            var boundM : Array<Edge>;
             
             //TODO: is this correct??? should it be at **
-            var boundB : Array<Edge> = [];
+            var boundB : Array<Edge>;
             
             if (index < (bound.length - 1)) 
             {

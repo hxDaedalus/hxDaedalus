@@ -777,7 +777,8 @@ class Geom2D
             
             if (result != null) 
             {
-                result = [ xFirstPart + xFactor * transcendPart, yFirstPart - yFactor * transcendPart, xFirstPart - xFactor * transcendPart, yFirstPart + yFactor * transcendPart];
+                for (f in [ xFirstPart + xFactor * transcendPart, yFirstPart - yFactor * transcendPart, xFirstPart - xFactor * transcendPart, yFirstPart + yFactor * transcendPart])
+					result.push(f);
             }
             
             return true;
@@ -814,7 +815,8 @@ class Geom2D
             
             
             if (result != null) 
-                result = result.concat( [ p0x + t0 * (p1x - p0x), p0y + t0 * (p1y - p0y), t0 ] );
+                for (f in [ p0x + t0 * (p1x - p0x), p0y + t0 * (p1y - p0y), t0 ] )
+					result.push(f);
             
             return true;
         }
@@ -830,14 +832,16 @@ class Geom2D
             var intersecting : Bool = false;
             if (0 <= t0 && t0 <= 1) 
             {
-                if (result != null) 
-                    result = result.concat( [p0x + t0 * (p1x - p0x), p0y + t0 * (p1y - p0y), t0] );
+                if (result != null)
+					for (f in [p0x + t0 * (p1x - p0x), p0y + t0 * (p1y - p0y), t0] )
+						result.push(f);
                 intersecting = true;
             }
             if (0 <= t1 && t1 <= 1) 
             {
                 if (result != null) 
-                    result = result.concat( [p0x + t1 * (p1x - p0x), p0y + t1 * (p1y - p0y), t1]);
+                    for (f in [p0x + t1 * (p1x - p0x), p0y + t1 * (p1y - p0y), t1])
+						result.push(f);
                 intersecting = true;
             }
             
@@ -868,7 +872,8 @@ class Geom2D
             t0 = -b / (2 * a);
             // we return a 3 elements array, under the form:
             //  [intersect0.x, intersect0.y, t0]
-            result = result.concat( [p0x + t0 * (p1x - p0x), p0y + t0 * (p1y - p0y), t0]);
+            for (f in [p0x + t0 * (p1x - p0x), p0y + t0 * (p1y - p0y), t0])
+				result.push(f);
         }
         else if (delta > 0) 
         {
@@ -878,7 +883,8 @@ class Geom2D
             // we return a 6 elements array, under the form:
             //  [intersect0.x, intersect0.y, t0
             //    , intersect1.x, intersect1.y, t1]
-            result = result.concat( [p0x + t0 * (p1x - p0x), p0y + t0 * (p1y - p0y), t0, p0x + t1 * (p1x - p0x), p0y + t1 * (p1y - p0y), t1]);
+            for (f in [p0x + t0 * (p1x - p0x), p0y + t0 * (p1y - p0y), t0, p0x + t1 * (p1x - p0x), p0y + t1 * (p1y - p0y), t1])
+				result.push(f);
         }
         
         return true;
@@ -951,7 +957,8 @@ class Geom2D
         var t3y  = t2y + c2y - c1y;
         var t4x  = t1x + c2x - c1x;
         var t4y  = t1y + c2y - c1y;
-        result = result.concat([t1x, t1y, t2x, t2y, t3x, t3y, t4x, t4y]);
+        for (f in [t1x, t1y, t2x, t2y, t3x, t3y, t4x, t4y])
+			result.push(f);
     }
     
     // squared distance from point p to infinite line (a, b)

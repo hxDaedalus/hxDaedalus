@@ -1,6 +1,7 @@
 package ddls.data.graph;
 
 import ddls.data.graph.GraphNode;
+import ddls.data.math.Potrace.EdgeData;
 
 class GraphEdge
 {
@@ -12,7 +13,7 @@ class GraphEdge
     public var oppositeEdge(get, set) : GraphEdge;
     public var sourceNode(get, set) : GraphNode;
     public var destinationNode(get, set) : GraphNode;
-    public var data(get, set) : Dynamic;
+    public var data(get, set) : EdgeData;
 
     
     private static var INC : Int = 0;
@@ -27,7 +28,7 @@ class GraphEdge
     private var _sourceNode : GraphNode;
     private var _destinationNode : GraphNode;
     
-    private var _data : Dynamic;
+    private var _data : EdgeData;
     
     public function new(){
         _id = INC;
@@ -111,12 +112,12 @@ class GraphEdge
     
     //TODO: Dynamic == Dynamite :(  must look at this
     
-    private function get_data() : Dynamic
+    private function get_data() : EdgeData
     {
         return _data;
     }
     
-    private function set_data( value: Dynamic ) : Dynamic
+    private function set_data( value: EdgeData ) : EdgeData
     {
         _data = value;
         return value;

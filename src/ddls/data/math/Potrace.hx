@@ -16,6 +16,7 @@ import ddls.data.math.Point2D;
 
 class Potrace
 {
+	inline private static var MAX_INT:Int = 0x7FFFFFFF;
     
     public static var maxDistance : Float = 1;
     
@@ -140,8 +141,8 @@ class Potrace
         while (i < shape.length){
             node = graph.insertNode();
             node.data = new NodeData();
-            cast((node.data), NodeData).index = i;
-            cast((node.data), NodeData).point = new Point2D(shape[i], shape[i + 1]);
+            (node.data).index = i;
+            (node.data).point = new Point2D(shape[i], shape[i + 1]);
             i += 2;
         }
         
@@ -166,7 +167,7 @@ class Potrace
                 sumDistSqrd = 0;
                 while (subNode != node2)
                 {
-                    distSqrd = Geom2D.distanceSquaredPointToSegment(cast((subNode.data), NodeData).point.x, cast((subNode.data), NodeData).point.y, cast((node1.data), NodeData).point.x, cast((node1.data), NodeData).point.y, cast((node2.data), NodeData).point.x, cast((node2.data), NodeData).point.y);
+                    distSqrd = Geom2D.distanceSquaredPointToSegment((subNode.data).point.x, (subNode.data).point.y, (node1.data).point.x, (node1.data).point.y, (node2.data).point.x, (node2.data).point.y);
                     if (distSqrd < 0) 
                         distSqrd = 0;
                     if (distSqrd >= maxDistance) 
@@ -190,7 +191,7 @@ class Potrace
                 edge = graph.insertEdge(node1, node2);
                 edgeData = new EdgeData();
                 edgeData.sumDistancesSquared = sumDistSqrd;
-                edgeData.length = cast((node1.data), NodeData).point.distanceTo(cast((node2.data), NodeData).point);
+                edgeData.length = (node1.data).point.distanceTo((node2.data).point);
                 edgeData.nodesCount = count;
                 edge.data = edgeData;
                 
@@ -209,25 +210,25 @@ class Potrace
         
         var currNode : GraphNode;
         // TODO: check if Int.MAX_VALUE below is suitable.
-        var minNodeIndex : Int = 0x7fffffff;
+        var minNodeIndex : Int = MAX_INT;
         var edge : GraphEdge;
         var score : Float;
         var higherScore : Float;
         var lowerScoreEdge : GraphEdge = null;
         currNode = graph.node;
-        while( ( cast((currNode.data), NodeData) ).index < minNodeIndex ){
+        while( (currNode.data).index < minNodeIndex ){
             
-            var temp = cast((currNode.data), NodeData);
-            minNodeIndex = temp.index;
-            
-            polygon.push( temp.point.x );
-            polygon.push( temp.point.y );
-            
-            higherScore = Math.NEGATIVE_INFINITY;
-            edge = currNode.outgoingEdge;
+			minNodeIndex = (currNode.data).index;
+			
+			polygon.push((currNode.data).point.x);
+			polygon.push((currNode.data).point.y);
+			
+			higherScore = 0;
+			
+			edge = currNode.outgoingEdge;
             while( edge!= null )
             {
-                score = cast((edge.data), EdgeData).nodesCount - cast((edge.data), EdgeData).length * Math.sqrt(cast((edge.data), EdgeData).sumDistancesSquared / (cast((edge.data), EdgeData).nodesCount));
+                score = (edge.data).nodesCount - (edge.data).length * Math.sqrt((edge.data).sumDistancesSquared / (edge.data).nodesCount);
                 if (score > higherScore) 
                 {
                     higherScore = score;

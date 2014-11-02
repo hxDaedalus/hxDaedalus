@@ -12,7 +12,7 @@ class Edge
     public var leftFace(get, set) : Face;
     public var fromConstraintSegments: Array<ConstraintSegment>;
     public var destinationVertex(get, never) : Vertex;
-    public var oppositeEdge: Edge;
+    public var oppositeEdge(get, never) : Edge;
     public var prevLeftEdge(get, never) : Edge;
     public var nextRightEdge(get, never) : Edge;
     public var prevRightEdge(get, never) : Edge;
@@ -28,6 +28,7 @@ class Edge
     private var _isReal : Bool;
     private var _isConstrained : Bool;
     private var _originVertex : Vertex;
+    private var _oppositeEdge : Edge;
     private var _nextLeftEdge : Edge;
     private var _leftFace : Face;
     
@@ -52,7 +53,7 @@ class Edge
     }
     
     public function setDatas( originVertex :    Vertex
-                            , oppositeEdge_ :    Edge
+                            , oppositeEdge :    Edge
                             , nextLeftEdge :    Edge
                             , leftFace :        Face
                             , isReal :          Bool = true
@@ -62,7 +63,7 @@ class Edge
         _isConstrained = isConstrained;
         _isReal = isReal;
         _originVertex = originVertex;
-        oppositeEdge = oppositeEdge_;
+        _oppositeEdge = oppositeEdge;
         _nextLeftEdge = nextLeftEdge;
         _leftFace = leftFace;
     }
@@ -99,7 +100,7 @@ class Edge
     public function dispose() : Void
     {
         _originVertex = null;
-        oppositeEdge = null;
+        _oppositeEdge = null;
         _nextLeftEdge = null;
         _leftFace = null;
         fromConstraintSegments = null;
@@ -110,21 +111,23 @@ class Edge
     private function get_destinationVertex() : Vertex{return oppositeEdge.originVertex;
     }
 
+    private function get_oppositeEdge() : Edge{return _oppositeEdge;
+    }
     private function get_nextLeftEdge() : Edge{return _nextLeftEdge;
     }
     private function get_prevLeftEdge() : Edge{return _nextLeftEdge.nextLeftEdge;
     }
-    private function get_nextRightEdge() : Edge{return oppositeEdge.nextLeftEdge.nextLeftEdge.oppositeEdge;
+    private function get_nextRightEdge() : Edge{return _oppositeEdge.nextLeftEdge.nextLeftEdge.oppositeEdge;
     }
-    private function get_prevRightEdge() : Edge{return oppositeEdge.nextLeftEdge.oppositeEdge;
+    private function get_prevRightEdge() : Edge{return _oppositeEdge.nextLeftEdge.oppositeEdge;
     }
     private function get_rotLeftEdge() : Edge{return _nextLeftEdge.nextLeftEdge.oppositeEdge;
     }
-    private function get_rotRightEdge() : Edge{return oppositeEdge.nextLeftEdge;
+    private function get_rotRightEdge() : Edge{return _oppositeEdge.nextLeftEdge;
     }
     private function get_leftFace() : Face{return _leftFace;
     }
-    private function get_rightFace() : Face{return oppositeEdge.leftFace;
+    private function get_rightFace() : Face{return _oppositeEdge.leftFace;
     }
     
     

@@ -187,7 +187,7 @@ class AStar {
                     g = scoreG[ curFace ] + distancePoint.length;
                     f = h + g;
                     fillDatas = false;
-                    if (!openedFaces[ neighbourFace ] ) 
+                    if (__openedFaces[neighbourFace] == null || !__openedFaces[neighbourFace])
                     {
                         sortedOpenedFaces.push( neighbourFace );
                         openedFaces[ neighbourFace ] = true;
@@ -210,7 +210,7 @@ class AStar {
                 }
             }  //  
             
-            openedFaces[ curFace ] = null;
+            openedFaces[ curFace ] = false;
             closedFaces[ curFace ] = true;
             sortedOpenedFaces.sort( sortingFaces );
         }  // if we didn't find a path  
@@ -251,25 +251,30 @@ class AStar {
         var vC : Vertex = null;  // the common vertex of the 2 edges (pivot)  
         
         // we identify the points
-        var aOriginVertex = fromEdge.originVertex;
-        if( aOriginVertex == toEdge.originVertex ) {
-                vA = fromEdge.destinationVertex;
-                vB = toEdge.destinationVertex;
-                vC = fromEdge.originVertex;
-        } else if( aOriginVertex == toEdge.destinationVertex ){
-                vA = fromEdge.originVertex;
-                vB = toEdge.originVertex;
-                vC = fromEdge.destinationVertex;
-        } else if( aOriginVertex == toEdge.destinationVertex ){
-                vA = fromEdge.destinationVertex;
-                vB = toEdge.originVertex;
-                vC = fromEdge.originVertex;
-        } else if( aOriginVertex == toEdge.originVertex) {
-                vA = fromEdge.originVertex;
-                vB = toEdge.destinationVertex;
-                vC = fromEdge.destinationVertex;
-
-        }
+		if (fromEdge.originVertex == toEdge.originVertex)
+		{
+			vA = fromEdge.destinationVertex;
+			vB = toEdge.destinationVertex;
+			vC = fromEdge.originVertex;
+		}
+		else if (fromEdge.destinationVertex == toEdge.destinationVertex)
+		{
+			vA = fromEdge.originVertex;
+			vB = toEdge.originVertex;
+			vC = fromEdge.destinationVertex;
+		}
+		else if (fromEdge.originVertex == toEdge.destinationVertex)
+		{
+			vA = fromEdge.destinationVertex;
+			vB = toEdge.originVertex;
+			vC = fromEdge.originVertex;
+		}
+		else if (fromEdge.destinationVertex == toEdge.originVertex)
+		{
+			vA = fromEdge.originVertex;
+			vB = toEdge.destinationVertex;
+			vC = fromEdge.destinationVertex;
+		}
         
         var dot : Float;
         var result : Bool;
