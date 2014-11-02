@@ -78,7 +78,7 @@ class Funnel
                             );
         }
         _sampleCircleDistanceSquared = (_sampleCircle[0].x - _sampleCircle[1].x) * (_sampleCircle[0].x - _sampleCircle[1].x) + (_sampleCircle[0].y - _sampleCircle[1].y) * (_sampleCircle[0].y - _sampleCircle[1].y);
-        return value;
+        return _radius;
     }
     
     public function findPath( fromX: Float, fromY: Float
@@ -349,8 +349,6 @@ class Funnel
                         funnelRight.push(funnelLeft[0] );
                         funnelRight.push( currPos );
                         break;
-                        {j--;continue;
-                        }
                     }
                     j--;
                 }

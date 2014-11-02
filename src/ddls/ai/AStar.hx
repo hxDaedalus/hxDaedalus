@@ -121,7 +121,7 @@ class AStar {
                 toFace = locVertex.edge.leftFace;
             case EEdge( edge ):
                 locEdge = edge;
-                toFace = locVertex.edge.leftFace;
+                toFace = locEdge.leftFace;
             case EFace( face ):
                 toFace = face;
             case ENull:
@@ -164,7 +164,7 @@ class AStar {
             while( ( innerEdge = iterEdge.next() )!= null ) {
                 if( innerEdge.isConstrained ) continue;
                 neighbourFace = innerEdge.rightFace;
-                if( closedFaces[ neighbourFace ] == null ) {
+                if( !closedFaces[ neighbourFace ] ) {
                     if (curFace != fromFace && _radius > 0 && !isWalkableByRadius( entryEdges[ curFace ], curFace, innerEdge) ) {
                         //                            trace("- NOT WALKABLE -");
                         //                            trace( "from", ddlsEdge(__entryEdges[__curFace]).originVertex.id, ddlsEdge(__entryEdges[__curFace]).destinationVertex.id );

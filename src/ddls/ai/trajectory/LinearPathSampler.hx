@@ -69,7 +69,8 @@ class LinearPathSampler{
         _currentX = _preCompX[ _count ];
         _currentY = _preCompY[ _count ];
         updateEntity();
-        return value;
+        
+		return _count;
     }
     
     function get_countMax(): Int {

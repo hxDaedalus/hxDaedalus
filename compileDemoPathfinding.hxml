@@ -8,4 +8,4 @@
 #mac
 -cmd open bin/DemoPathfinding.swf
 #win
-#-cmd start bin/DemoPathFinding.swf
+#-cmd start bin/DemoPathfinding.swf

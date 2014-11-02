@@ -932,7 +932,7 @@ class Geom2D
             var t3x  = t4x + t2x - t1x;
             var t3y = t2y + t4y - t1y;
             
-            result = result.concat([ t3x, t3y, t4x, t4y ]);
+            for (f in [ t3x, t3y, t4x, t4y ]) result.push(f);
             
             return true;
         }

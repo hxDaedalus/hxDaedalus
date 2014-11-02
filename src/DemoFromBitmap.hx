@@ -3,11 +3,7 @@ import ddls.data.Object;
 import ddls.factories.BitmapObjectFactory;
 import ddls.factories.RectMeshFactory;
 import ddls.view.SimpleView;
-#if openfl
-import openfl.Lib;
-#else
-import flash.Lib;
-#end
+
 import flash.display.Bitmap;
 import flash.display.Sprite;
 import flash.display.BitmapData;
