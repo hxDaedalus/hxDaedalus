@@ -88,8 +88,7 @@ class PathIterator
         updateEntity();
         
         _hasPrev = false;
-        if (_path.length > 2) _hasNext = true
-        else _hasNext = false;
+        _hasNext = (_path.length > 2)? true: false;
     }
     
     public function prev() : Bool
