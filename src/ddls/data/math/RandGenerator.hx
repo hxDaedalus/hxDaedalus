@@ -1,20 +1,20 @@
 package ddls.data.math;
 class RandGenerator
 {
-    public var seed(get, set) : UInt;
+    public var seed(get, set) : Int;
     public var rangeMin: Int;
     public var rangeMax: Int;
 
     
-     var _originalSeed : UInt;
-     var _currSeed : UInt;
+     var _originalSeed : Int;
+     var _currSeed : Int;
      var _rangeMin : Int;
      var _rangeMax : Int;
     
      var _numIter : Int;
      var _tempString : String;
     
-    public function new( seed: UInt = 1234, rangeMin_: Int = 0, rangeMax_: Int = 1 )
+    public function new( seed: Int = 1234, rangeMin_: Int = 0, rangeMax_: Int = 1 )
     {
         _originalSeed = _currSeed = seed;
         rangeMin = rangeMin_;
@@ -23,12 +23,12 @@ class RandGenerator
         _numIter = 0;
     }
     
-     function set_seed(value : UInt) : UInt{_originalSeed = _currSeed = value;
+     function set_seed(value : Int) : Int{_originalSeed = _currSeed = value;
         return value;
     }
 
     
-     function get_seed() : UInt{return _originalSeed;
+     function get_seed() : Int{return _originalSeed;
     }
 
     
