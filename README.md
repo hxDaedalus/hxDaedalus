@@ -1,7 +1,7 @@
-DaedalusHX
+HxDaedalus
 ==========
 
-Daedalus-lib Haxe version a port of the AS3 library found here:
+This is a Haxe version of the as3 Daedalus-lib you can find the original library here:
 https://code.google.com/p/daedalus-lib/
 
 Licence is MIT for the original and this port.
