@@ -187,7 +187,7 @@ class AStar {
                     g = scoreG[ curFace ] + distancePoint.length;
                     f = h + g;
                     fillDatas = false;
-                    if (__openedFaces[neighbourFace] == null || !__openedFaces[neighbourFace])
+                    if (openedFaces[neighbourFace] == null || !openedFaces[neighbourFace])
                     {
                         sortedOpenedFaces.push( neighbourFace );
                         openedFaces[ neighbourFace ] = true;
