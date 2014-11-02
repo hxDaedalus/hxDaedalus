@@ -10,15 +10,15 @@ class Vertex
     public var edge(get, set) : Edge;
 
     
-    private static var INC : Int = 0;
-    private var _id : Int;
+     static var INC : Int = 0;
+     var _id : Int;
     
-    private var _pos : Point2D;
+     var _pos : Point2D;
     
-    private var _isReal : Bool;
-    private var _edge : Edge;
+     var _isReal : Bool;
+     var _edge : Edge;
     
-    private var _fromConstraintSegments : Array<ConstraintSegment>;
+     var _fromConstraintSegments : Array<ConstraintSegment>;
     
     public var colorDebug : Int = -1;
     
@@ -32,26 +32,26 @@ class Vertex
         _fromConstraintSegments = new Array<ConstraintSegment>();
     }
     
-    private function get_id() : Int
+     function get_id() : Int
     {
         return _id;
     }
     
-    private function get_isReal() : Bool
+     function get_isReal() : Bool
     {
         return _isReal;
     }
     
-    private function get_pos() : Point2D
+     function get_pos() : Point2D
     {
         return _pos;
     }
     
-    private function get_fromConstraintSegments():Array<ConstraintSegment>{
+     function get_fromConstraintSegments():Array<ConstraintSegment>{
         return _fromConstraintSegments;
     }
     
-    private function set_fromConstraintSegments(value:Array<ConstraintSegment>):Array<ConstraintSegment> {
+     function set_fromConstraintSegments(value:Array<ConstraintSegment>):Array<ConstraintSegment> {
         return _fromConstraintSegments = value;
     }
     
@@ -79,11 +79,11 @@ class Vertex
         _fromConstraintSegments = null;
     }
     
-    private function get_edge():Edge {
+     function get_edge():Edge {
         return _edge;
     }
     
-    private function set_edge(value:Edge):Edge {
+     function set_edge(value:Edge):Edge {
         return _edge = value;
     }
 

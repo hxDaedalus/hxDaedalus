@@ -21,15 +21,15 @@ import flash.events.KeyboardEvent;
 class DemoPathfinding extends Sprite
 {
     
-    private var _mesh : Mesh;
-    private var _view : SimpleView;
+     var _mesh : Mesh;
+     var _view : SimpleView;
     
-    private var _entityAI : EntityAI;
-    private var _pathfinder : PathFinder;
-    private var _path : Array<Float>;
-    private var _pathSampler : LinearPathSampler;
+     var _entityAI : EntityAI;
+     var _pathfinder : PathFinder;
+     var _path : Array<Float>;
+     var _pathSampler : LinearPathSampler;
     
-    private var _newPath:Bool = false;
+     var _newPath:Bool = false;
     
     public static function main():Void {
         flash.Lib.current.addChild(new DemoPathfinding());
@@ -123,15 +123,15 @@ class DemoPathfinding extends Sprite
         flash.Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
     }
     
-    private function _onMouseUp( event: MouseEvent ): Void {
+     function _onMouseUp( event: MouseEvent ): Void {
             _newPath = false;
     }
     
-    private function _onMouseDown( event: MouseEvent ): Void {
+     function _onMouseDown( event: MouseEvent ): Void {
         _newPath = true;
     }
     
-    private function _onEnterFrame( event: Event ): Void {
+     function _onEnterFrame( event: Event ): Void {
         if( _newPath ) {
             // find path !
             _pathfinder.findPath( stage.mouseX, stage.mouseY, _path );
@@ -150,7 +150,7 @@ class DemoPathfinding extends Sprite
         }
     }
     
-    private function _onKeyDown( event:KeyboardEvent ): Void {
+     function _onKeyDown( event:KeyboardEvent ): Void {
         if( event.keyCode == 27 ) {// ESC
             #if flash
                 flash.system.System.exit(1);

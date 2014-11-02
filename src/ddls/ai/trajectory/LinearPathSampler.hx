@@ -15,22 +15,22 @@ class LinearPathSampler
     public var samplingDistance(get, set) : Float;
     public var path(never, set) : Array<Float>;
 
-    private var _entity : EntityAI;
-    private var _currentX : Float;
-    private var _currentY : Float;
-    private var _hasPrev : Bool;
-    private var _hasNext : Bool;
+     var _entity : EntityAI;
+     var _currentX : Float;
+     var _currentY : Float;
+     var _hasPrev : Bool;
+     var _hasNext : Bool;
     
-    private var _samplingDistance : Float = 1;
-    private var _samplingDistanceSquared : Float = 1;
-    private var _path : Array<Float>;
-    private var _iPrev : Int;
-    private var _iNext : Int;
+     var _samplingDistance : Float = 1;
+     var _samplingDistanceSquared : Float = 1;
+     var _path : Array<Float>;
+     var _iPrev : Int;
+     var _iNext : Int;
     
-    private var _preComputed : Bool;
-    private var _count : Int;
-    private var _preCompX : Array<Float>;
-    private var _preCompY : Array<Float>;
+     var _preComputed : Bool;
+     var _count : Int;
+     var _preCompX : Array<Float>;
+     var _preCompY : Array<Float>;
     
     public function new()
     {
@@ -46,32 +46,32 @@ class LinearPathSampler
         _preCompY = null;
     }
     
-    private function get_x() : Float
+     function get_x() : Float
     {
         return _currentX;
     }
     
-    private function get_y() : Float
+     function get_y() : Float
     {
         return _currentY;
     }
     
-    private function get_hasPrev() : Bool
+     function get_hasPrev() : Bool
     {
         return _hasPrev;
     }
     
-    private function get_hasNext() : Bool
+     function get_hasNext() : Bool
     {
         return _hasNext;
     }
     
-    private function get_count() : Int
+     function get_count() : Int
     {
         return _count;
     }
     
-    private function set_count(value : Int) : Int
+     function set_count(value : Int) : Int
     {
         _count = value;
         if( _count < 0 ) _count = 0;
@@ -89,24 +89,24 @@ class LinearPathSampler
         return value;
     }
     
-    private function get_countMax() : Int
+     function get_countMax() : Int
     {
         return _preCompX.length - 1;
     }
     
-    private function get_samplingDistance() : Float
+     function get_samplingDistance() : Float
     {
         return _samplingDistance;
     }
     
-    private function set_samplingDistance(value : Float) : Float
+     function set_samplingDistance(value : Float) : Float
     {
         _samplingDistance = value;
         _samplingDistanceSquared = _samplingDistance * _samplingDistance;
         return value;
     }
     
-    private function set_path(value : Array<Float>) : Array<Float>
+     function set_path(value : Array<Float>) : Array<Float>
     {
         _path = value;
         _preComputed = false;
@@ -270,7 +270,7 @@ class LinearPathSampler
         }
     }
     
-    private function updateEntity() : Void {
+     function updateEntity() : Void {
         if( entity == null ) return;
         entity.x = _currentX;
         entity.y = _currentY;

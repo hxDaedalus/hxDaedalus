@@ -235,7 +235,7 @@ class AStar {
     }
     
     // faces with low distance value are at the end of the array
-    private function sortingFaces( a: Face, b: Face ): Int {
+     function sortingFaces( a: Face, b: Face ): Int {
         if ( scoreF[ a ] == scoreF[ b ] ) {
             return 0;
         } else if ( scoreF[ a ] < scoreF[ b ] ) {
@@ -245,7 +245,7 @@ class AStar {
         }
     }
     
-    private function isWalkableByRadius( fromEdge : Edge, throughFace : Face, toEdge : Edge ) : Bool {
+     function isWalkableByRadius( fromEdge : Edge, throughFace : Face, toEdge : Edge ) : Bool {
         var vA : Vertex = null;  // the vertex on fromEdge not on toEdge  
         var vB : Vertex = null;  // the vertex on toEdge not on fromEdge  
         var vC : Vertex = null;  // the common vertex of the 2 edges (pivot)  

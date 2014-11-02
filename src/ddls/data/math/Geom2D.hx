@@ -40,7 +40,7 @@ class Geom2D
 {
     
     
-    private static var _randGen: RandGenerator;
+     static var _randGen: RandGenerator;
     
     // return one the following, in priority order:
     // - an existant vertex (if (x, y) lies on this vertex)
@@ -51,7 +51,7 @@ class Geom2D
     // or
     // - null if outside mesh
     // YOU SHOULD USE THIS FUNCTION ONLY FOR COORDINATES INSIDE SAFE AREA
-    private static var __samples: Array<Vertex> = new Array<Vertex>();
+     static var __samples: Array<Vertex> = new Array<Vertex>();
     public static function locatePosition( x: Float, y: Float, mesh: Mesh ): Intersection
     {
         // jump and walk algorithm
@@ -543,7 +543,7 @@ class Geom2D
         return false;
     }
     
-    private static var __circumcenter : Point2D = new Point2D();
+     static var __circumcenter : Point2D = new Point2D();
     public static function isDelaunay(edge : Edge) : Bool
     {
         var vLeft : Vertex = edge.originVertex;

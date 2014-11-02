@@ -6,13 +6,13 @@ class RandGenerator
     public var rangeMax: Int;
 
     
-    private var _originalSeed : UInt;
-    private var _currSeed : UInt;
-    private var _rangeMin : Int;
-    private var _rangeMax : Int;
+     var _originalSeed : UInt;
+     var _currSeed : UInt;
+     var _rangeMin : Int;
+     var _rangeMax : Int;
     
-    private var _numIter : Int;
-    private var _tempString : String;
+     var _numIter : Int;
+     var _tempString : String;
     
     public function new( seed: UInt = 1234, rangeMin_: Int = 0, rangeMax_: Int = 1 )
     {
@@ -23,12 +23,12 @@ class RandGenerator
         _numIter = 0;
     }
     
-    private function set_seed(value : UInt) : UInt{_originalSeed = _currSeed = value;
+     function set_seed(value : UInt) : UInt{_originalSeed = _currSeed = value;
         return value;
     }
 
     
-    private function get_seed() : UInt{return _originalSeed;
+     function get_seed() : UInt{return _originalSeed;
     }
 
     

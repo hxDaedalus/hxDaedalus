@@ -21,22 +21,22 @@ class Mesh
     public var __constraintShapes(get, never) : Array<ConstraintShape>;
 
     
-    private static var INC : Int = 0;
-    private var _id : Int;
+     static var INC : Int = 0;
+     var _id : Int;
     
-    private var _width : Float = 0;
-    private var _height : Float = 0;
-    private var _clipping : Bool = false;
+     var _width : Float = 0;
+     var _height : Float = 0;
+     var _clipping : Bool = false;
     
     public var _vertices : Array<Vertex>= null;
     public var _edges : Array<Edge>= null;
     public var _faces : Array<Face>= null;
-    private var _constraintShapes : Array<ConstraintShape>= null;
-    private var _objects : Array<Object>= null;
+     var _constraintShapes : Array<ConstraintShape>= null;
+     var _objects : Array<Object>= null;
     
     // keep references of center vertex and bounding edges when split, useful to restore edges as Delaunay
-    private var __centerVertex : Vertex= null;
-    private var __edgesToCheck : Array<Edge>= null;
+     var __centerVertex : Vertex= null;
+     var __edgesToCheck : Array<Edge>= null;
     
     public function new( width: Float, height: Float )
     {
@@ -56,28 +56,28 @@ class Mesh
         __edgesToCheck = new Array<Edge>();
     }
     
-    private function get_height() : Float
+     function get_height() : Float
     {
         return _height;
     }
     
-    private function get_width() : Float
+     function get_width() : Float
     {
         return _width;
     }
     
-    private function get_clipping() : Bool
+     function get_clipping() : Bool
     {
         return _clipping;
     }
     
-    private function set_clipping(value : Bool) : Bool
+     function set_clipping(value : Bool) : Bool
     {
         _clipping = value;
         return value;
     }
     
-    private function get_id() : Int
+     function get_id() : Int
     {
         return _id;
     }
@@ -99,7 +99,7 @@ class Mesh
         __centerVertex = null;
     }
     
-    private function get___constraintShapes() : Array<ConstraintShape>
+     function get___constraintShapes() : Array<ConstraintShape>
     {
         return _constraintShapes;
     }
@@ -176,7 +176,7 @@ class Mesh
         }
     }
     
-    private var __objectsUpdateInProgress : Bool = false;
+     var __objectsUpdateInProgress : Bool = false;
     public function updateObjects() : Void
     {
         __objectsUpdateInProgress = true;
@@ -728,7 +728,7 @@ class Mesh
         return segment;
     }
     
-    private function insertNewConstrainedEdge(fromSegment : ConstraintSegment, edgeDownUp : Edge, intersectedEdges : Array<Edge>, leftBoundingEdges : Array<Edge>, rightBoundingEdges : Array<Edge>) : Void
+     function insertNewConstrainedEdge(fromSegment : ConstraintSegment, edgeDownUp : Edge, intersectedEdges : Array<Edge>, leftBoundingEdges : Array<Edge>, rightBoundingEdges : Array<Edge>) : Void
     {
         //trace("insertNewConstrainedEdge");
         _edges.push(edgeDownUp);
@@ -787,7 +787,7 @@ class Mesh
         segment.dispose();
     }
     
-    private function check() : Void
+     function check() : Void
     {
         for (i in 0..._edges.length){
             if( _edges[i].nextLeftEdge == null ) 
@@ -1347,7 +1347,7 @@ class Mesh
     
     // untriangulate is usually used while a new edge insertion in order to delete the intersected edges
     // edgesList is a list of chained edges oriented from right to left
-    private function untriangulate(edgesList : Array<Edge>) : Void
+     function untriangulate(edgesList : Array<Edge>) : Void
     {
         // we clean useless faces and adjacent vertices
         var i : Int;
@@ -1390,7 +1390,7 @@ class Mesh
     
     // triangulate is usually used to fill the hole after deletion of a vertex from mesh or after untriangulation
     // - bounds is the list of edges in CCW bounding the surface to retriangulate,
-    private function triangulate(bound : Array<Edge>, isReal : Bool) : Void
+     function triangulate(bound : Array<Edge>, isReal : Bool) : Void
     {
         if (bound.length < 2) 
         {
@@ -1537,7 +1537,7 @@ class Mesh
     }
     
     
-    private function findPositionFromBounds(x : Float, y : Float) : Int
+     function findPositionFromBounds(x : Float, y : Float) : Int
     {
         /* point positions relative to bounds
         1 | 2 | 3

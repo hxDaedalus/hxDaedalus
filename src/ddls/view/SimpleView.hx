@@ -17,21 +17,21 @@ import flash.text.TextField;
 
 class SimpleView
 {
-    private var _surface : Sprite;
+     var _surface : Sprite;
     public var surface(get, never) : Sprite;
-    private function get_surface(): Sprite {
+     function get_surface(): Sprite {
         return _surface;
     }
     
-    private var _edges : Sprite;
-    private var _constraints : Sprite;
-    private var _vertices : Sprite;
-    private var _paths : Sprite;
-    private var _entities : Sprite;
+     var _edges : Sprite;
+     var _constraints : Sprite;
+     var _vertices : Sprite;
+     var _paths : Sprite;
+     var _entities : Sprite;
     
     
     
-    private var _showVerticesIndices : Bool = false;
+     var _showVerticesIndices : Bool = false;
     
     public function new()
     {
@@ -167,7 +167,7 @@ class SimpleView
         }
     }
     
-    private function vertexIsInsideAABB(vertex : Vertex, mesh : Mesh): Bool {
+     function vertexIsInsideAABB(vertex : Vertex, mesh : Mesh): Bool {
         if (vertex.pos.x < 0 || vertex.pos.x > mesh.width || vertex.pos.y < 0 || vertex.pos.y > mesh.height) 
             return false
         else 

@@ -13,16 +13,16 @@ class GraphNode
     public var data(get, set) : NodeData;
 
     
-    private static var INC : Int = 0;
-    private var _id : Int;
+     static var INC : Int = 0;
+     var _id : Int;
     
-    private var _prev : GraphNode;
-    private var _next : GraphNode;
+     var _prev : GraphNode;
+     var _next : GraphNode;
     
-    private var _outgoingEdge : GraphEdge;
-    private var _successorNodes : Map<GraphNode,GraphEdge>;
+     var _outgoingEdge : GraphEdge;
+     var _successorNodes : Map<GraphNode,GraphEdge>;
     
-    private var _data : NodeData;
+     var _data : NodeData;
     
     public function new()
     {
@@ -32,7 +32,7 @@ class GraphNode
         _successorNodes = new Map<GraphNode,GraphEdge>();
     }
     
-    private function get_id(): Int {
+     function get_id(): Int {
         return _id;
     }
     
@@ -45,45 +45,45 @@ class GraphNode
         _data = null;
     }
     
-    private function get_prev() : GraphNode
+     function get_prev() : GraphNode
     {
         return _prev;
     }
     
-    private function set_prev(value : GraphNode) : GraphNode
+     function set_prev(value : GraphNode) : GraphNode
     {
         _prev = value;
         return value;
     }
     
-    private function get_next() : GraphNode
+     function get_next() : GraphNode
     {
         return _next;
     }
     
-    private function set_next(value : GraphNode) : GraphNode
+     function set_next(value : GraphNode) : GraphNode
     {
         _next = value;
         return value;
     }
     
-    private function get_outgoingEdge(): GraphEdge
+     function get_outgoingEdge(): GraphEdge
     {
         return _outgoingEdge;
     }
     
-    private function set_outgoingEdge( value: GraphEdge ): GraphEdge
+     function set_outgoingEdge( value: GraphEdge ): GraphEdge
     {
         _outgoingEdge = value;
         return value;
     }
     
-    private function get_successorNodes(): Map<GraphNode,GraphEdge>
+     function get_successorNodes(): Map<GraphNode,GraphEdge>
     {
         return _successorNodes;
     }
     
-    private function set_successorNodes( value: Map<GraphNode,GraphEdge> ): Map<GraphNode,GraphEdge>
+     function set_successorNodes( value: Map<GraphNode,GraphEdge> ): Map<GraphNode,GraphEdge>
     {
         _successorNodes = value;
         return value;
@@ -91,12 +91,12 @@ class GraphNode
     
     //TODO: Dynamic oh dear :( must try to change!
     
-    private function get_data(): NodeData
+     function get_data(): NodeData
     {
         return _data;
     }
     
-    private function set_data( value: NodeData ) : NodeData
+     function set_data( value: NodeData ) : NodeData
     {
         _data = value;
         return value;

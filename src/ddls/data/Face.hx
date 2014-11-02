@@ -8,11 +8,11 @@ class Face
     public var edge(get, never) : Edge;
 
     
-    private static var INC : Int = 0;
-    private var _id : Int;
+     static var INC : Int = 0;
+     var _id : Int;
     
-    private var _isReal : Bool;
-    private var _edge : Edge;
+     var _isReal : Bool;
+     var _edge : Edge;
     
     public var colorDebug : Int = -1;
     
@@ -21,15 +21,15 @@ class Face
         INC++;
     }
     
-    private function get_id(): Int {
+     function get_id(): Int {
         return _id;
     }
     
-    private function get_isReal(): Bool {
+     function get_isReal(): Bool {
         return _isReal;
     }
     
-    private function set_datas( edge : Edge ): Void {
+     function set_datas( edge : Edge ): Void {
         _isReal = true;
         _edge = edge;
     }
@@ -44,7 +44,7 @@ class Face
         _edge = null;
     }
     
-    private function get_edge(): Edge {
+     function get_edge(): Edge {
         return _edge;
     }
 }

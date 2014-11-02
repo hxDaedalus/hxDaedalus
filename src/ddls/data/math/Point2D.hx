@@ -27,7 +27,7 @@ class Point2D{
         y -= p.y;
     }
     
-    private function get_length(): Float {
+     function get_length(): Float {
         return Math.sqrt( x*x + y*y );
     }
     

@@ -13,7 +13,7 @@ class ConstraintShape{
         segments = new Array<ConstraintSegment>();
     }
     
-    private function get_id(): Int {
+     function get_id(): Int {
         return _id;
     }
     

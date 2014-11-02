@@ -15,11 +15,11 @@ class Funnel
     public var radius(get, set) : Float;
 
     
-    private var _radius : Float = 0;
-    private var _radiusSquared : Float = 0;
-    private var _numSamplesCircle : Int = 16;
-    private var _sampleCircle : Array<Point2D>;
-    private var _sampleCircleDistanceSquared : Float;
+     var _radius : Float = 0;
+     var _radiusSquared : Float = 0;
+     var _numSamplesCircle : Int = 16;
+     var _sampleCircle : Array<Point2D>;
+     var _sampleCircleDistanceSquared : Float;
     
     public var debugSurface : Sprite;
     
@@ -37,10 +37,10 @@ class Funnel
     }
     
     
-    private var _poolPointsSize : Int = 3000;
-    private var _poolPoints : Array<Point2D>;
-    private var _currPoolPointsIndex : Int = 0;
-    private var __point : Point2D;
+     var _poolPointsSize : Int = 3000;
+     var _poolPoints : Array<Point2D>;
+     var _currPoolPointsIndex : Int = 0;
+     var __point : Point2D;
     public function getPoint(x : Float = 0, y : Float = 0) : Point2D
     {
         __point = _poolPoints[_currPoolPointsIndex];
@@ -60,12 +60,12 @@ class Funnel
         return getPoint(pointToCopy.x, pointToCopy.y);
     }
     
-    private function get_radius() : Float
+     function get_radius() : Float
     {
         return _radius;
     }
     
-    private function set_radius(value : Float) : Float
+     function set_radius(value : Float) : Float
     {
         _radius = Math.max( 0, value );
         _radiusSquared = _radius * _radius;
@@ -531,7 +531,7 @@ class Funnel
         }
     }
     
-    private function adjustWithTangents(p1 : Point2D, applyRadiusToP1 : Bool, p2 : Point2D, applyRadiusToP2 : Bool, pointSides : Map<Point2D,Int>, pointSuccessor : Map<Point2D,Point2D>, newPath : Array<Point2D>, adjustedPoints : Array<Point2D>) : Void
+     function adjustWithTangents(p1 : Point2D, applyRadiusToP1 : Bool, p2 : Point2D, applyRadiusToP2 : Bool, pointSides : Map<Point2D,Int>, pointSuccessor : Map<Point2D,Point2D>, newPath : Array<Point2D>, adjustedPoints : Array<Point2D>) : Void
     {
         // we find the tangent T between the points pathPoints[i] - pathPoints[i+1]
         // then we check the unused intermediate points between pathPoints[i] and pathPoints[i+1]
@@ -683,7 +683,7 @@ class Funnel
         newPath.push( p1 );
     }
     
-    private function checkAdjustedPath( newPath : Array<Point2D>, adjustedPoints : Array<Point2D>, pointSides : Map<Point2D,Int> ) : Void
+     function checkAdjustedPath( newPath : Array<Point2D>, adjustedPoints : Array<Point2D>, pointSides : Map<Point2D,Int> ) : Void
     {
         
         var needCheck = true;
@@ -819,7 +819,7 @@ class Funnel
         }
     }
     
-    private function smoothAngle(prevPoint : Point2D, pointToSmooth : Point2D, nextPoint : Point2D, side : Int, encirclePoints : Array<Point2D>) : Void
+     function smoothAngle(prevPoint : Point2D, pointToSmooth : Point2D, nextPoint : Point2D, side : Int, encirclePoints : Array<Point2D>) : Void
     {
         var angleType = Geom2D.getDirection(prevPoint.x, prevPoint.y, pointToSmooth.x, pointToSmooth.y, nextPoint.x, nextPoint.y);
         

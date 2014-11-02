@@ -21,16 +21,16 @@ class Edge
     public var rightFace(get, never) : Face;
 
     
-    private static var INC : Int = 0;
-    private var _id : Int;
+     static var INC : Int = 0;
+     var _id : Int;
     
     // root datas
-    private var _isReal : Bool;
-    private var _isConstrained : Bool;
-    private var _originVertex : Vertex;
-    private var _oppositeEdge : Edge;
-    private var _nextLeftEdge : Edge;
-    private var _leftFace : Face;
+     var _isReal : Bool;
+     var _isConstrained : Bool;
+     var _originVertex : Vertex;
+     var _oppositeEdge : Edge;
+     var _nextLeftEdge : Edge;
+     var _leftFace : Face;
     
     public var colorDebug : Int = -1;
     
@@ -40,15 +40,15 @@ class Edge
         fromConstraintSegments = new Array<ConstraintSegment>();
     }
     
-    private function get_id(): Int {
+     function get_id(): Int {
         return _id;
     }
     
-    private function get_isReal(): Bool {
+     function get_isReal(): Bool {
         return _isReal;
     }
     
-    private function get_isConstrained(): Bool {
+     function get_isConstrained(): Bool {
         return _isConstrained;
     }
     
@@ -77,22 +77,22 @@ class Edge
         if( index != -1 ) fromConstraintSegments.splice(index, 1);
     }
     
-    private function set_originVertex( value: Vertex ): Vertex {
+     function set_originVertex( value: Vertex ): Vertex {
         _originVertex = value;
         return value;
     }
     
-    private function set_nextLeftEdge( value: Edge ): Edge {
+     function set_nextLeftEdge( value: Edge ): Edge {
         _nextLeftEdge = value;
         return value;
     }
     
-    private function set_leftFace( value: Face ): Face {
+     function set_leftFace( value: Face ): Face {
         _leftFace = value;
         return value;
     }
     
-    private function set_isConstrained( value: Bool ) : Bool {
+     function set_isConstrained( value: Bool ) : Bool {
         _isConstrained = value;
         return value;
     }
@@ -106,28 +106,28 @@ class Edge
         fromConstraintSegments = null;
     }
     
-    private function get_originVertex() : Vertex{return _originVertex;
+     function get_originVertex() : Vertex{return _originVertex;
     }
-    private function get_destinationVertex() : Vertex{return oppositeEdge.originVertex;
+     function get_destinationVertex() : Vertex{return oppositeEdge.originVertex;
     }
 
-    private function get_oppositeEdge() : Edge{return _oppositeEdge;
+     function get_oppositeEdge() : Edge{return _oppositeEdge;
     }
-    private function get_nextLeftEdge() : Edge{return _nextLeftEdge;
+     function get_nextLeftEdge() : Edge{return _nextLeftEdge;
     }
-    private function get_prevLeftEdge() : Edge{return _nextLeftEdge.nextLeftEdge;
+     function get_prevLeftEdge() : Edge{return _nextLeftEdge.nextLeftEdge;
     }
-    private function get_nextRightEdge() : Edge{return _oppositeEdge.nextLeftEdge.nextLeftEdge.oppositeEdge;
+     function get_nextRightEdge() : Edge{return _oppositeEdge.nextLeftEdge.nextLeftEdge.oppositeEdge;
     }
-    private function get_prevRightEdge() : Edge{return _oppositeEdge.nextLeftEdge.oppositeEdge;
+     function get_prevRightEdge() : Edge{return _oppositeEdge.nextLeftEdge.oppositeEdge;
     }
-    private function get_rotLeftEdge() : Edge{return _nextLeftEdge.nextLeftEdge.oppositeEdge;
+     function get_rotLeftEdge() : Edge{return _nextLeftEdge.nextLeftEdge.oppositeEdge;
     }
-    private function get_rotRightEdge() : Edge{return _oppositeEdge.nextLeftEdge;
+     function get_rotRightEdge() : Edge{return _oppositeEdge.nextLeftEdge;
     }
-    private function get_leftFace() : Face{return _leftFace;
+     function get_leftFace() : Face{return _leftFace;
     }
-    private function get_rightFace() : Face{return _oppositeEdge.leftFace;
+     function get_rightFace() : Face{return _oppositeEdge.leftFace;
     }
     
     

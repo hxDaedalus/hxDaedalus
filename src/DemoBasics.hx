@@ -18,9 +18,9 @@ import flash.events.KeyboardEvent;
 class DemoBasics extends Sprite
 {
     
-    private var _mesh : Mesh;
-    private var _view : SimpleView;
-    private var _object : Object;
+     var _mesh : Mesh;
+     var _view : SimpleView;
+     var _object : Object;
     
     public static function main():Void 
     {
@@ -102,7 +102,7 @@ class DemoBasics extends Sprite
             _view.drawMesh(_mesh);
         }
         
-        private function _onKeyDown(event:KeyboardEvent):Void
+         function _onKeyDown(event:KeyboardEvent):Void
         {
             if (event.keyCode == 27) {	// ESC
             #if flash

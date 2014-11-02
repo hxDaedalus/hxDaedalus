@@ -15,15 +15,15 @@ class EntityAI
     public var radiusSquared(get, never) : Float;
 
     
-    private var _radius : Float;
-    private var _radiusSquared : Float;
-    private var _x : Float;
-    private var _y : Float;
-    private var _dirNormX : Float;
-    private var _dirNormY : Float;
-    private var _angleFOV : Float;
-    private var _approximateObject : Object;
-    private static inline var NUM_SEGMENTS : Int = 6;
+     var _radius : Float;
+     var _radiusSquared : Float;
+     var _x : Float;
+     var _y : Float;
+     var _dirNormX : Float;
+     var _dirNormY : Float;
+     var _angleFOV : Float;
+     var _approximateObject : Object;
+     static inline var NUM_SEGMENTS : Int = 6;
     
     public function new()
     {
@@ -50,24 +50,24 @@ class EntityAI
         }
     }
     
-    private function get_approximateObject() : Object
+     function get_approximateObject() : Object
     {
         _approximateObject.matrix.identity();
         _approximateObject.matrix.translate(x, y);
         return _approximateObject;
     }
     
-    private function get_radius() : Float
+     function get_radius() : Float
     {
         return _radius;
     }
     
-    private function get_radiusSquared() : Float
+     function get_radiusSquared() : Float
     {
         return _radiusSquared;
     }
     
-    private function set_radius(value : Float) : Float
+     function set_radius(value : Float) : Float
     {
         _radius = value;
         _radiusSquared = _radius * _radius;

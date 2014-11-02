@@ -10,11 +10,11 @@ class Graph
     public var node(get, never) : GraphNode;
 
     
-    private static var INC : Int = 0;
-    private var _id : Int;
+     static var INC : Int = 0;
+     var _id : Int;
     
-    private var _node : GraphNode;
-    private var _edge : GraphEdge;
+     var _node : GraphNode;
+     var _edge : GraphEdge;
     
     public function new()
     {
@@ -22,7 +22,7 @@ class Graph
         INC++;
     }
     
-    private function get_id(): Int {
+     function get_id(): Int {
         return _id;
     }
     
@@ -30,11 +30,11 @@ class Graph
         while (_node!=null)deleteNode(_node);
     }
     
-    private function get_edge(): GraphEdge {
+     function get_edge(): GraphEdge {
         return _edge;
     }
     
-    private function get_node(): GraphNode {
+     function get_node(): GraphNode {
         return _node;
     }
     

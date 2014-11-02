@@ -15,15 +15,15 @@ class PathIterator
     public var path(never, set) : Array<Float>;
 
     
-    private var _entity : EntityAI;
-    private var _currentX : Float;
-    private var _currentY : Float;
-    private var _hasPrev : Bool;
-    private var _hasNext : Bool;
+     var _entity : EntityAI;
+     var _currentX : Float;
+     var _currentY : Float;
+     var _hasPrev : Bool;
+     var _hasNext : Bool;
     
-    private var _path : Array<Float>;
-    private var _count : Int;
-    private var _countMax : Int;
+     var _path : Array<Float>;
+     var _count : Int;
+     var _countMax : Int;
     
     public function new()
     {
@@ -31,48 +31,48 @@ class PathIterator
         
     }
     
-    private function get_entity() : EntityAI
+     function get_entity() : EntityAI
     {
         return _entity;
     }
     
-    private function set_entity(value : EntityAI) : EntityAI
+     function set_entity(value : EntityAI) : EntityAI
     {
         _entity = value;
         return value;
     }
     
-    private function get_x() : Float
+     function get_x() : Float
     {
         return _currentX;
     }
     
-    private function get_y() : Float
+     function get_y() : Float
     {
         return _currentY;
     }
     
-    private function get_hasPrev() : Bool
+     function get_hasPrev() : Bool
     {
         return _hasPrev;
     }
     
-    private function get_hasNext() : Bool
+     function get_hasNext() : Bool
     {
         return _hasNext;
     }
     
-    private function get_count() : Int
+     function get_count() : Int
     {
         return _count;
     }
     
-    private function get_countMax() : Int
+     function get_countMax() : Int
     {
         return _countMax;
     }
     
-    private function set_path( value: Array<Float> ) : Array<Float>
+     function set_path( value: Array<Float> ) : Array<Float>
     {
         _path = value;
         _countMax = _path.length / 2;
@@ -125,7 +125,7 @@ class PathIterator
         return true;
     }
     
-    private function updateEntity() : Void
+     function updateEntity() : Void
     {
         if (_entity == null) return;
         

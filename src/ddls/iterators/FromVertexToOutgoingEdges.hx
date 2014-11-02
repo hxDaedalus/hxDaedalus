@@ -9,8 +9,8 @@ class FromVertexToOutgoingEdges
     public var fromVertex(never, set) : Vertex;
 
     
-    private var _fromVertex : Vertex;
-    private var _nextEdge : Edge;
+     var _fromVertex : Vertex;
+     var _nextEdge : Edge;
     
     public var realEdgesOnly : Bool = true;
     
@@ -20,7 +20,7 @@ class FromVertexToOutgoingEdges
         
     }
     
-    private function set_fromVertex(value : Vertex) : Vertex
+     function set_fromVertex(value : Vertex) : Vertex
     {
         _fromVertex = value;
         _nextEdge = _fromVertex.edge;
@@ -31,7 +31,7 @@ class FromVertexToOutgoingEdges
         return value;
     }
     
-    private var _resultEdge : Edge;
+     var _resultEdge : Edge;
     
     public function next() : Edge
     {

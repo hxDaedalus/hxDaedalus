@@ -21,11 +21,11 @@ class TestImage extends flash.display.BitmapData {}
 class DemoFromBitmap extends Sprite
 {
     
-    private var _mesh : Mesh;
-    private var _view : SimpleView;
-    private var _object : Object;
+     var _mesh : Mesh;
+     var _view : SimpleView;
+     var _object : Object;
     
-    private var _bmp : Bitmap;
+     var _bmp : Bitmap;
     
     public static function main():Void {
         flash.Lib.current.addChild(new DemoFromBitmap());
@@ -66,7 +66,7 @@ class DemoFromBitmap extends Sprite
         flash.Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
     }
     
-    private function _onKeyDown(event:KeyboardEvent):Void
+     function _onKeyDown(event:KeyboardEvent):Void
     {
         if (event.keyCode == 27) {	// ESC
             #if flash

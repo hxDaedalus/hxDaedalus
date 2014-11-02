@@ -32,11 +32,11 @@ class PathFinder {
         listFaces = null;
     }
     
-    private function get_mesh() : Mesh {
+     function get_mesh() : Mesh {
         return _mesh;
     }
     
-    private function set_mesh(value : Mesh) : Mesh
+     function set_mesh(value : Mesh) : Mesh
     {
         _mesh = value;
         astar.mesh = _mesh;

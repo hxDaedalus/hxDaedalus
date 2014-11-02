@@ -16,7 +16,7 @@ import ddls.data.math.Point2D;
 
 class Potrace
 {
-	inline private static var MAX_INT:Int = 0x7FFFFFFF;
+	inline  static var MAX_INT:Int = 0x7FFFFFFF;
     
     public static var maxDistance : Float = 1;
     
