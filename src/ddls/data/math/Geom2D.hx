@@ -993,20 +993,19 @@ class Geom2D
         return distanceSquaredPointToSegment(vertex.pos.x, vertex.pos.y, edge.originVertex.pos.x, edge.originVertex.pos.y, edge.destinationVertex.pos.x, edge.destinationVertex.pos.y);
     }
     
-    public static function pathLength(path : Array<Float>) : Float
-    {
-        var sumDistance  = 0.;
-        var fromX = path[0];
-        var fromY  = path[1];
+    public static function pathLength(path : Array<Float>): Float {
+        var sumDistance = 0.;
+        var fromX = path[ 0 ];
+        var fromY = path[ 1 ];
         var nextX : Float;
         var nextY : Float;
         var x : Float;
         var y : Float;
         var distance : Float;
         var i = 2;
-        while (i < path.length){
-            nextX = path[i];
-            nextY = path[i + 1];
+        while( i < path.length ){
+            nextX = path[ i ];
+            nextY = path[ i + 1 ];
             x = nextX - fromX;
             y = nextY - fromY;
             distance = Math.sqrt(x * x + y * y);
@@ -1018,8 +1017,7 @@ class Geom2D
         
         return sumDistance;
     }
-
-    public function new()
-    {
-    }
+    
+    public function new(){}
+    
 }

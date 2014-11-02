@@ -5,37 +5,24 @@ import ddls.data.graph.GraphNode;
 
 class Graph
 {
-    public var id(get, never) : Int;
-    public var edge(get, never) : GraphEdge;
-    public var node(get, never) : GraphNode;
-
+    public var id( get, never ) : Int;
+    function get_id(): Int { return _id; }
+    public var edge( get, never ) : GraphEdge;
+    function get_edge(): GraphEdge { return _edge; }
+    public var node( get, never ) : GraphNode;
+    function get_node(): GraphNode { return _node; }
+    static var INC : Int = 0;
+    var _id: Int;
+    var _node: GraphNode;
+    var _edge: GraphEdge;
     
-     static var INC : Int = 0;
-     var _id : Int;
-    
-     var _node : GraphNode;
-     var _edge : GraphEdge;
-    
-    public function new()
-    {
+    public function new(){
         _id = INC;
         INC++;
     }
     
-     function get_id(): Int {
-        return _id;
-    }
-    
     public function dispose(): Void {
-        while (_node!=null)deleteNode(_node);
-    }
-    
-     function get_edge(): GraphEdge {
-        return _edge;
-    }
-    
-     function get_node(): GraphNode {
-        return _node;
+        while( _node != null ) deleteNode( _node );
     }
     
     public function insertNode(): GraphNode {

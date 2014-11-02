@@ -1547,18 +1547,18 @@ class Mesh
         7 | 6 | 5
         */
         
-        if (x <= 0) {
-            if (y <= 0)             return 1
-            else if (y >= _height)  return 7
-            else                    return 8;
-        } else if (x >= _width) {
-            if (y <= 0)             return 3
-            else if (y >= _height)  return 5
-            else                    return 4;
+        if( x <= 0 ) {
+            if( y <= 0 )             return 1
+            else if( y >= _height )  return 7
+            else                     return 8;
+        } else if( x >= _width ) {
+            if( y <= 0 )             return 3
+            else if( y >= _height )  return 5
+            else                     return 4;
         } else {
-            if (y <= 0)             return 2
-            else if (y >= _height)  return 6
-            else                    return 0;
+            if( y <= 0 )             return 2
+            else if( y >= _height )  return 6
+            else                     return 0;
         }
     }
     

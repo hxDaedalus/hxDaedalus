@@ -5,62 +5,53 @@ import ddls.data.math.Potrace.EdgeData;
 
 class GraphEdge
 {
-    public var id(get, never) : Int;
-    public var prev(get, set) : GraphEdge;
-    public var next(get, set) : GraphEdge;
-    public var rotPrevEdge(get, set) : GraphEdge;
-    public var rotNextEdge(get, set) : GraphEdge;
-    public var oppositeEdge(get, set) : GraphEdge;
-    public var sourceNode(get, set) : GraphNode;
-    public var destinationNode(get, set) : GraphNode;
-    public var data(get, set) : EdgeData;
-
-    
-     static var INC : Int = 0;
-     var _id : Int;
-    
-     var _prev : GraphEdge;
-     var _next : GraphEdge;
-    
-     var _rotPrevEdge : GraphEdge;
-     var _rotNextEdge : GraphEdge;
-     var _oppositeEdge : GraphEdge;
-     var _sourceNode : GraphNode;
-     var _destinationNode : GraphNode;
-    
-     var _data : EdgeData;
+    public var id( get, never ): Int;
+    function get_id(): Int { return _id; }
+    public var prev( get, set ): GraphEdge;
+    public var next( get, set ): GraphEdge;
+    public var rotPrevEdge( get, set ): GraphEdge;
+    public var rotNextEdge( get, set ): GraphEdge;
+    public var oppositeEdge( get, set ): GraphEdge;
+    public var sourceNode( get, set ): GraphNode;
+    public var destinationNode( get, set ): GraphNode;
+    public var data( get, set ): EdgeData;
+    static var INC: Int = 0;
+    var _id: Int;
+    var _prev: GraphEdge;
+    var _next: GraphEdge;
+    var _rotPrevEdge: GraphEdge;
+    var _rotNextEdge: GraphEdge;
+    var _oppositeEdge: GraphEdge;
+    var _sourceNode: GraphNode;
+    var _destinationNode: GraphNode;
+    var _data: EdgeData;
     
     public function new(){
         _id = INC;
         INC++;
     }
     
-     function get_id(): Int {
-        return _id;
-    }
-    
     public function dispose(): Void {}
     
-     function get_prev(): GraphEdge {
+    function get_prev(): GraphEdge {
         return _prev;
     }
     
-     function set_prev( value: GraphEdge ): GraphEdge {
+    function set_prev( value: GraphEdge ): GraphEdge {
         _prev = value;
         return value;
     }
     
-     function get_next() : GraphEdge
-    {
+     function get_next(): GraphEdge {
         return _next;
     }
     
-     function set_next( value: GraphEdge ): GraphEdge {
+    function set_next( value: GraphEdge ): GraphEdge {
         _next = value;
         return value;
     }
     
-     function get_rotPrevEdge() : GraphEdge {
+    function get_rotPrevEdge(): GraphEdge {
         return _rotPrevEdge;
     }
     
