@@ -1,4 +1,4 @@
-HxDaedalus
+hxDaedalus
 ==========
 
 This is a Haxe version of the as3 Daedalus-lib you can find the original library here:
