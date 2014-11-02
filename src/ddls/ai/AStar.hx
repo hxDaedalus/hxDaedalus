@@ -126,10 +126,10 @@ class AStar {
                 toFace = face;
             case ENull:
         }
-        /*fromFace.colorDebug = 0xFF0000;
+        fromFace.colorDebug = 0xFF0000;
         toFace.colorDebug = 0xFF0000;
         trace( "from face:", fromFace );
-        trace( "to face:", toFace );*/
+        trace( "to face:", toFace );
         
         sortedOpenedFaces.push( fromFace );
         entryEdges[ fromFace ] = null;

@@ -33,8 +33,6 @@ switch( loc ){
         //
 }
 */
-//var typedef Intersection={ ?vertex:Vertex, ?edge:Edge, ?polygon:Polygon };
-
 
 class Geom2D
 {

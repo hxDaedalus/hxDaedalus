@@ -64,8 +64,8 @@ class LinearPathSampler{
         _count = value;
         if( _count < 0 ) _count = 0;
         if( _count > countMax - 1 ) _count = countMax - 1;
-        _hasPrev = ( _count == 0 ) false: true;
-        _hasNext = ( _count == countMax - 1 ) false: true;
+        _hasPrev = ( _count == 0 )? false: true;
+        _hasNext = ( _count == countMax - 1 )? false: true;
         _currentX = _preCompX[ _count ];
         _currentY = _preCompY[ _count ];
         updateEntity();

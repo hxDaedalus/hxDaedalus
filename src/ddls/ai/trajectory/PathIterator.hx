@@ -80,8 +80,7 @@ class PathIterator
         return value;
     }
     
-    public function reset() : Void
-    {
+    public function reset(): Void {
         _count = 0;
         _currentX = _path[_count];
         _currentY = _path[_count + 1];
