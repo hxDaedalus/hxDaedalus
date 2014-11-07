@@ -6,11 +6,8 @@ import ddls.data.Object;
 import ddls.data.Vertex;
 import ddls.factories.RectMeshFactory;
 import ddls.view.SimpleView;
-#if openfl
-import openfl.Lib;
-#else
+
 import flash.Lib;
-#end
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.KeyboardEvent;
@@ -24,7 +21,7 @@ class DemoBasics extends Sprite
     
     public static function main():Void 
     {
-        flash.Lib.current.addChild(new DemoBasics());
+        Lib.current.addChild(new DemoBasics());
     }
     
     public function new()
@@ -86,10 +83,10 @@ class DemoBasics extends Sprite
         //_mesh.deleteObject(_object);
         
         // animate
-        flash.Lib.current.stage.addEventListener(Event.ENTER_FRAME, _onEnterFrame);
+        Lib.current.stage.addEventListener(Event.ENTER_FRAME, _onEnterFrame);
         
         // key presses
-        flash.Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
+        Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
     }
     
         function _onEnterFrame(event:Event):Void {
