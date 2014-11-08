@@ -1,8 +1,8 @@
-import ddls.data.Mesh;
-import ddls.data.Object;
-import ddls.factories.BitmapObject;
-import ddls.factories.RectMesh;
-import ddls.view.SimpleView;
+import hxDaedalus.data.Mesh;
+import hxDaedalus.data.Object;
+import hxDaedalus.factories.BitmapObject;
+import hxDaedalus.factories.RectMesh;
+import hxDaedalus.view.SimpleView;
 
 import flash.Lib;
 import flash.display.Bitmap;

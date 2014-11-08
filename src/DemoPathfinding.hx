@@ -1,13 +1,13 @@
 
-import ddls.ai.EntityAI;
-import ddls.ai.PathFinder;
-import ddls.ai.trajectory.LinearPathSampler;
-import ddls.data.Mesh;
-import ddls.data.Object;
-import ddls.data.math.Point2D;
-import ddls.data.math.RandGenerator;
-import ddls.factories.RectMesh;
-import ddls.view.SimpleView;
+import hxDaedalus.ai.EntityAI;
+import hxDaedalus.ai.PathFinder;
+import hxDaedalus.ai.trajectory.LinearPathSampler;
+import hxDaedalus.data.Mesh;
+import hxDaedalus.data.Object;
+import hxDaedalus.data.math.Point2D;
+import hxDaedalus.data.math.RandGenerator;
+import hxDaedalus.factories.RectMesh;
+import hxDaedalus.view.SimpleView;
 
 import flash.Lib;
 import flash.display.Sprite;

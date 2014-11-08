@@ -1,11 +1,11 @@
 
-import ddls.data.ConstraintSegment;
-import ddls.data.ConstraintShape;
-import ddls.data.Mesh;
-import ddls.data.Object;
-import ddls.data.Vertex;
-import ddls.factories.RectMesh;
-import ddls.view.SimpleView;
+import hxDaedalus.data.ConstraintSegment;
+import hxDaedalus.data.ConstraintShape;
+import hxDaedalus.data.Mesh;
+import hxDaedalus.data.Object;
+import hxDaedalus.data.Vertex;
+import hxDaedalus.factories.RectMesh;
+import hxDaedalus.view.SimpleView;
 
 import flash.Lib;
 import flash.display.Sprite;
