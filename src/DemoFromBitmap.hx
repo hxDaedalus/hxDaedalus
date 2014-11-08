@@ -4,6 +4,7 @@ import ddls.factories.BitmapObjectFactory;
 import ddls.factories.RectMeshFactory;
 import ddls.view.SimpleView;
 
+import flash.Lib;
 import flash.display.Bitmap;
 import flash.display.Sprite;
 import flash.display.BitmapData;
@@ -24,7 +25,7 @@ class DemoFromBitmap extends Sprite
      var _bmp : Bitmap;
     
     public static function main():Void {
-        flash.Lib.current.addChild(new DemoFromBitmap());
+        Lib.current.addChild(new DemoFromBitmap());
     }
     
     public function new()
@@ -35,11 +36,7 @@ class DemoFromBitmap extends Sprite
         _mesh = RectMeshFactory.buildRectangle( 600, 600 );
         
         // show the source bmp
-        #if html5	// openfl hack: see DemoFromBitmap.xml
-            _bmp = new Bitmap(openfl.Assets.getBitmapData("TestImage"));
-        #else
-            _bmp = new Bitmap(new TestImage(0, 0));
-        #end
+		_bmp = new Bitmap(new TestImage(0, 0));
         _bmp.x = 110;
         _bmp.y = 220;
         addChild( _bmp );
@@ -58,8 +55,9 @@ class DemoFromBitmap extends Sprite
         
         // display result mesh
         _view.drawMesh( _mesh );
-        // key presses
-        flash.Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
+        
+		// key presses
+        Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
     }
     
      function _onKeyDown(event:KeyboardEvent):Void

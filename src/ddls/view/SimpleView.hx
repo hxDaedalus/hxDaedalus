@@ -155,6 +155,7 @@ class SimpleView
         _paths.graphics.moveTo(path[0], path[1]);
         var i = 2;
         while (i < path.length) {
+			//TODO: remove this conditionals once openfl behaves consistently
             #if sys
                 _paths.graphics.beginFill(0, 1);
             #end

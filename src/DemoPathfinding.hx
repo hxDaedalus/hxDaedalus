@@ -8,11 +8,8 @@ import ddls.data.math.Point2D;
 import ddls.data.math.RandGenerator;
 import ddls.factories.RectMeshFactory;
 import ddls.view.SimpleView;
-#if openfl
-import openfl.Lib;
-#else
+
 import flash.Lib;
-#end
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.MouseEvent;
@@ -32,7 +29,7 @@ class DemoPathfinding extends Sprite
      var _newPath:Bool = false;
     
     public static function main():Void {
-        flash.Lib.current.addChild(new DemoPathfinding());
+        Lib.current.addChild(new DemoPathfinding());
     }
     
     public function new(){
@@ -85,7 +82,7 @@ class DemoPathfinding extends Sprite
         // we need an entity
         _entityAI = new EntityAI();
         // set radius as size for your entity
-        _entityAI.radius = 10;
+        _entityAI.radius = 4;
         // set a position
         _entityAI.x = 20;
         _entityAI.y = 20;
@@ -113,14 +110,14 @@ class DemoPathfinding extends Sprite
         
         
         // click/drag
-        flash.Lib.current.stage.addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
-        flash.Lib.current.stage.addEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
+        Lib.current.stage.addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
+        Lib.current.stage.addEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
         
         // animate
-        flash.Lib.current.stage.addEventListener(Event.ENTER_FRAME, _onEnterFrame);
+        Lib.current.stage.addEventListener(Event.ENTER_FRAME, _onEnterFrame);
         
         // key presses
-        flash.Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
+        Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
     }
     
      function _onMouseUp( event: MouseEvent ): Void {
@@ -151,7 +148,7 @@ class DemoPathfinding extends Sprite
     }
     
      function _onKeyDown( event:KeyboardEvent ): Void {
-        if( event.keyCode == 27 ) {// ESC
+        if( event.keyCode == 27 ) {  // ESC
             #if flash
                 flash.system.System.exit(1);
             #elseif sys
