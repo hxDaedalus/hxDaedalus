@@ -66,7 +66,7 @@ class Geom2D
         for (i in 0...numSamples){
             var _rnd:Int = _randGen.next();
             //TODO: Assert
-            if (_rnd < 0 || _rnd > mesh._vertices.length -1 || mesh._vertices == null) throw "null";
+            if (_rnd < 0 || _rnd > mesh._vertices.length -1 || mesh._vertices == null) throw '_rnd: $_rnd vertices: ${mesh._vertices.length}';
             __samples.push(mesh._vertices[_rnd]);
         }
         

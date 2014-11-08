@@ -18,15 +18,15 @@ import flash.events.KeyboardEvent;
 class DemoPathfinding extends Sprite
 {
     
-     var _mesh : Mesh;
-     var _view : SimpleView;
+    var _mesh : Mesh;
+    var _view : SimpleView;
     
-     var _entityAI : EntityAI;
-     var _pathfinder : PathFinder;
-     var _path : Array<Float>;
-     var _pathSampler : LinearPathSampler;
+    var _entityAI : EntityAI;
+    var _pathfinder : PathFinder;
+    var _path : Array<Float>;
+    var _pathSampler : LinearPathSampler;
     
-     var _newPath:Bool = false;
+    var _newPath:Bool = false;
     
     public static function main():Void {
         Lib.current.addChild(new DemoPathfinding());
@@ -41,7 +41,6 @@ class DemoPathfinding extends Sprite
         // create a viewport
         _view = new SimpleView();
         addChild(_view.surface);
-        
         
         // pseudo random generator
         var randGen : RandGenerator;
@@ -73,11 +72,7 @@ class DemoPathfinding extends Sprite
             _mesh.insertObject(object);
         }  // show result mesh on screen  
         
-        
-        
-        
         _view.drawMesh(_mesh);
-        
         
         // we need an entity
         _entityAI = new EntityAI();
@@ -87,27 +82,22 @@ class DemoPathfinding extends Sprite
         _entityAI.x = 20;
         _entityAI.y = 20;
         
-        
         // show entity on screen
         _view.drawEntity(_entityAI);
-        
         
         // now configure the pathfinder
         _pathfinder = new PathFinder();
         _pathfinder.entity = _entityAI;  // set the entity  
         _pathfinder.mesh = _mesh;  // set the mesh  
         
-        
         // we need a vector to store the path
         _path = new Array<Float>();
-        
         
         // then configure the path sampler
         _pathSampler = new LinearPathSampler();
         _pathSampler.entity = _entityAI;
         _pathSampler.samplingDistance = 5;
         _pathSampler.path = _path;
-        
         
         // click/drag
         Lib.current.stage.addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
@@ -120,40 +110,43 @@ class DemoPathfinding extends Sprite
         Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
     }
     
-     function _onMouseUp( event: MouseEvent ): Void {
-            _newPath = false;
+    function _onMouseUp( event: MouseEvent ): Void {
+		_newPath = false;
     }
     
-     function _onMouseDown( event: MouseEvent ): Void {
+    function _onMouseDown( event: MouseEvent ): Void {
         _newPath = true;
     }
     
-     function _onEnterFrame( event: Event ): Void {
-        if( _newPath ) {
+    function _onEnterFrame( event: Event ): Void {
+        if ( _newPath ) {
             // find path !
             _pathfinder.findPath( stage.mouseX, stage.mouseY, _path );
-            // show path on screen
+            
+			// show path on screen
             _view.drawPath( _path );
-            // reset the path sampler to manage new generated path
+            
+			// reset the path sampler to manage new generated path
             _pathSampler.reset();
         }
         
         // animate !
-        if( _pathSampler.hasNext ) {
+        if ( _pathSampler.hasNext ) {
             // move entity
             _pathSampler.next();            
-            // show entty new position on screen
+            
+			// show entity new position on screen
             _view.drawEntity(_entityAI);
         }
     }
     
-     function _onKeyDown( event:KeyboardEvent ): Void {
+    function _onKeyDown( event:KeyboardEvent ): Void {
         if( event.keyCode == 27 ) {  // ESC
-            #if flash
-                flash.system.System.exit(1);
-            #elseif sys
-                Sys.exit(1);
-            #end
+		#if flash
+			flash.system.System.exit(1);
+		#elseif sys
+			Sys.exit(1);
+		#end
         }
     }
 }

@@ -11,18 +11,17 @@ import flash.display.BitmapData;
 import flash.events.KeyboardEvent;
 
 
-
 @:bitmap("DemoFromBitmap.png")
 class TestImage extends flash.display.BitmapData {}
 
 class DemoFromBitmap extends Sprite
 {
     
-     var _mesh : Mesh;
-     var _view : SimpleView;
-     var _object : Object;
+    var _mesh : Mesh;
+    var _view : SimpleView;
+    var _object : Object;
     
-     var _bmp : Bitmap;
+    var _bmp : Bitmap;
     
     public static function main():Void {
         Lib.current.addChild(new DemoFromBitmap());
@@ -36,8 +35,12 @@ class DemoFromBitmap extends Sprite
         _mesh = RectMesh.buildRectangle( 600, 600 );
         
         // show the source bmp
-		_bmp = new Bitmap(new TestImage(0, 0));
-        _bmp.x = 110;
+    #if html5	// load as openfl asset: see DemoFromBitmap.xml
+        _bmp = new Bitmap(openfl.Assets.getBitmapData("TestImage"));		
+    #else		
+        _bmp = new Bitmap(new TestImage(0, 0));		
+	#end
+		_bmp.x = 110;
         _bmp.y = 220;
         addChild( _bmp );
         
@@ -45,13 +48,11 @@ class DemoFromBitmap extends Sprite
         _view = new SimpleView();
         addChild( _view.surface );
         
-        
         // create an object from bitmap
         _object = BitmapObject.buildFromBmpData(_bmp.bitmapData);
         _object.x = 110;
         _object.y = 220;
         _mesh.insertObject( _object );
-        
         
         // display result mesh
         _view.drawMesh( _mesh );
@@ -60,7 +61,7 @@ class DemoFromBitmap extends Sprite
         Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
     }
     
-     function _onKeyDown(event:KeyboardEvent):Void
+    function _onKeyDown(event:KeyboardEvent):Void
     {
         if (event.keyCode == 27) {	// ESC
             #if flash
