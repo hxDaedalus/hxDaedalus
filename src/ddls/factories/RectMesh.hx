@@ -9,7 +9,7 @@ import ddls.data.Face;
 import ddls.data.Mesh;
 import ddls.data.Vertex;
 
-class RectMeshFactory
+class RectMesh
 {
     
     public static function buildRectangle( width: Float, height: Float) : Mesh

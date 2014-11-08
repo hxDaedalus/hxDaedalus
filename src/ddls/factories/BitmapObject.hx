@@ -8,7 +8,7 @@ import ddls.data.math.Potrace;
 import flash.display.BitmapData;
 import flash.display.Shape;
 
-class BitmapObjectFactory
+class BitmapObject
 {
     public function new(){}
     public static function buildFromBmpData(    bmpData: BitmapData

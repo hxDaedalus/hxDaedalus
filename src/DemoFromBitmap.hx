@@ -1,7 +1,7 @@
 import ddls.data.Mesh;
 import ddls.data.Object;
-import ddls.factories.BitmapObjectFactory;
-import ddls.factories.RectMeshFactory;
+import ddls.factories.BitmapObject;
+import ddls.factories.RectMesh;
 import ddls.view.SimpleView;
 
 import flash.Lib;
@@ -33,7 +33,7 @@ class DemoFromBitmap extends Sprite
         super();
         
         // build a rectangular 2 polygons mesh of 600x600
-        _mesh = RectMeshFactory.buildRectangle( 600, 600 );
+        _mesh = RectMesh.buildRectangle( 600, 600 );
         
         // show the source bmp
 		_bmp = new Bitmap(new TestImage(0, 0));
@@ -47,7 +47,7 @@ class DemoFromBitmap extends Sprite
         
         
         // create an object from bitmap
-        _object = BitmapObjectFactory.buildFromBmpData(_bmp.bitmapData);
+        _object = BitmapObject.buildFromBmpData(_bmp.bitmapData);
         _object.x = 110;
         _object.y = 220;
         _mesh.insertObject( _object );

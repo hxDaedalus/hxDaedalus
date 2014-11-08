@@ -4,7 +4,7 @@ import ddls.data.ConstraintShape;
 import ddls.data.Mesh;
 import ddls.data.Object;
 import ddls.data.Vertex;
-import ddls.factories.RectMeshFactory;
+import ddls.factories.RectMesh;
 import ddls.view.SimpleView;
 
 import flash.Lib;
@@ -28,7 +28,7 @@ class DemoBasics extends Sprite
     {
         super();
         // build a rectangular 2 polygons mesh of 600x400
-        _mesh = RectMeshFactory.buildRectangle(600, 400);
+        _mesh = RectMesh.buildRectangle(600, 400);
         
         
         // create a viewport

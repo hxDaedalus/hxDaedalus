@@ -12,7 +12,7 @@ import flash.display.BitmapData;
 import flash.display.Shape;
 import flash.geom.Point;
 
-class BitmapMeshFactory
+class BitmapMesh
 {
     
     public static function buildFromBmpData(    bmpData:    BitmapData
@@ -41,7 +41,7 @@ class BitmapMeshFactory
         
         
         
-        var mesh : Mesh = RectMeshFactory.buildRectangle(bmpData.width, bmpData.height);
+        var mesh : Mesh = RectMesh.buildRectangle(bmpData.width, bmpData.height);
         for (i in 0...polygons.length){
             j = 0;
             while (j < polygons[i].length - 2){

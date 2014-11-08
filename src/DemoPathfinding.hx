@@ -6,7 +6,7 @@ import ddls.data.Mesh;
 import ddls.data.Object;
 import ddls.data.math.Point2D;
 import ddls.data.math.RandGenerator;
-import ddls.factories.RectMeshFactory;
+import ddls.factories.RectMesh;
 import ddls.view.SimpleView;
 
 import flash.Lib;
@@ -35,7 +35,7 @@ class DemoPathfinding extends Sprite
     public function new(){
         super();
         // build a rectangular 2 polygons mesh of 600x600
-        _mesh = RectMeshFactory.buildRectangle(600, 600);
+        _mesh = RectMesh.buildRectangle(600, 600);
         
         Lib.current.addChild(this);
         // create a viewport
