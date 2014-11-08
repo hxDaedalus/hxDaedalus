@@ -1,7 +1,7 @@
 package hxDaedalus.data.graph;
 
 import hxDaedalus.data.graph.GraphNode;
-import hxDaedalus.data.math.Potrace.EdgeData;
+import hxDaedalus.data.math.EdgeData;
 
 class GraphEdge
 {

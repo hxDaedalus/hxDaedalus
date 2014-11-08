@@ -218,14 +218,14 @@ class Potrace
         currNode = graph.node;
         while( (currNode.data).index < minNodeIndex ){
             
-			minNodeIndex = (currNode.data).index;
-			
-			polygon.push((currNode.data).point.x);
-			polygon.push((currNode.data).point.y);
-			
-			higherScore = 0;
-			
-			edge = currNode.outgoingEdge;
+            minNodeIndex = (currNode.data).index;
+            
+            polygon.push((currNode.data).point.x);
+            polygon.push((currNode.data).point.y);
+            
+            higherScore = 0;
+            
+            edge = currNode.outgoingEdge;
             while( edge!= null )
             {
                 score = (edge.data).nodesCount - (edge.data).length * Math.sqrt((edge.data).sumDistancesSquared / (edge.data).nodesCount);
@@ -264,31 +264,5 @@ class Potrace
 
     public function new()
     {
-    }
-}
-
-
-class EdgeData
-{
-    public var sumDistancesSquared : Float;
-    public var length : Float;
-    public var nodesCount : Int;
-    
-    public function new()
-    {
-        
-        
-    }
-}
-
-class NodeData
-{
-    public var index : Int;
-    public var point : Point2D;
-    
-    public function new()
-    {
-        
-        
     }
 }
