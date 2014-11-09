@@ -19,6 +19,9 @@ class BitmapObject
         var i : Int;
         var j : Int;
         
+		if (!(bmpData.width > 0 && bmpData.height > 0)) 
+			throw 'Invalid `bmpData` size (${bmpData.width}, ${bmpData.height})';
+		
         // OUTLINES STEP-LIKE SHAPES GENERATION
         var shapes : Array<Array<Float>> = Potrace.buildShapes(bmpData, debugBmp, debugShape);
         
@@ -26,17 +29,15 @@ class BitmapObject
         var graphs = new Array<Graph>();
         for (i in 0...shapes.length){
             graphs.push( Potrace.buildGraph(shapes[i]) );
-        }  // OPTIMIZED POLYGONS GENERATION  
+        }  
         
-        
-        
+        // OPTIMIZED POLYGONS GENERATION  
         var polygons : Array<Array<Float>> = new Array<Array<Float>>();
         for (i in 0...graphs.length){
             polygons.push(Potrace.buildPolygon(graphs[i], debugShape));
-        }  // OBJECT GENERATION  
+        }   
         
-        
-        
+        // OBJECT GENERATION  
         var obj : Object = new Object();
         for (i in 0...polygons.length){
             j = 0;

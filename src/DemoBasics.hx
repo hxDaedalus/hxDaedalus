@@ -15,9 +15,9 @@ import flash.events.KeyboardEvent;
 class DemoBasics extends Sprite
 {
     
-     var _mesh : Mesh;
-     var _view : SimpleView;
-     var _object : Object;
+    var _mesh : Mesh;
+    var _view : SimpleView;
+    var _object : Object;
     
     public static function main():Void 
     {
@@ -27,6 +27,7 @@ class DemoBasics extends Sprite
     public function new()
     {
         super();
+		
         // build a rectangular 2 polygons mesh of 600x400
         _mesh = RectMesh.buildRectangle(600, 400);
         
@@ -89,24 +90,24 @@ class DemoBasics extends Sprite
         Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
     }
     
-        function _onEnterFrame(event:Event):Void {
-            // objects can be transformed at any time
-            _object.rotation += 0.05;
+	function _onEnterFrame(event:Event):Void {
+		// objects can be transformed at any time
+		_object.rotation += 0.05;
 
-            _mesh.updateObjects();  // don't forget to update  
+		_mesh.updateObjects();  // don't forget to update  
 
-            // render mesh
-            _view.drawMesh(_mesh);
-        }
-        
-         function _onKeyDown(event:KeyboardEvent):Void
-        {
-            if (event.keyCode == 27) {	// ESC
-            #if flash
-                flash.system.System.exit(1);
-            #elseif sys
-                Sys.exit(1);
-            #end
-        }
+		// render mesh
+		_view.drawMesh(_mesh);
+	}
+	
+	function _onKeyDown(event:KeyboardEvent):Void
+	{
+		if (event.keyCode == 27) {	// ESC
+		#if flash
+			flash.system.System.exit(1);
+		#elseif sys
+			Sys.exit(1);
+		#end
+		}
     }
 }
