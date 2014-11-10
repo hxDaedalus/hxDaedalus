@@ -1,6 +1,7 @@
 package hxDaedalus.factories;
 
 
+import hxDaedalus.data.math.ShapeSimplifier;
 import hxDaedalus.data.Object;
 import hxDaedalus.data.graph.Graph;
 import hxDaedalus.data.math.Potrace;
@@ -12,6 +13,7 @@ class BitmapObject
 {
     public function new(){}
     public static function buildFromBmpData(    bmpData: BitmapData
+											,	simplificationEpsilon:Float = 1
                                             ,   debugBmp: BitmapData = null
                                             ,   debugShape : Shape = null
                                             ) : Object
@@ -25,12 +27,19 @@ class BitmapObject
         // OUTLINES STEP-LIKE SHAPES GENERATION
         var shapes : Array<Array<Float>> = Potrace.buildShapes(bmpData, debugBmp, debugShape);
         
+		// SIMPLIFY SHAPES (REDUCE NUMBER OF POINTS)
+		if (simplificationEpsilon >= 1) {
+			for (i in 0...shapes.length) {
+				shapes[i] = ShapeSimplifier.simplify(shapes[i], simplificationEpsilon);
+			}
+		}
+		
         // GRAPHS OF POTENTIAL SEGMENTS GENERATION
         var graphs = new Array<Graph>();
         for (i in 0...shapes.length){
             graphs.push( Potrace.buildGraph(shapes[i]) );
         }  
-        
+		
         // OPTIMIZED POLYGONS GENERATION  
         var polygons : Array<Array<Float>> = new Array<Array<Float>>();
         for (i in 0...graphs.length){
