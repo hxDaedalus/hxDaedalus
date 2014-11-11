@@ -46,7 +46,7 @@ class DemoBitmapPathfinding extends Sprite {
 		super();
 		
 		// build a rectangular 2 polygons mesh
-		_mesh = RectMesh.buildRectangle( 1024, 1024 );
+		_mesh = RectMesh.buildRectangle( 1024, 780 );
 		
 		// show the source bmp
     #if html5	// load as openfl asset: see DemoFromBitmapPathfinding.xml
@@ -98,8 +98,8 @@ class DemoBitmapPathfinding extends Sprite {
 		_entityAI.radius = 4;
 		
 		// set a position
-		_entityAI.x = 20;
-		_entityAI.y = 20;
+		_entityAI.x = 50;
+		_entityAI.y = 50;
 		
 		// show entity on screen
 		_view.drawEntity( _entityAI );

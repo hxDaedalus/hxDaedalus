@@ -1,7 +1,7 @@
 -cp src/
 -main DemoBitmapPathfinding
 -swf-version 11.2
--swf-header 1024:1024:60:FFFFFF
+-swf-header 1024:780:60:FFFFFF
 -swf bin/DemoBitmapPathfinding.swf
 -D fdb
 -debug
