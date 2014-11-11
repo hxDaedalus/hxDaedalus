@@ -1,4 +1,4 @@
-package hxDaedalus;
+package hxDaedalus.debug;
 
 import haxe.PosInfos;
 
@@ -6,6 +6,7 @@ import haxe.PosInfos;
 /**
  * Used for sanity-checks throughout the code when in debug mode (or if -D DAEDALUS_CHECKS is passed to the compiler).
  * Should be automatically stripped out by the compiler in release mode (or if -D NO_DAEDALUS_CHECKS is passed to the compiler).
+ * Same applies to -D DAEDALUS_TRACE and -D NO_DAEDALUS_TRACE.
  */
 class Debug
 {
@@ -46,4 +47,18 @@ class Debug
 
 #end
 
+
+#if ((debug && !NO_DAEDALUS_TRACE) || DAEDALUS_TRACE)
+
+	inline static public function trace(value:Dynamic, ?pos:PosInfos) {
+		haxe.Log.Debug.trace(value, pos);
+	}
+
+#elseif (!debug || NO_DAEDALUS_TRACE)
+
+	inline static public function trace(value:Dynamic, ?pos:PosInfos) {
+		return;
+	}
+
+#end
 }

@@ -1,6 +1,7 @@
 package hxDaedalus.ai.trajectory;
 
 
+import hxDaedalus.debug.Debug;
 import hxDaedalus.ai.EntityAI;
 
 class LinearPathSampler{
@@ -96,7 +97,7 @@ class LinearPathSampler{
     
     public function reset(): Void {
         if ( _path.length > 0 ) {
-			Debug.assertTrue((_path.length % 2) == 0, "Wrong length");
+			Debug.assertTrue((_path.length & 1) == 0, "Wrong length");
 			
             _currentX = _path[ 0 ];
             _currentY = _path[ 1 ];

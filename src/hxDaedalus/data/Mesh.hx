@@ -2,14 +2,12 @@ package hxDaedalus.data;
 
 import hxDaedalus.data.Object;
 import hxDaedalus.data.Vertex;
-
 import hxDaedalus.data.math.Geom2D;
 import hxDaedalus.data.math.Matrix2D;
 import hxDaedalus.data.math.Point2D;
 import hxDaedalus.iterators.FromVertexToIncomingEdges;
 import hxDaedalus.iterators.FromVertexToOutgoingEdges;
-
-
+import hxDaedalus.debug.Debug;
 
 
 class Mesh
@@ -227,7 +225,7 @@ class Mesh
     
     public function insertConstraintSegment(x1 : Float, y1 : Float, x2 : Float, y2 : Float) : ConstraintSegment
     {
-        //trace("insertConstraintSegment");
+        //Debug.trace("insertConstraintSegment");
         
         /* point positions relative to bounds
         1 | 2 | 3
@@ -458,7 +456,7 @@ class Mesh
         var vertexUp = insertVertex( newX2, newY2 );
         if( vertexUp == null ) return null;
         if( vertexDown == vertexUp ) return null; 
-        // useful    //trace("vertices", vertexDown.id, vertexUp.id)  
+        // useful    //Debug.trace("vertices " + vertexDown.id + " " + vertexUp.id)  
         var iterVertexToOutEdges : FromVertexToOutgoingEdges = new FromVertexToOutgoingEdges();
         var currVertex : Vertex;
         var currEdge : Edge;
@@ -491,7 +489,7 @@ class Mesh
             switch( currObjet ){
                 case EVertex( vertex ):
 ///////////////////////////
-                        //trace("case vertex");
+                        //Debug.trace("case vertex");
                         currVertex = vertex;
                         iterVertexToOutEdges.fromVertex = currVertex;
                         while ((currEdge = iterVertexToOutEdges.next())!=null)
@@ -499,7 +497,7 @@ class Mesh
                             // if we meet directly the end vertex
                             if (currEdge.destinationVertex == vertexUp) 
                             {
-                                //trace("we met the end vertex");
+                                //Debug.trace("we met the end vertex");
                                 if (!currEdge.isConstrained) 
                                 {
                                     currEdge.isConstrained = true;
@@ -515,10 +513,10 @@ class Mesh
 
                             if (Geom2D.distanceSquaredVertexToEdge(currEdge.destinationVertex, tempEdgeDownUp) <= Constants.EPSILON_SQUARED) 
                             {
-                                //trace("we met a vertex");
+                                //Debug.trace("we met a vertex");
                                 if (!currEdge.isConstrained) 
                                 {
-                                    //trace("edge is not constrained");
+                                    //Debug.trace("edge is not constrained");
                                     currEdge.isConstrained = true;
                                     currEdge.oppositeEdge.isConstrained = true;
                                 }
@@ -543,10 +541,10 @@ class Mesh
                             currEdge = currEdge.nextLeftEdge;
                             if (Geom2D.intersections2edges(currEdge, tempEdgeDownUp, pIntersect)) 
                             {
-                                //trace("edge intersection");
+                                //Debug.trace("edge intersection");
                                 if (currEdge.isConstrained) 
                                 {
-                                    //trace("edge is constrained");
+                                    //Debug.trace("edge is constrained");
                                     vertexDown = splitEdge(currEdge, pIntersect.x, pIntersect.y);
                                     iterVertexToOutEdges.fromVertex = currVertex;
                                     while ((currEdge = iterVertexToOutEdges.next())!=null )
@@ -567,7 +565,7 @@ class Mesh
                                 }
                                 else 
                                 {
-                                    //trace("edge is not constrained");
+                                    //Debug.trace("edge is not constrained");
                                     intersectedEdges.push(currEdge);
                                     leftBoundingEdges.unshift(currEdge.nextLeftEdge);
                                     rightBoundingEdges.push(currEdge.prevLeftEdge);
@@ -581,11 +579,11 @@ class Mesh
 ////////////////////////////////////////////
                 case EEdge( edge ):
                     currEdge = edge;
-                        //trace("case edge");
+                        //Debug.trace("case edge");
                         edgeLeft = currEdge.nextLeftEdge;
                         if (edgeLeft.destinationVertex == vertexUp) 
                         {
-                            //trace("end point reached");
+                            //Debug.trace("end point reached");
                             leftBoundingEdges.unshift(edgeLeft.nextLeftEdge);
                             rightBoundingEdges.push(edgeLeft);
 
@@ -601,7 +599,7 @@ class Mesh
                         }
                         else if (Geom2D.distanceSquaredVertexToEdge(edgeLeft.destinationVertex, tempEdgeDownUp) <= Constants.EPSILON_SQUARED) 
                         {
-                            //trace("we met a vertex");
+                            //Debug.trace("we met a vertex");
                             leftBoundingEdges.unshift(edgeLeft.nextLeftEdge);
                             rightBoundingEdges.push(edgeLeft);
 
@@ -625,10 +623,10 @@ class Mesh
                         {
                             if (Geom2D.intersections2edges(edgeLeft, tempEdgeDownUp, pIntersect)) 
                             {
-                                //trace("1st left edge intersected");
+                                //Debug.trace("1st left edge intersected");
                                 if (edgeLeft.isConstrained) 
                                 {
-                                    //trace("edge is constrained");
+                                    //Debug.trace("edge is constrained");
                                     currVertex = splitEdge(edgeLeft, pIntersect.x, pIntersect.y);
 
                                     iterVertexToOutEdges.fromVertex = currVertex;
@@ -661,7 +659,7 @@ class Mesh
                                 }
                                 else 
                                 {
-                                    //trace("edge is not constrained");
+                                    //Debug.trace("edge is not constrained");
                                     intersectedEdges.push(edgeLeft);
                                     leftBoundingEdges.unshift(edgeLeft.nextLeftEdge);
                                     currEdge = edgeLeft.oppositeEdge;  // we keep the edge from left to right  
@@ -670,12 +668,12 @@ class Mesh
                             }
                             else 
                             {
-                                //trace("2nd left edge intersected");
+                                //Debug.trace("2nd left edge intersected");
                                 edgeLeft = edgeLeft.nextLeftEdge;
                                 Geom2D.intersections2edges(edgeLeft, tempEdgeDownUp, pIntersect);
                                 if (edgeLeft.isConstrained) 
                                 {
-                                    //trace("edge is constrained");
+                                    //Debug.trace("edge is constrained");
                                     currVertex = splitEdge(edgeLeft, pIntersect.x, pIntersect.y);
 
                                     iterVertexToOutEdges.fromVertex = currVertex;
@@ -708,7 +706,7 @@ class Mesh
                                 }
                                 else 
                                 {
-                                    //trace("edge is not constrained");
+                                    //Debug.trace("edge is not constrained");
                                     intersectedEdges.push(edgeLeft);
                                     rightBoundingEdges.push(edgeLeft.prevLeftEdge);
                                     currEdge = edgeLeft.oppositeEdge;  // we keep the edge from left to right  
@@ -730,7 +728,7 @@ class Mesh
     
      function insertNewConstrainedEdge(fromSegment : ConstraintSegment, edgeDownUp : Edge, intersectedEdges : Array<Edge>, leftBoundingEdges : Array<Edge>, rightBoundingEdges : Array<Edge>) : Void
     {
-        //trace("insertNewConstrainedEdge");
+        //Debug.trace("insertNewConstrainedEdge");
         _edges.push(edgeDownUp);
         _edges.push(edgeDownUp.oppositeEdge);
         
@@ -750,7 +748,7 @@ class Mesh
     
     public function deleteConstraintSegment(segment : ConstraintSegment) : Void
     {
-        //trace("deleteConstraintSegment id", segment.id);
+        //Debug.trace("deleteConstraintSegment id " + segment.id);
         var i : Int;
         var vertexToDelete : Array<Vertex> = new Array<Vertex>();
         var edge : Edge = null;
@@ -758,7 +756,7 @@ class Mesh
         var fromConstraintSegment : Array<ConstraintSegment>;
         for (i in 0...segment.edges.length){
             edge = segment.edges[i];
-            //trace("unconstrain edge ", edge);
+            //Debug.trace("unconstrain edge " + edge);
             edge.removeFromConstraintSegment(segment);
             if (edge.fromConstraintSegments.length == 0) 
             {
@@ -777,10 +775,10 @@ class Mesh
 			vertexToDelete.push(vertex);
         //}
 		
-        //trace("clean the useless vertices");
+        //Debug.trace("clean the useless vertices");
         for (i in 0...vertexToDelete.length){
             deleteVertex(vertexToDelete[i]);
-        }  //trace("clean done");  
+        }  //Debug.trace("clean done");  
         
         
         
@@ -792,16 +790,16 @@ class Mesh
         for (i in 0..._edges.length){
             if( _edges[i].nextLeftEdge == null ) 
             {
-                trace("!!! missing nextLeftEdge");
+                Debug.trace("!!! missing nextLeftEdge");
                 return;
             }
         }
-        trace("check OK");
+        Debug.trace("check OK");
     }
     
     public function insertVertex(x : Float, y : Float) : Vertex
     {
-        //trace("insertVertex", x, y);
+        //Debug.trace("insertVertex " + x + "," + y);
         if (x < 0 || y < 0 || x > _width || y > _height) return null;
         
         __edgesToCheck.splice(0, __edgesToCheck.length);
@@ -811,16 +809,16 @@ class Mesh
         
         switch( inObject ){
             case EVertex( vertex ):
-                //trace("inVertex", vertex.id);
+                //Debug.trace("inVertex " + vertex.id);
                 newVertex = vertex;
             case EEdge( edge ):
-                //trace("inEdge", edge);
+                //Debug.trace("inEdge " + edge);
                 newVertex = splitEdge(edge, x, y);
             case EFace( face ):
-                //trace("inFace", face );
+                //Debug.trace("inFace " + face );
                 newVertex = splitFace(face, x, y);
             case ENull:
-                //trace( 'nothing!');
+                //Debug.trace('nothing!');
         }
         
         restoreAsDelaunay();
@@ -1170,7 +1168,7 @@ class Mesh
     // - it is adjacent to exactly 2 contrained edges and is not an end point of any constraint segment
     public function deleteVertex(vertex : Vertex) : Bool
     {
-        //trace("tryToDeleteVertex id", vertex.id);
+        //Debug.trace("tryToDeleteVertex id " + vertex.id);
         var i : Int;
         var freeOfConstraint : Bool;
         var iterEdges : FromVertexToOutgoingEdges = new FromVertexToOutgoingEdges();
@@ -1181,7 +1179,7 @@ class Mesh
         
         freeOfConstraint = vertex.fromConstraintSegments.length == 0;
         
-        //trace("  -> freeOfConstraint", freeOfConstraint);
+        //Debug.trace("  -> freeOfConstraint " + freeOfConstraint);
         
         var bound  = new Array<Edge>();
         
@@ -1207,7 +1205,7 @@ class Mesh
                 edges = vertex.fromConstraintSegments[i].edges;
                 if (edges[0].originVertex == vertex || edges[edges.length - 1].destinationVertex == vertex) 
                 {
-                    //trace("  -> is end point of a constraint segment");
+                    //Debug.trace("  -> is end point of a constraint segment");
                     return false;
                 }
             }  // we check the count of adjacent constrained edges  
@@ -1224,11 +1222,11 @@ class Mesh
                     count++;
                     if (count > 2) 
                     {
-                        //trace("  -> count of adjacent constrained edges", count);
+                        //Debug.trace("  -> count of adjacent constrained edges " + count);
                         return false;
                     }
                 }
-            }  //trace("process vertex deletion");    // if not disqualified, then we can process  
+            }  //Debug.trace("process vertex deletion");    // if not disqualified, then we can process  
             
             
             
@@ -1326,12 +1324,12 @@ class Mesh
         // finally we triangulate
         if (freeOfConstraint) 
         {
-            //trace("trigger single hole triangulation");
+            //Debug.trace("trigger single hole triangulation");
             triangulate(bound, true);
         }
         else 
         {
-            //trace("trigger dual holes triangulation");
+            //Debug.trace("trigger dual holes triangulation");
             triangulate(boundA, realA);
             triangulate(boundB, realB);
         }  //check();  
@@ -1394,25 +1392,25 @@ class Mesh
     {
         if (bound.length < 2) 
         {
-            trace("BREAK ! the hole has less than 2 edges");
+            Debug.trace("BREAK ! the hole has less than 2 edges");
             return;
         }
         // if the hole is a 2 edges polygon, we have a big problem
         else if (bound.length == 2) 
         {
             //throw new Error("BREAK ! the hole has only 2 edges! " + "  - edge0: " + bound[0].originVertex.id + " -> " + bound[0].destinationVertex.id + "  - edge1: " +  bound[1].originVertex.id + " -> " + bound[1].destinationVertex.id);
-            trace("BREAK ! the hole has only 2 edges");
-            trace("  - edge0:", bound[0].originVertex.id, "->", bound[0].destinationVertex.id);
-            trace("  - edge1:", bound[1].originVertex.id, "->", bound[1].destinationVertex.id);
+            Debug.trace("BREAK ! the hole has only 2 edges");
+            Debug.trace("  - edge0: " + bound[0].originVertex.id + " -> " + bound[0].destinationVertex.id);
+            Debug.trace("  - edge1: " +  bound[1].originVertex.id + " -> " + bound[1].destinationVertex.id);
             return;
         }
         // if the hole is a 3 edges polygon:
         else if (bound.length == 3) 
         {
-            /*trace("the hole is a 3 edges polygon");
-            trace("  - edge0:", bound[0].originVertex.id, "->", bound[0].destinationVertex.id);
-            trace("  - edge1:", bound[1].originVertex.id, "->", bound[1].destinationVertex.id);
-            trace("  - edge2:", bound[2].originVertex.id, "->", bound[2].destinationVertex.id);*/
+            /*Debug.trace("the hole is a 3 edges polygon");
+            Debug.trace("  - edge0: " + bound[0].originVertex.id + " -> " + bound[0].destinationVertex.id);
+            Debug.trace("  - edge1: " + bound[1].originVertex.id + " -> " + bound[1].destinationVertex.id);
+            Debug.trace("  - edge2: " + bound[2].originVertex.id + " -> " + bound[2].destinationVertex.id);*/
             var f = new Face();
             f.setDatas(bound[0], isReal);
             _faces.push(f);
@@ -1426,9 +1424,9 @@ class Mesh
         // if more than 3 edges, we process recursively:
         else 
         {
-            //trace("the hole has", bound.length, "edges");
+            //Debug.trace("the hole has " + bound.length + " edges");
             /*for (i in 0...bound.length){
-                //trace("  - edge", i, ":", bound[i].originVertex.id, "->", bound[i].destinationVertex.id);
+                //Debug.trace("  - edge " + i + ": " + bound[i].originVertex.id + " -> " + bound[i].destinationVertex.id);
                 
             }*/
             
@@ -1474,24 +1472,24 @@ class Mesh
             if (!isDelaunay) 
             {
                 // for perfect regular n-sides polygons, checking delaunay circumcircle condition is not possible
-                trace("NO DELAUNAY FOUND");
+                Debug.trace("NO DELAUNAY FOUND");
                 var s : String = "";
                 for (i in 0...bound.length){
                     s += bound[i].originVertex.pos.x + " , ";
                     s += bound[i].originVertex.pos.y + " , ";
                     s += bound[i].destinationVertex.pos.x + " , ";
                     s += bound[i].destinationVertex.pos.y + " , ";
-                }  //trace(s);  
+                }  //Debug.trace(s);  
                 
                 
                 index = 2;
-            }  //trace("index", index, "on", bound.length);  
+            }  //Debug.trace("index " + index + " on " + bound.length);  
             
             
             var edgeA : Edge = null;
             var edgeAopp : Edge = null;
             var edgeB : Edge = null;
-            var edgeBopp : Edge;// = null;
+            var edgeBopp : Edge;
             var boundA : Array<Edge>;
             var boundM : Array<Edge>;
             
@@ -1566,15 +1564,15 @@ class Mesh
     {
         var i : Int;
         for (i in 0..._vertices.length){
-            trace("-- vertex", _vertices[i].id);
-            trace("  edge", _vertices[i].edge.id, " - ", _vertices[i].edge);
-            trace("  edge isReal:", _vertices[i].edge.isReal);
+            Debug.trace("-- vertex " + _vertices[i].id);
+            Debug.trace("  edge " + _vertices[i].edge.id + " - " + _vertices[i].edge);
+            Debug.trace("  edge isReal: " + _vertices[i].edge.isReal);
         }
         for (i in 0..._edges.length){
-            trace("-- edge", _edges[i]);
-            trace("  isReal", _edges[i].id, " - ", _edges[i].isReal);
-            trace("  nextLeftEdge", _edges[i].nextLeftEdge);
-            trace("  oppositeEdge", _edges[i].oppositeEdge);
+            Debug.trace("-- edge " + _edges[i]);
+            Debug.trace("  isReal " + _edges[i].id + " - " + _edges[i].isReal);
+            Debug.trace("  nextLeftEdge " + _edges[i].nextLeftEdge);
+            Debug.trace("  oppositeEdge " + _edges[i].oppositeEdge);
         }
     }
 }

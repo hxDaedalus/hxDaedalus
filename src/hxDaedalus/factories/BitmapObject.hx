@@ -5,6 +5,7 @@ import hxDaedalus.data.math.ShapeSimplifier;
 import hxDaedalus.data.Object;
 import hxDaedalus.data.graph.Graph;
 import hxDaedalus.data.math.Potrace;
+import hxDaedalus.debug.Debug;
 
 import flash.display.BitmapData;
 import flash.display.Shape;

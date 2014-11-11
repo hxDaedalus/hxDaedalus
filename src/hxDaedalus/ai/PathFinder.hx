@@ -1,8 +1,11 @@
 package hxDaedalus.ai;
+
 import hxDaedalus.data.Edge;
 import hxDaedalus.data.Face;
 import hxDaedalus.data.Mesh;
 import hxDaedalus.data.math.Geom2D;
+import hxDaedalus.debug.Debug;
+
 
 class PathFinder {
     
@@ -57,7 +60,7 @@ class PathFinder {
         listEdges.splice( 0, listEdges.length );
         astar.findPath( entity.x, entity.y, toX, toY, listFaces, listEdges );
         if( listFaces.length == 0 ){
-            trace("PathFinder listFaces.length == 0");
+            Debug.trace("PathFinder listFaces.length == 0");
             return;
         }
 

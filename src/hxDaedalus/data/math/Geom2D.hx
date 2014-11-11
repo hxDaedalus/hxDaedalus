@@ -2,7 +2,6 @@ package hxDaedalus.data.math;
 
 import hxDaedalus.data.math.Point2D;
 import hxDaedalus.data.math.RandGenerator;
-
 import hxDaedalus.data.Constants;
 import hxDaedalus.data.Edge;
 import hxDaedalus.data.Face;
@@ -10,8 +9,7 @@ import hxDaedalus.data.Mesh;
 import hxDaedalus.data.Vertex;
 import hxDaedalus.iterators.FromFaceToInnerEdges;
 import hxDaedalus.iterators.FromVertexToHoldingFaces;
-
-import flash.geom.Point;
+import hxDaedalus.debug.Debug;
 
  
 enum Intersection {
@@ -106,7 +104,7 @@ class Geom2D
             numIter++;
             if (numIter == 50) 
             {
-                //trace("WALK TAKE MORE THAN 50 LOOP");
+                Debug.trace("WALK TAKE MORE THAN 50 LOOP");
             }
             iterEdge.fromFace = currFace;
             do
@@ -114,7 +112,7 @@ class Geom2D
                 currEdge = iterEdge.next();
                 if (currEdge == null) 
                 {
-                    trace("KILL PATH");
+                    Debug.trace("KILL PATH");
                     return ENull;
                 }
                 relativPos = getRelativePosition(x, y, currEdge);
