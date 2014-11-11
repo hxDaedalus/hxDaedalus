@@ -66,27 +66,40 @@ class DemoBitmapPathfinding extends Sprite {
 		_overlay.x = 0;
 		_overlay.y = 0;
 		addChild(_overlay);
+		
 		_view = new SimpleView();
 		addChild( _view.surface );
 		
 		// create an object from bitmap
-		_object = BitmapObject.buildFromBmpData( _bmp.bitmapData );
+		_object = BitmapObject.buildFromBmpData( _bmp.bitmapData, 1.8 );
 		_object.x = 0;
 		_object.y = 0;
+		var s = haxe.Timer.stamp();
 		_mesh.insertObject( _object );
+		//trace("meshInsert: " + (haxe.Timer.stamp() - s));
 		
 		// display result mesh
+		
+		// draw the mesh
 		_view.drawMesh( _mesh );
+		
+		// stamp it on the overlay bitmap
+		_overlay.bitmapData.draw(_view.surface);
+		
+		// hide vertices, edges and contraints (so they don't have to be redrawn every frame)
+		_view.vertices.visible = false;
+		_view.edges.visible = false;
+		_view.constraints.visible = false;
 		
 		// we need an entity
 		_entityAI = new EntityAI();
 		
-		// set radius as size for your entity
+		// set radius size for your entity
 		_entityAI.radius = 4;
 		
 		// set a position
-		_entityAI.x = 150;
-		_entityAI.y = 150;
+		_entityAI.x = 20;
+		_entityAI.y = 20;
 		
 		// show entity on screen
 		_view.drawEntity( _entityAI );
@@ -102,7 +115,7 @@ class DemoBitmapPathfinding extends Sprite {
 		// then configure the path sampler
 		_pathSampler = new LinearPathSampler();
 		_pathSampler.entity = _entityAI;
-		_pathSampler.samplingDistance = 5;
+		_pathSampler.samplingDistance = 10;
 		_pathSampler.path = _path;
 
 		// click/drag
@@ -114,22 +127,13 @@ class DemoBitmapPathfinding extends Sprite {
 		
 		// key presses
 		Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
+		
+	#if openfl
+		var fps = new openfl.display.FPS();
+		Lib.current.stage.addChild(fps);
+	#end
 	}
-
-	function _onClick( event: MouseEvent ): Void {
-		// find path !
-		_pathfinder.findPath(stage.mouseX, stage.mouseY, _path);
-		
-		// show path on screen
-		_view.drawPath(_path);
-		
-		// reset the path sampler to manage new generated path
-		_pathSampler.reset();
-		
-		// animate !
-		Lib.current.stage.addEventListener(Event.ENTER_FRAME, _onEnterFrame);
-	}
-
+	
     function _onMouseUp( event: MouseEvent ): Void {
 		_newPath = false;
     }
@@ -140,7 +144,6 @@ class DemoBitmapPathfinding extends Sprite {
     
     function _onEnterFrame( event: Event ): Void {
         if ( _newPath ) {
-            
 			// find path !
             _pathfinder.findPath( stage.mouseX, stage.mouseY, _path );
             
@@ -153,7 +156,6 @@ class DemoBitmapPathfinding extends Sprite {
         
         // animate !
         if ( _pathSampler.hasNext ) {
-            
 			// move entity
             _pathSampler.next();            
             
