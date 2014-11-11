@@ -21,8 +21,7 @@ class BitmapObject
         var i : Int;
         var j : Int;
         
-		if (!(bmpData.width > 0 && bmpData.height > 0)) 
-			throw 'Invalid `bmpData` size (${bmpData.width}, ${bmpData.height})';
+		Debug.assertTrue(bmpData.width > 0 && bmpData.height > 0, 'Invalid `bmpData` size (${bmpData.width}, ${bmpData.height})');
 		
         // OUTLINES STEP-LIKE SHAPES GENERATION
         var shapes : Array<Array<Float>> = Potrace.buildShapes(bmpData, debugBmp, debugShape);

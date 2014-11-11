@@ -45,8 +45,8 @@ class PathFinder {
     
     public function findPath(toX : Float, toY : Float, resultPath : Array<Float>) : Void {
         resultPath.splice( 0, resultPath.length );
-        if( _mesh == null ) throw "Mesh missing";
-        if( entity == null ) throw "Entity missing";
+        Debug.assertFalse(_mesh == null, "Mesh missing");
+        Debug.assertFalse(entity == null, "Entity missing");
         
         if( Geom2D.isCircleIntersectingAnyConstraint( toX, toY, entity.radius, _mesh ) ) return;
         
@@ -60,6 +60,7 @@ class PathFinder {
             trace("PathFinder listFaces.length == 0");
             return;
         }
+
         funnel.findPath( entity.x, entity.y, toX, toY, listFaces, listEdges, resultPath );
     }
 }
