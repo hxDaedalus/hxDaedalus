@@ -5,6 +5,7 @@ import hxDaedalus.data.math.ShapeSimplifier;
 import hxDaedalus.data.Object;
 import hxDaedalus.data.graph.Graph;
 import hxDaedalus.data.math.Potrace;
+import hxDaedalus.debug.Debug;
 
 import flash.display.BitmapData;
 import flash.display.Shape;
@@ -21,8 +22,7 @@ class BitmapObject
         var i : Int;
         var j : Int;
         
-		if (!(bmpData.width > 0 && bmpData.height > 0)) 
-			throw 'Invalid `bmpData` size (${bmpData.width}, ${bmpData.height})';
+		Debug.assertTrue(bmpData.width > 0 && bmpData.height > 0, 'Invalid `bmpData` size (${bmpData.width}, ${bmpData.height})');
 		
         // OUTLINES STEP-LIKE SHAPES GENERATION
         var shapes : Array<Array<Float>> = Potrace.buildShapes(bmpData, debugBmp, debugShape);

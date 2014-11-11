@@ -1,5 +1,6 @@
 package hxDaedalus.data.math;
 
+import hxDaedalus.debug.Debug;
 
 class ShapeSimplifier
 {
@@ -14,7 +15,7 @@ class ShapeSimplifier
 	static public function simplify(coords:Array<Float>, epsilon:Float = 1):Array<Float> 
 	{
 		var len = coords.length;
-		if ((len % 2) != 0) throw "Wrong size";
+		Debug.assertFalse((len & 1) != 0, "Wrong size");
 		
 		if (len <= 4) {
 			return [].concat(coords);

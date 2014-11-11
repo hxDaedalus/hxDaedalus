@@ -7,6 +7,7 @@ import hxDaedalus.data.Face;
 import hxDaedalus.data.math.Geom2D;
 import hxDaedalus.data.Vertex;
 import hxDaedalus.data.math.Point2D;
+import hxDaedalus.debug.Debug;
 
 import flash.display.Sprite;
 
@@ -276,7 +277,7 @@ class Funnel
             }
             else 
             {
-                trace("IMPOSSIBLE TO IDENTIFY THE VERTEX !!!");
+                Debug.trace("IMPOSSIBLE TO IDENTIFY THE VERTEX !!!");
             }
             
             newPointA = getCopyPoint(currVertex.pos);
@@ -329,13 +330,13 @@ class Funnel
             // we identify the current vertex funnel's position by the position of his origin vertex
             if ( pointSides[ currPos ] == -1 ) {
                 // current vertex is at right
-                //trace("current vertex is at right");
+                //Debug.trace("current vertex is at right");
                 j = funnelLeft.length - 2;
                 while (j >= 0){
                     direction = Geom2D.getDirection(funnelLeft[j].x, funnelLeft[j].y, funnelLeft[j + 1].x, funnelLeft[j + 1].y, currPos.x, currPos.y);
                     if (direction != -1) 
                     {
-                        //trace("funnels are crossing");
+                        //Debug.trace("funnels are crossing");
                         
                         funnelLeft.shift();
                         for (k in 0...j){
@@ -408,14 +409,14 @@ class Funnel
         
         
         var blocked = false;
-        //trace("check if the goal is blocked by one funnel right vertex");
+        //Debug.trace("check if the goal is blocked by one funnel right vertex");
         j = funnelRight.length - 2;
         while (j >= 0){
             direction = Geom2D.getDirection(funnelRight[j].x, funnelRight[j].y, funnelRight[j + 1].x, funnelRight[j + 1].y, toX, toY);
-            //trace("dir", funnelRight[j].x, funnelRight[j].y, funnelRight[j+1].x, funnelRight[j+1].y, toX, toY);
+            //Debug.trace("dir" + funnelRight[j].x + "," + funnelRight[j].y + " " + funnelRight[j+1].x + "," + funnelRight[j+1].y + " " + toX + "," + toY);
             if (direction != 1) 
             {
-                //trace("goal access right blocked");
+                //Debug.trace("goal access right blocked");
                 // access blocked
                 funnelRight.shift();
                 for (k in 0...j + 1){
@@ -434,14 +435,14 @@ class Funnel
         if (!blocked) 
         {
             // check if the goal is blocked by one funnel's left vertex
-            //trace("check if the goal is blocked by one funnel left vertex");
+            //Debug.trace("check if the goal is blocked by one funnel left vertex");
             j = funnelLeft.length - 2;
             while (j >= 0){
                 direction = Geom2D.getDirection(funnelLeft[j].x, funnelLeft[j].y, funnelLeft[j + 1].x, funnelLeft[j + 1].y, toX, toY);
-                //trace("dir", funnelLeft[j].x, funnelLeft[j].y, funnelLeft[j+1].x, funnelLeft[j+1].y, toX, toY);
+                //Debug.trace("dir " + funnelLeft[j].x + "," + funnelLeft[j].y + " " + funnelLeft[j+1].x + "," + funnelLeft[j+1].y + " " + toX + "," + toY);
                 if (direction != -1) 
                 {
-                    //trace("goal access left blocked");
+                    //Debug.trace("goal access left blocked");
                     // access blocked
                     funnelLeft.shift();
                     for (k in 0...j + 1){
@@ -535,7 +536,7 @@ class Funnel
         // then we check the unused intermediate points between pathPoints[i] and pathPoints[i+1]
         // if a point P is too close from the segment, we replace T by 2 tangents T1, T2, between the points pathPoints[i] P and P - pathPoints[i+1]
         
-        //trace("adjustWithTangents");
+        //Debug.trace("adjustWithTangents");
         
         var tangentsResult : Array<Float> = new Array<Float>();
         
@@ -548,18 +549,15 @@ class Funnel
         // if no radius application
         if (!applyRadiusToP1 && !applyRadiusToP2) 
         {
-            //trace("no radius applied");
+            //Debug.trace("no radius applied");
             pTangent1 = p1;
             pTangent2 = p2;
         }
         // we apply radius to p2 only
         else if (!applyRadiusToP1) 
         {
-            //trace("! applyRadiusToP1");
-            Geom2D.tangentsPointToCircle(p1.x, p1.y, p2.x, p2.y, _radius, tangentsResult);
-            //TODO: check if this added test is sound
-			if (tangentsResult.length > 0)
-			{
+            //Debug.trace("! applyRadiusToP1");
+            if (Geom2D.tangentsPointToCircle(p1.x, p1.y, p2.x, p2.y, _radius, tangentsResult)) {
 				// p2 lies on the left funnel
 				if (side2 == 1) 
 				{
@@ -572,42 +570,40 @@ class Funnel
 					pTangent1 = p1;
 					pTangent2 = getPoint(tangentsResult[0], tangentsResult[1]);
 				}
-			} else 
-			{
-				trace("no tangent");
+			} else {
+				Debug.trace("NO TANGENT");
 				return;
 			}
         }
         // we apply radius to p1 only
         else if (!applyRadiusToP2) 
         {
-            //trace("! applyRadiusToP2");
-            Geom2D.tangentsPointToCircle(p2.x, p2.y, p1.x, p1.y, _radius, tangentsResult);
-            //TODO: check if this added test is sound
-			if (tangentsResult.length > 0)
-			{
-				// p1 lies on the left funnel
-				if (side1 == 1) 
+            //Debug.trace("! applyRadiusToP2");
+            if (Geom2D.tangentsPointToCircle(p2.x, p2.y, p1.x, p1.y, _radius, tangentsResult)) {
+				if (tangentsResult.length > 0)
 				{
-					pTangent1 = getPoint(tangentsResult[0], tangentsResult[1]);
-					pTangent2 = p2;
+					// p1 lies on the left funnel
+					if (side1 == 1) 
+					{
+						pTangent1 = getPoint(tangentsResult[0], tangentsResult[1]);
+						pTangent2 = p2;
+					}
+					// p1 lies on the right funnel
+					else 
+					{
+						pTangent1 = getPoint(tangentsResult[2], tangentsResult[3]);
+						pTangent2 = p2;
+					}
 				}
-				// p1 lies on the right funnel
-				else 
-				{
-					pTangent1 = getPoint(tangentsResult[2], tangentsResult[3]);
-					pTangent2 = p2;
-				}
-			} else 
-			{
-				trace("no tangent");
+			} else {
+				Debug.trace("NO TANGENT");
 				return;
 			}
         }
         // we apply radius to both points
         else 
         {
-            //trace("we apply radius to both points");
+            //Debug.trace("we apply radius to both points");
             // both points lie on left funnel
             if (side1 == 1 && side2 == 1) 
             {
@@ -637,7 +633,7 @@ class Funnel
                 {
                     // NO TANGENT BECAUSE POINTS TOO CLOSE
                     // A* MUST CHECK THAT !
-                    trace("NO TANGENT, points are too close for radius");
+                    Debug.trace("NO TANGENT, points are too close for radius");
                     return;
                 }
             }
@@ -654,7 +650,7 @@ class Funnel
                 {
                     // NO TANGENT BECAUSE POINTS TOO CLOSE
                     // A* MUST CHECK THAT !
-                    trace("NO TANGENT, points are too close for radius");
+                    Debug.trace("NO TANGENT, points are too close for radius");
                     return;
                 }
             }
@@ -739,7 +735,7 @@ class Funnel
                     if (dot > 0) 
                     {
                         //needCheck = true;
-                        //trace("dot > 0");
+                        //Debug.trace("dot > 0");
                         // rework the tangent
                         if (i == 2) 
                         {
@@ -779,7 +775,7 @@ class Funnel
                             // 1st point lies on left funnel, 2nd on right funnel
                             if (point0Side == 1 && point2Side == -1) 
                             {
-                                //trace("point0Side == 1 && point2Side == -1");
+                                //Debug.trace("point0Side == 1 && point2Side == -1");
                                 Geom2D.tangentsCrossCircleToCircle(_radius, point0.x, point0.y, point2.x, point2.y, tangentsResult);  // we keep the points of the right-left tangent  ;
                                 
                                 pTangent1 = getPoint(tangentsResult[2], tangentsResult[3]);
@@ -788,7 +784,7 @@ class Funnel
                             // 1st point lies on right funnel, 2nd on left funnel
                             else if (point0Side == -1 && point2Side == 1) 
                             {
-                                //trace("point0Side == -1 && point2Side == 1");
+                                //Debug.trace("point0Side == -1 && point2Side == 1");
                                 Geom2D.tangentsCrossCircleToCircle(_radius, point0.x, point0.y, point2.x, point2.y, tangentsResult);  // we keep the points of the right-left tangent  ;
                                 
                                 pTangent1 = getPoint(tangentsResult[0], tangentsResult[1]);
@@ -797,7 +793,7 @@ class Funnel
                             // both points lie on left funnel
                             else if (point0Side == 1 && point2Side == 1) 
                             {
-                                //trace("point0Side == 1 && point2Side == 1");
+                                //Debug.trace("point0Side == 1 && point2Side == 1");
                                 Geom2D.tangentsParalCircleToCircle(_radius, point0.x, point0.y, point2.x, point2.y, tangentsResult);
                                 // we keep the points of the right tangent
                                 pTangent1 = getPoint(tangentsResult[2], tangentsResult[3]);
@@ -806,7 +802,7 @@ class Funnel
                             // both points lie on right funnel
                             else if (point0Side == -1 && point2Side == -1) 
                             {
-                                //trace("point0Side == -1 && point2Side == -1");
+                                //Debug.trace("point0Side == -1 && point2Side == -1");
                                 Geom2D.tangentsParalCircleToCircle(_radius, point0.x, point0.y, point2.x, point2.y, tangentsResult);
                                 // we keep the points of the right tangent
                                 pTangent1 = getPoint(tangentsResult[0], tangentsResult[1]);
@@ -838,11 +834,11 @@ class Funnel
         var angleType = Geom2D.getDirection(prevPoint.x, prevPoint.y, pointToSmooth.x, pointToSmooth.y, nextPoint.x, nextPoint.y);
         
         /*
-        trace("smoothAngle");
-        trace("angleType", angleType);
-        trace("prevPoint", prevPoint);
-        trace("pointToSmooth", pointToSmooth);
-        trace("nextPoint", nextPoint);
+        Debug.trace("smoothAngle");
+        Debug.trace("angleType " + angleType);
+        Debug.trace("prevPoint " + prevPoint);
+        Debug.trace("pointToSmooth " + pointToSmooth);
+        Debug.trace("nextPoint " + nextPoint);
         */
         
         var distanceSquared = (prevPoint.x - nextPoint.x) * (prevPoint.x - nextPoint.x) + (prevPoint.y - nextPoint.y) * (prevPoint.y - nextPoint.y);
@@ -865,18 +861,18 @@ class Funnel
             // if funnel left
             if (side == 1) 
             {
-                //trace("funnel side is 1");
+                //Debug.trace("funnel side is 1");
                 // if angle is < 180
                 if (angleType == -1) 
                 {
-                    //trace("angle type is -1");
+                    //Debug.trace("angle type is -1");
                     if (side1 == -1 && side2 == -1) 
                         pointInArea = true;
                 }
                 // if angle is >= 180
                 else 
                 {
-                    //trace("angle type is 1")
+                    //Debug.trace("angle type is 1")
                     if (side1 == -1 || side2 == -1) 
                         pointInArea = true;
                 }

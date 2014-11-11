@@ -2,7 +2,6 @@ package hxDaedalus.data.math;
 
 import hxDaedalus.data.math.Point2D;
 import hxDaedalus.data.math.RandGenerator;
-
 import hxDaedalus.data.Constants;
 import hxDaedalus.data.Edge;
 import hxDaedalus.data.Face;
@@ -10,8 +9,7 @@ import hxDaedalus.data.Mesh;
 import hxDaedalus.data.Vertex;
 import hxDaedalus.iterators.FromFaceToInnerEdges;
 import hxDaedalus.iterators.FromVertexToHoldingFaces;
-
-import flash.geom.Point;
+import hxDaedalus.debug.Debug;
 
  
 enum Intersection {
@@ -65,8 +63,9 @@ class Geom2D
         _randGen.rangeMax = mesh._vertices.length - 1;
         for (i in 0...numSamples){
             var _rnd:Int = _randGen.next();
-            //TODO: Assert
-            if (_rnd < 0 || _rnd > mesh._vertices.length -1 || mesh._vertices == null) throw '_rnd: $_rnd vertices: ${mesh._vertices.length}';
+
+            Debug.assertFalse(_rnd < 0 || _rnd > mesh._vertices.length - 1, '_rnd: $_rnd');
+			Debug.assertFalse(mesh._vertices == null, 'vertices: ${mesh._vertices.length}');
             __samples.push(mesh._vertices[_rnd]);
         }
         
@@ -105,7 +104,7 @@ class Geom2D
             numIter++;
             if (numIter == 50) 
             {
-                trace("WALK TAKE MORE THAN 50 LOOP");
+                Debug.trace("WALK TAKE MORE THAN 50 LOOP");
             }
             iterEdge.fromFace = currFace;
             do
@@ -113,7 +112,7 @@ class Geom2D
                 currEdge = iterEdge.next();
                 if (currEdge == null) 
                 {
-                    trace("KILL PATH");
+                    Debug.trace("KILL PATH");
                     return ENull;
                 }
                 relativPos = getRelativePosition(x, y, currEdge);
@@ -892,13 +891,13 @@ class Geom2D
     // fill the result vector with 4 elements, with the form:
     // [point_tangent1.x, point_tangent1.y, point_tangent2.x, point_tangent2.y]
     // empty if no tangent
-    public static function tangentsPointToCircle(px : Float, py : Float, cx : Float, cy : Float, r : Float, result : Array<Float>) : Void
+    public static function tangentsPointToCircle(px : Float, py : Float, cx : Float, cy : Float, r : Float, result : Array<Float>) : Bool
     {
         var c2x  = (px + cx) / 2;
         var c2y  = (py + cy) / 2;
         var r2 = 0.5 * Math.sqrt((px - cx) * (px - cx) + (py - cy) * (py - cy));
         
-        intersections2Circles(c2x, c2y, r2, cx, cy, r, result);
+        return intersections2Circles(c2x, c2y, r2, cx, cy, r, result);
     }
     
     // <!!!> CIRCLES MUST HAVE SAME RADIUS

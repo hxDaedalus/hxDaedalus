@@ -1,6 +1,7 @@
 package hxDaedalus.ai.trajectory;
 
 
+import hxDaedalus.debug.Debug;
 import hxDaedalus.ai.EntityAI;
 
 class LinearPathSampler{
@@ -95,7 +96,9 @@ class LinearPathSampler{
     }
     
     public function reset(): Void {
-        if( _path.length > 0 ){
+        if ( _path.length > 0 ) {
+			Debug.assertTrue((_path.length & 1) == 0, "Wrong length");
+			
             _currentX = _path[ 0 ];
             _currentY = _path[ 1 ];
             _iPrev = 0;
@@ -222,7 +225,8 @@ class LinearPathSampler{
     
      function updateEntity() : Void {
         if( entity == null ) return;
-        entity.x = _currentX;
+        Debug.assertFalse(Math.isNaN(_currentX) && Math.isNaN(_currentY));
+		entity.x = _currentX;
         entity.y = _currentY;
     }
 }

@@ -1,6 +1,5 @@
 package hxDaedalus.ai;
 
-
 import hxDaedalus.data.Edge;
 import hxDaedalus.data.Face;
 import hxDaedalus.data.Mesh;
@@ -8,6 +7,7 @@ import hxDaedalus.data.Vertex;
 import hxDaedalus.data.math.Geom2D;
 import hxDaedalus.data.math.Point2D;
 import hxDaedalus.iterators.FromFaceToInnerEdges;
+import hxDaedalus.debug.Debug;
 
 import haxe.ds.StringMap;
 
@@ -78,7 +78,7 @@ class AStar {
                             ,   toX : Float,    toY : Float
                             ,   resultListFaces : Array<Face>
                             ,   resultListEdges : Array<Edge>) : Void {
-        //trace("findPath");
+        //Debug.trace("findPath");
         closedFaces = new Map<Face,Bool>();
         sortedOpenedFaces = new Array<Face>();
         openedFaces = new Map<Face,Bool>();
@@ -129,8 +129,8 @@ class AStar {
 		/*
         fromFace.colorDebug = 0xFF0000;
         toFace.colorDebug = 0xFF0000;
-        trace( "from face:", fromFace );
-        trace( "to face:", toFace );
+        Debug.trace( "from face: " + fromFace );
+        Debug.trace( "to face: " + toFace );
 		*/
         
         sortedOpenedFaces.push( fromFace );
@@ -154,7 +154,7 @@ class AStar {
         while( true ){
             // no path found
             if( sortedOpenedFaces.length == 0 ){
-                trace("AStar no path found");
+                Debug.trace("AStar no path found");
                 curFace = null;
                 break;
             }  // we reached the target face  
@@ -168,10 +168,10 @@ class AStar {
                 neighbourFace = innerEdge.rightFace;
                 if( !closedFaces[ neighbourFace ] ) {
                     if (curFace != fromFace && _radius > 0 && !isWalkableByRadius( entryEdges[ curFace ], curFace, innerEdge) ) {
-                        //                            trace("- NOT WALKABLE -");
-                        //                            trace( "from", hxDaedalusEdge(__entryEdges[__curFace]).originVertex.id, hxDaedalusEdge(__entryEdges[__curFace]).destinationVertex.id );
-                        //                            trace( "to", innerEdge.originVertex.id, innerEdge.destinationVertex.id );
-                        //                            trace("----------------");
+                        //                            Debug.trace("- NOT WALKABLE -");
+                        //                            Debug.trace( "from ", hxDaedalusEdge(__entryEdges[__curFace]).originVertex.id, hxDaedalusEdge(__entryEdges[__curFace]).destinationVertex.id );
+                        //                            Debug.trace( "to", innerEdge.originVertex.id, innerEdge.destinationVertex.id );
+                        //                            Debug.trace("----------------");
                         continue;
                     }
                     
