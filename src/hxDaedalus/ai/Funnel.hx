@@ -556,10 +556,7 @@ class Funnel
         else if (!applyRadiusToP1) 
         {
             //trace("! applyRadiusToP1");
-            Geom2D.tangentsPointToCircle(p1.x, p1.y, p2.x, p2.y, _radius, tangentsResult);
-            //TODO: check if this added test is sound
-			if (tangentsResult.length > 0)
-			{
+            if (Geom2D.tangentsPointToCircle(p1.x, p1.y, p2.x, p2.y, _radius, tangentsResult)) {
 				// p2 lies on the left funnel
 				if (side2 == 1) 
 				{
@@ -572,9 +569,8 @@ class Funnel
 					pTangent1 = p1;
 					pTangent2 = getPoint(tangentsResult[0], tangentsResult[1]);
 				}
-			} else 
-			{
-				trace("no tangent");
+			} else {
+				trace("NO TANGENT");
 				return;
 			}
         }
@@ -582,25 +578,24 @@ class Funnel
         else if (!applyRadiusToP2) 
         {
             //trace("! applyRadiusToP2");
-            Geom2D.tangentsPointToCircle(p2.x, p2.y, p1.x, p1.y, _radius, tangentsResult);
-            //TODO: check if this added test is sound
-			if (tangentsResult.length > 0)
-			{
-				// p1 lies on the left funnel
-				if (side1 == 1) 
+            if (Geom2D.tangentsPointToCircle(p2.x, p2.y, p1.x, p1.y, _radius, tangentsResult)) {
+				if (tangentsResult.length > 0)
 				{
-					pTangent1 = getPoint(tangentsResult[0], tangentsResult[1]);
-					pTangent2 = p2;
+					// p1 lies on the left funnel
+					if (side1 == 1) 
+					{
+						pTangent1 = getPoint(tangentsResult[0], tangentsResult[1]);
+						pTangent2 = p2;
+					}
+					// p1 lies on the right funnel
+					else 
+					{
+						pTangent1 = getPoint(tangentsResult[2], tangentsResult[3]);
+						pTangent2 = p2;
+					}
 				}
-				// p1 lies on the right funnel
-				else 
-				{
-					pTangent1 = getPoint(tangentsResult[2], tangentsResult[3]);
-					pTangent2 = p2;
-				}
-			} else 
-			{
-				trace("no tangent");
+			} else {
+				trace("NO TANGENT");
 				return;
 			}
         }
