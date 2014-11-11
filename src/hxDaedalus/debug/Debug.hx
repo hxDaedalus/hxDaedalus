@@ -51,7 +51,7 @@ class Debug
 #if ((debug && !NO_DAEDALUS_TRACE) || DAEDALUS_TRACE)
 
 	inline static public function trace(value:Dynamic, ?pos:PosInfos) {
-		haxe.Log.Debug.trace(value, pos);
+		haxe.Log.trace(value, pos);
 	}
 
 #elseif (!debug || NO_DAEDALUS_TRACE)
