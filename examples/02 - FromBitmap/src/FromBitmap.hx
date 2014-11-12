@@ -11,10 +11,10 @@ import flash.display.BitmapData;
 import flash.events.KeyboardEvent;
 
 
-@:bitmap("DemoFromBitmap.png")
+@:bitmap("assets/FromBitmap.png")
 class TestImage extends flash.display.BitmapData {}
 
-class DemoFromBitmap extends Sprite
+class FromBitmap extends Sprite
 {
     
     var _mesh : Mesh;
@@ -24,7 +24,7 @@ class DemoFromBitmap extends Sprite
     var _bmp : Bitmap;
     
     public static function main():Void {
-        Lib.current.addChild(new DemoFromBitmap());
+        Lib.current.addChild(new FromBitmap());
     }
     
     public function new()

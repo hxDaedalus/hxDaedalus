@@ -12,7 +12,7 @@ import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.KeyboardEvent;
 
-class DemoBasics extends Sprite
+class Basics extends Sprite
 {
     
     var _mesh : Mesh;
@@ -21,7 +21,7 @@ class DemoBasics extends Sprite
     
     public static function main():Void 
     {
-        Lib.current.addChild(new DemoBasics());
+        Lib.current.addChild(new Basics());
     }
     
     public function new()
