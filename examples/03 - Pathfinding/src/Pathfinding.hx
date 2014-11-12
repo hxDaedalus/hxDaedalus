@@ -15,7 +15,7 @@ import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.events.KeyboardEvent;
 
-class DemoPathfinding extends Sprite
+class Pathfinding extends Sprite
 {
     
     var _mesh : Mesh;
@@ -29,7 +29,7 @@ class DemoPathfinding extends Sprite
     var _newPath:Bool = false;
     
     public static function main():Void {
-        Lib.current.addChild(new DemoPathfinding());
+        Lib.current.addChild(new Pathfinding());
     }
     
     public function new(){

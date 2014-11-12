@@ -18,13 +18,13 @@ import flash.display.Sprite;
 import flash.events.KeyboardEvent;
 import flash.Lib;
 
-@:bitmap("galapagosBW.png")
+@:bitmap("assets/galapagosBW.png")
 class GalapagosBW extends flash.display.BitmapData {}
 
-@:bitmap("galapagosColor.png")
+@:bitmap("assets/galapagosColor.png")
 class GalapagosColor extends flash.display.BitmapData {}
 
-class DemoBitmapPathfinding extends Sprite {
+class BitmapPathfinding extends Sprite {
 
 	var _mesh:  Mesh;
 	var _view:  SimpleView;
@@ -39,7 +39,7 @@ class DemoBitmapPathfinding extends Sprite {
     var _newPath:Bool = false;
 
 	public static function main(): Void {
-		Lib.current.addChild(new DemoBitmapPathfinding());
+		Lib.current.addChild(new BitmapPathfinding());
 	}
 
 	public function new() {
