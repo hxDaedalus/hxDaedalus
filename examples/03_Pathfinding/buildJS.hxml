@@ -1,7 +1,7 @@
 -cp src/
 -cp ../../src/
 -main PathfindingJS
--D canvasHeader=600:400:60:FFFFFF
+-D canvasHeader=600:600:60:FFFFFF
 -js web/daedalusPathfinding.js
 -D fdb
 #-D showVerticesIndices

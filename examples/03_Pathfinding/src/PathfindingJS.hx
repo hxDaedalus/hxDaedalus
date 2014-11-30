@@ -47,7 +47,7 @@ class PathfindingJS
         // populate mesh with many square objects
         var object : Object;
         var shapeCoords : Array<Float>;
-        for (i in 0...30){
+        for (i in 0...50){
             trace(' i ' + i );
             object = new Object();
             shapeCoords = new Array<Float>();
