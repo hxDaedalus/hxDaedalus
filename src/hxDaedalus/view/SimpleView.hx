@@ -52,16 +52,14 @@ class SimpleView
         return _paths;
     }
    
-	var _entities:Sprite;
+    var _entities:Sprite;
     public var entities(get, null):Sprite;
     function get_entities():Sprite {
         return _entities;
     }
     
-    var _showVerticesIndices:Bool = false;
     
-    
-	public function new()
+    public function new()
     {
         _edges = new Sprite();
         _constraints = new Sprite();
@@ -114,8 +112,7 @@ class SimpleView
             _vertices.graphics.drawCircle(vertex.pos.x, vertex.pos.y, 0.5);
             _vertices.graphics.endFill();
             
-            if (_showVerticesIndices) 
-            {
+            #if showVerticesIndices 
                 var tf:TextField = new TextField();
                 tf.mouseEnabled = false;
                 tf.text = Std.string(vertex.id);
@@ -123,7 +120,7 @@ class SimpleView
                 tf.y = vertex.pos.y + 5;
                 tf.width = tf.height = 20;
                 _vertices.addChild(tf);
-            }
+            #end
             
             iterEdges.fromVertex = vertex;
             while ((incomingEdge = iterEdges.next()) != null)

@@ -5,6 +5,7 @@
 -swf-header 600:600:60:FFFFFF
 -swf bin/FromBitmap.swf
 -D fdb
+#-D showVerticesIndices
 -debug
 #mac
 -cmd open bin/FromBitmap.swf

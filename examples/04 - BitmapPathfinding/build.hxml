@@ -5,6 +5,7 @@
 -swf-header 1024:780:60:FFFFFF
 -swf bin/BitmapPathfinding.swf
 -D fdb
+#-D showVerticesIndices
 -debug
 #mac
 -cmd open bin/BitmapPathfinding.swf

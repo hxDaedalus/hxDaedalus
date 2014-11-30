@@ -5,6 +5,7 @@
 -swf-header 600:400:60:FFFFFF
 -swf bin/Basics.swf
 -D fdb
+#-D showVerticesIndices
 -debug
 #mac
 -cmd open bin/Basics.swf
