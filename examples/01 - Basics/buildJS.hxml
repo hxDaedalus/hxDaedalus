@@ -9,4 +9,4 @@
 #mac
 -cmd open web/DaedalusBasic.html
 #win
-#-cmd start bin/Basics.swf
+#-cmd start web/DaedalusBasic.html

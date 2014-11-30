@@ -8,8 +8,11 @@ import hxDaedalus.data.math.Geom2D;
 import hxDaedalus.data.Vertex;
 import hxDaedalus.data.math.Point2D;
 import hxDaedalus.debug.Debug;
+#if js
 
-import flash.display.Sprite;
+#else
+    import flash.display.Sprite;
+#end
 
 class Funnel
 {
@@ -21,8 +24,11 @@ class Funnel
      var _numSamplesCircle : Int = 16;
      var _sampleCircle : Array<Point2D>;
      var _sampleCircleDistanceSquared : Float;
+    #if js
     
-    public var debugSurface : Sprite;
+    #else
+     public var debugSurface : Sprite;
+    #end
     
     public function new()
     {
