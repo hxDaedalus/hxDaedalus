@@ -98,9 +98,9 @@ class PathfindingJS
         pathSampler.path = path;
         
         // click/drag
-        Browser.document.body.onmousedown = onMouseDown;
-        Browser.document.body.onmousedown = onMouseUp;
-        Browser.document.body.onmousemove = onMouseMove;
+        view.basicCanvas.canvas.onmousedown = onMouseDown;
+        view.basicCanvas.canvas.onmouseup = onMouseUp;
+        view.basicCanvas.canvas.onmousemove = onMouseMove;
         // animate
         view.basicCanvas.onEnterFrame = onEnterFrame;
         
