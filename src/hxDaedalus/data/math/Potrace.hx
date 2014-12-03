@@ -5,10 +5,8 @@ import hxDaedalus.data.Constants;
 import hxDaedalus.data.graph.Graph;
 import hxDaedalus.data.graph.GraphEdge;
 import hxDaedalus.data.graph.GraphNode;
-
-import flash.display.BitmapData;
-import flash.display.Shape;
-import flash.geom.Point;
+import hxDaedalus.data.math.Point2D;
+import hxPixels.Pixels;
 
 
 
@@ -20,7 +18,7 @@ class Potrace
     
     public static var maxDistance : Float = 1;
     
-    public static function buildShapes( bmpData: BitmapData, debugBmp: BitmapData = null, debugShape: Shape = null ) : Array<Array<Float>>
+    public static function buildShapes( bmpData: Pixels, debugBmp: Pixels = null, debugShape: Dynamic = null ) : Array<Array<Float>>
     {
         // OUTLINES STEP-LIKE SHAPES GENERATION
         var shapes = new Array<Array<Float>>();
@@ -38,15 +36,15 @@ class Potrace
         return shapes;
     }
     
-    public static function buildShape(bmpData : BitmapData, fromPixelRow : Int, fromPixelCol : Int, dictPixelsDone : Map<String,Bool>, debugBmp : BitmapData = null, debugShape : Shape = null) : Array<Float>
+    public static function buildShape(bmpData : Pixels, fromPixelRow : Int, fromPixelCol : Int, dictPixelsDone : Map<String,Bool>, debugBmp : Pixels = null, debugShape : Dynamic = null) : Array<Float>
     {
         var newX : Float = fromPixelCol;
         var newY : Float = fromPixelRow;
         var path = [ newX, newY ];
         dictPixelsDone[newX + "_" + newY] = true;
         
-        var curDir = new Point(0, 1);
-        var newDir = new Point();
+        var curDir = new Point2D(0, 1);
+        var newDir = new Point2D();
         var newPixelRow : Int;
         var newPixelCol : Int;
         var count = -1;
@@ -204,7 +202,7 @@ class Potrace
         return graph;
     }
     
-    public static function buildPolygon(graph : Graph, debugShape : Shape = null) : Array<Float>
+    public static function buildPolygon(graph : Graph, debugShape : Dynamic = null) : Array<Float>
     {
         var polygon : Array<Float> = new Array<Float>();
         

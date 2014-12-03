@@ -14,6 +14,7 @@
 	<haxeflag name="-D" value="swf-script-timeout=60" />
 	<!--haxeflag name="--no-traces" if="release" /-->
 	<haxelib name="openfl" />
+	<haxelib name="hxPixels" />
 	
 	<assets path="assets/galapagosBW.png" rename="GalapagosBW" if="html5" />
 	<assets path="assets/galapagosColor.png" rename="GalapagosColor" if="html5" />

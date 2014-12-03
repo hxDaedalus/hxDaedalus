@@ -11,7 +11,7 @@ import hxDaedalus.debug.Debug;
 #if js
 
 #else
-    import flash.display.Sprite;
+    //import flash.display.Sprite;
 #end
 
 class Funnel
@@ -27,7 +27,7 @@ class Funnel
     #if js
     
     #else
-     public var debugSurface : Sprite;
+     //public var debugSurface : Sprite;
     #end
     
     public function new()

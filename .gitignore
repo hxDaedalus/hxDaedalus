@@ -2,6 +2,8 @@
 bin/
 bin-debug/
 bin-release/
+web/
+deploySwing/
 
 # Other files and folders
 .settings/

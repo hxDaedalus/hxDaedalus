@@ -67,8 +67,9 @@ class BitmapPathfinding extends Sprite {
 		_overlay.y = 0;
 		addChild(_overlay);
 		
-		_view = new SimpleView();
-		addChild( _view.surface );
+		var viewSprite = new Sprite();
+		_view = new SimpleView(viewSprite);
+		addChild( viewSprite );
 		
 		// create an object from bitmap
 		_object = BitmapObject.buildFromBmpData( _bmp.bitmapData, 1.8 );
@@ -84,12 +85,12 @@ class BitmapPathfinding extends Sprite {
 		_view.drawMesh( _mesh );
 		
 		// stamp it on the overlay bitmap
-		_overlay.bitmapData.draw(_view.surface);
+		_overlay.bitmapData.draw(viewSprite);
 		
 		// hide vertices, edges and contraints (so they don't have to be redrawn every frame)
-		_view.vertices.visible = false;
-		_view.edges.visible = false;
-		_view.constraints.visible = false;
+		//_view.showVertices = false;
+		//_view.showEdges = false;
+		//_view.showConstraints = false;
 		
 		// we need an entity
 		_entityAI = new EntityAI();

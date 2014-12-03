@@ -6,17 +6,15 @@ import hxDaedalus.data.Object;
 import hxDaedalus.data.graph.Graph;
 import hxDaedalus.data.math.Potrace;
 import hxDaedalus.debug.Debug;
-
-import flash.display.BitmapData;
-import flash.display.Shape;
+import hxPixels.Pixels;
 
 class BitmapObject
 {
     public function new(){}
-    public static function buildFromBmpData(    bmpData: BitmapData
+    public static function buildFromBmpData(    bmpData: Pixels
 											,	simplificationEpsilon:Float = 1
-                                            ,   debugBmp: BitmapData = null
-                                            ,   debugShape : Shape = null
+                                            ,   debugBmp: Pixels = null
+                                            ,   debugShape : Dynamic = null
                                             ) : Object
     {
         var i : Int;
