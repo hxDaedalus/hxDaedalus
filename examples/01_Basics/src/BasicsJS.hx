@@ -1,19 +1,23 @@
 
+import hxDaedalus.canvas.BasicCanvas;
 import hxDaedalus.data.ConstraintSegment;
 import hxDaedalus.data.ConstraintShape;
 import hxDaedalus.data.Mesh;
 import hxDaedalus.data.Object;
 import hxDaedalus.data.Vertex;
 import hxDaedalus.factories.RectMesh;
-import hxDaedalus.view.SimpleViewJS;
+import hxDaedalus.view.SimpleView;
+//import hxDaedalus.view.SimpleViewJS;
 
 class BasicsJS
 {
     
     var mesh : Mesh;
-    var view : SimpleViewJS;
+    var view : SimpleView;
     var object : Object;
     
+	var basicCanvas:BasicCanvas;
+	
     public static function main():Void 
     {
         new BasicsJS();
@@ -25,9 +29,10 @@ class BasicsJS
         // build a rectangular 2 polygons mesh of 600x400
         mesh = RectMesh.buildRectangle(600, 400);
         
-        
+        basicCanvas = new BasicCanvas();
+		
         // create a viewport
-        view = new SimpleViewJS();
+        view = new SimpleView(basicCanvas);
         
         
         // SINGLE VERTEX INSERTION / DELETION
@@ -77,7 +82,7 @@ class BasicsJS
         //_mesh.deleteObject(_object);
         
         // animate
-        view.basicCanvas.onEnterFrame = onEnterFrame;
+        basicCanvas.onEnterFrame = onEnterFrame;
     }
     
     function onEnterFrame():Void {
@@ -86,7 +91,7 @@ class BasicsJS
     
         mesh.updateObjects();  // don't forget to update  
         // render mesh
-        view.drawMesh(mesh);
+        view.drawMesh(mesh, true);
     }
 
 }

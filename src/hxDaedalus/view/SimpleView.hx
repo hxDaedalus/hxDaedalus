@@ -4,16 +4,13 @@ package hxDaedalus.view;
 import hxDaedalus.ai.EntityAI;
 import hxDaedalus.data.Edge;
 import hxDaedalus.data.Face;
+import hxDaedalus.data.math.Point2D;
 import hxDaedalus.data.Mesh;
 import hxDaedalus.data.Vertex;
 import hxDaedalus.graphics.SimpleDrawingContext;
 import hxDaedalus.iterators.FromMeshToVertices;
 import hxDaedalus.iterators.FromVertexToHoldingFaces;
 import hxDaedalus.iterators.FromVertexToIncomingEdges;
-
-import flash.display.LineScaleMode;
-import flash.display.Sprite;
-import flash.text.TextField;
 
 
 class SimpleView
@@ -46,13 +43,21 @@ class SimpleView
     }
     
 
-    public function new(sprite:Sprite)
+#if (flash || openfl || nme) 
+    public function new(sprite:flash.display.Sprite)
     {
 		this._graphics = new SimpleDrawingContext(sprite.graphics);
     }
+#elseif js
+    public function new(canvas:hxDaedalus.canvas.BasicCanvas)
+    {
+		this._graphics = new SimpleDrawingContext(canvas);
+    }
+#end
     
     function drawVertex(vertex : Vertex) : Void
 	{
+		_graphics.lineStyle(verticesRadius, verticesColor, verticesAlpha);
 		_graphics.beginFill(verticesColor, verticesAlpha);
 		_graphics.drawCircle(vertex.pos.x, vertex.pos.y, verticesRadius);
 		_graphics.endFill();
@@ -88,10 +93,7 @@ class SimpleView
     public function drawMesh(mesh:Mesh, cleanBefore : Bool = false):Void 
 	{
         if (cleanBefore) _graphics.clear();
-        
-        _graphics.lineStyle(constraintsWidth, constraintsColor, constraintsAlpha);
-        _graphics.drawRect(0, 0, mesh.width, mesh.height);
-        
+		
 		mesh.traverse(drawVertex, drawEdge);
     }
     

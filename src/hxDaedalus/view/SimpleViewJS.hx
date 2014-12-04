@@ -35,7 +35,7 @@ class SimpleViewJS
         basicCanvas.lineStyle( 0.5, 0xFF0000 );
         surface.beginPath();
         surface.rect(0, 0, mesh.width, mesh.height);
-        basicCanvas.endDraw();
+        basicCanvas.endFill();
         
         var vertex:Vertex;
         var incomingEdge:Edge;
@@ -56,7 +56,7 @@ class SimpleViewJS
             
             //basicCanvas.beginFill(0x0000FF);
             basicCanvas.drawCircle(vertex.pos.x, vertex.pos.y, 0.5);
-            basicCanvas.endDraw();
+            basicCanvas.endFill();
             #if showVerticesIndices 
                 // To implement
             #end
@@ -71,14 +71,14 @@ class SimpleViewJS
                         basicCanvas.lineStyle(0.5, 0xFF0000);
                         surface.moveTo(incomingEdge.originVertex.pos.x, incomingEdge.originVertex.pos.y);
                         surface.lineTo(incomingEdge.destinationVertex.pos.x, incomingEdge.destinationVertex.pos.y);
-                        basicCanvas.endDraw();
+                        basicCanvas.endFill();
                     }
                     else 
                     {
                         basicCanvas.lineStyle(0.5, 0x999999);
                         surface.moveTo(incomingEdge.originVertex.pos.x, incomingEdge.originVertex.pos.y);
                         surface.lineTo(incomingEdge.destinationVertex.pos.x, incomingEdge.destinationVertex.pos.y);
-                        basicCanvas.endDraw();
+                        basicCanvas.endFill();
                     }
                 }
             }
@@ -90,7 +90,7 @@ class SimpleViewJS
         basicCanvas.lineStyle(0.5, 0x00FF00);
         basicCanvas.beginFill(0x00FF00);
         basicCanvas.drawCircle(entity.x, entity.y, entity.radius);
-        basicCanvas.endDraw();
+        basicCanvas.endFill();
     }
     
     public function drawEntities(vEntities: Array<EntityAI> ):Void 
@@ -99,7 +99,7 @@ class SimpleViewJS
         for (i in 0...vEntities.length) {
             basicCanvas.beginFill(0x00FF00);
             basicCanvas.drawCircle(vEntities[i].x, vEntities[i].y, vEntities[i].radius);
-            basicCanvas.endDraw();
+            basicCanvas.endFill();
         }
     }
     
@@ -117,7 +117,7 @@ class SimpleViewJS
             surface.moveTo(path[i], path[i + 1]);
             i += 2;
         }
-        basicCanvas.endDraw();
+        basicCanvas.endFill();
     }
     
     function vertexIsInsideAABB(vertex:Vertex, mesh:Mesh):Bool 

@@ -31,10 +31,11 @@ class Basics extends Sprite
         // build a rectangular 2 polygons mesh of 600x400
         _mesh = RectMesh.buildRectangle(600, 400);
         
-        
+		
         // create a viewport
-        _view = new SimpleView();
-        addChild( _view.surface );
+		var viewSprite = new Sprite();
+        _view = new SimpleView(viewSprite);
+        addChild( viewSprite );
         
         
         // SINGLE VERTEX INSERTION / DELETION
@@ -97,7 +98,7 @@ class Basics extends Sprite
 		_mesh.updateObjects();  // don't forget to update  
 
 		// render mesh
-		_view.drawMesh(_mesh);
+		_view.drawMesh(_mesh, true);
 	}
 	
 	function _onKeyDown(event:KeyboardEvent):Void
