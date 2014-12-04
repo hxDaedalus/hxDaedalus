@@ -5,6 +5,7 @@ import hxDaedalus.data.Vertex;
 import hxDaedalus.data.math.Geom2D;
 import hxDaedalus.data.math.Matrix2D;
 import hxDaedalus.data.math.Point2D;
+import hxDaedalus.iterators.FromMeshToVertices;
 import hxDaedalus.iterators.FromVertexToIncomingEdges;
 import hxDaedalus.iterators.FromVertexToOutgoingEdges;
 import hxDaedalus.debug.Debug;
@@ -1574,6 +1575,47 @@ class Mesh
             Debug.trace("  nextLeftEdge " + _edges[i].nextLeftEdge);
             Debug.trace("  oppositeEdge " + _edges[i].oppositeEdge);
         }
+    }
+	
+	public function traverse(onVertex : Vertex->Void, onEdge : Edge->Void) : Void 
+	{
+        var vertex : Vertex;
+        var incomingEdge : Edge;
+        var holdingFace : Face;
+        
+        var iterVertices : FromMeshToVertices;
+        iterVertices = new FromMeshToVertices();
+        iterVertices.fromMesh = this;
+        
+        var iterEdges : FromVertexToIncomingEdges;
+        iterEdges = new FromVertexToIncomingEdges();
+        var dictVerticesDone = new Map<Vertex,Bool>();
+        
+        while ((vertex = iterVertices.next()) != null)
+        {
+            dictVerticesDone[vertex] = true;
+            if (!vertexIsInsideAABB(vertex, this)) 
+                continue;  
+            
+			onVertex(vertex);
+            
+            iterEdges.fromVertex = vertex;
+            while ((incomingEdge = iterEdges.next()) != null)
+            {
+                if (!dictVerticesDone[incomingEdge.originVertex]) 
+                {
+					onEdge(incomingEdge);
+                }
+            }
+        }
+	}
+    
+    function vertexIsInsideAABB(vertex : Vertex, mesh : Mesh) : Bool 
+	{
+        if (vertex.pos.x < 0 || vertex.pos.x > mesh.width || vertex.pos.y < 0 || vertex.pos.y > mesh.height) 
+            return false
+        else 
+			return true;
     }
 }
 

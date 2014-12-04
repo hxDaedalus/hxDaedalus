@@ -17,6 +17,26 @@ import flash.text.TextField;
 
 class SimpleView
 {
+	public var edgesColor:Int = 0x999999;
+	public var edgesWidth:Float = 1;
+	public var edgesAlpha:Float = .25;
+	
+	public var constraintsColor:Int = 0xFF0000;
+	public var constraintsWidth:Float = 2;
+	public var constraintsAlpha:Float = 1.0;
+	
+	public var verticesColor:Int = 0x0000FF;
+	public var verticesRadius:Float = .5;
+	public var verticesAlpha:Float = .25;
+	
+	public var pathsColor:Int = 0xFFC010;
+	public var pathsWidth:Float = 1.5;
+	public var pathsAlpha:Float = .75;
+	
+	public var entitiesColor:Int = 0x00FF00;
+	public var entitiesWidth:Float = 1;
+	public var entitiesAlpha:Float = .75;
+	
     var _surface:Sprite;
 	
 	/** 
@@ -74,7 +94,40 @@ class SimpleView
         _surface.addChild(_paths);
         _surface.addChild(_entities);
     }
-    
+
+    public function drawVertex(vertex : Vertex) : Void
+	{
+		_vertices.graphics.beginFill(verticesColor, verticesAlpha);
+		_vertices.graphics.drawCircle(vertex.pos.x, vertex.pos.y, verticesRadius);
+		_vertices.graphics.endFill();
+		
+		#if showVerticesIndices 
+			var t f :TextField = new TextField();
+			tf.mouseEnabled = false;
+			tf.text = Std.string(vertex.id);
+			tf.x = vertex.pos.x + 5;
+			tf.y = vertex.pos.y + 5;
+			tf.width = tf.height = 20;
+			_vertices.addChild(tf);
+		#end
+	}
+	
+	public function drawEdge(edge : Edge) : Void 
+	{
+		if (edge.isConstrained) 
+		{
+			_constraints.graphics.lineStyle(constraintsWidth, constraintsColor, constraintsAlpha, false, LineScaleMode.NONE);
+			_constraints.graphics.moveTo(edge.originVertex.pos.x, edge.originVertex.pos.y);
+			_constraints.graphics.lineTo(edge.destinationVertex.pos.x, edge.destinationVertex.pos.y);
+		}
+		else 
+		{
+			_edges.graphics.lineStyle(edgesWidth, edgesColor, edgesAlpha, false, LineScaleMode.NONE);
+			_edges.graphics.moveTo(edge.originVertex.pos.x, edge.originVertex.pos.y);
+			_edges.graphics.lineTo(edge.destinationVertex.pos.x, edge.destinationVertex.pos.y);
+		}
+	}
+	
 	/** Draws vertices, edges and constraints onto the `surface` sprite. */
     public function drawMesh(mesh:Mesh):Void 
 	{
@@ -85,75 +138,18 @@ class SimpleView
         
         while (_vertices.numChildren != 0) _vertices.removeChildAt(0);
         
-        _surface.graphics.beginFill(0x00, 0);
-        _surface.graphics.lineStyle(1, 0xFF0000, 1, false, LineScaleMode.NONE);
+        _surface.graphics.lineStyle(constraintsWidth, constraintsColor, constraintsAlpha, false, LineScaleMode.NONE);
         _surface.graphics.drawRect(0, 0, mesh.width, mesh.height);
-        _surface.graphics.endFill();
         
-        var vertex:Vertex;
-        var incomingEdge:Edge;
-        var holdingFace:Face;
-        
-        var iterVertices:FromMeshToVertices;
-        iterVertices = new FromMeshToVertices();
-        iterVertices.fromMesh = mesh;
-        
-        var iterEdges:FromVertexToIncomingEdges;
-        iterEdges = new FromVertexToIncomingEdges();
-        var dictVerticesDone = new Map<Vertex,Bool>();
-        
-        while ((vertex = iterVertices.next()) != null)
-        {
-            dictVerticesDone[vertex] = true;
-            if (!vertexIsInsideAABB(vertex, mesh)) 
-                continue;  
-            
-            _vertices.graphics.beginFill(0x0000FF, 1);
-            _vertices.graphics.drawCircle(vertex.pos.x, vertex.pos.y, 0.5);
-            _vertices.graphics.endFill();
-            
-            #if showVerticesIndices 
-                var tf:TextField = new TextField();
-                tf.mouseEnabled = false;
-                tf.text = Std.string(vertex.id);
-                tf.x = vertex.pos.x + 5;
-                tf.y = vertex.pos.y + 5;
-                tf.width = tf.height = 20;
-                _vertices.addChild(tf);
-            #end
-            
-            iterEdges.fromVertex = vertex;
-            while ((incomingEdge = iterEdges.next()) != null)
-            {
-                if (!dictVerticesDone[incomingEdge.originVertex]) 
-                {
-                    if (incomingEdge.isConstrained) 
-                    {
-                        _constraints.graphics.beginFill(0, 1);
-                        _constraints.graphics.lineStyle(2, 0xFF0000, 1, false, LineScaleMode.NONE);
-                        _constraints.graphics.moveTo(incomingEdge.originVertex.pos.x, incomingEdge.originVertex.pos.y);
-                        _constraints.graphics.lineTo(incomingEdge.destinationVertex.pos.x, incomingEdge.destinationVertex.pos.y);
-                        _constraints.graphics.endFill();
-                    }
-                    else 
-                    {
-                        _edges.graphics.beginFill(0, 1);
-                        _edges.graphics.lineStyle(1, 0x999999, .25, false, LineScaleMode.NONE);
-                        _edges.graphics.moveTo(incomingEdge.originVertex.pos.x, incomingEdge.originVertex.pos.y);
-                        _edges.graphics.lineTo(incomingEdge.destinationVertex.pos.x, incomingEdge.destinationVertex.pos.y);
-                        _edges.graphics.endFill();
-                    }
-                }
-            }
-        }
+		mesh.traverse(drawVertex, drawEdge);
     }
     
     public function drawEntity(entity:EntityAI, cleanBefore:Bool = true):Void 
 	{
         if (cleanBefore) _entities.graphics.clear();
         
-        _entities.graphics.lineStyle(1, 0x00FF00, .75, false, LineScaleMode.NONE);
-        _entities.graphics.beginFill(0x00FF00, 1);
+        _entities.graphics.lineStyle(entitiesWidth, entitiesColor, entitiesAlpha, false, LineScaleMode.NONE);
+        _entities.graphics.beginFill(entitiesColor, entitiesAlpha);
         _entities.graphics.drawCircle(entity.x, entity.y, entity.radius);
         _entities.graphics.endFill();
     }
@@ -162,11 +158,8 @@ class SimpleView
 	{
         if (cleanBefore) _entities.graphics.clear();
         
-        _entities.graphics.lineStyle(1, 0x00FF00, .75, false, LineScaleMode.NONE);
         for (i in 0...vEntities.length) {
-            _entities.graphics.beginFill(0x00FF00, 1);
-            _entities.graphics.drawCircle(vEntities[i].x, vEntities[i].y, vEntities[i].radius);
-            _entities.graphics.endFill();
+            drawEntity(vEntities[i], false);
         }
     }
     
@@ -178,7 +171,7 @@ class SimpleView
         if (path.length == 0) 
             return;
         
-        _paths.graphics.lineStyle(1.5, 0xFFC010, .75, false, LineScaleMode.NONE);
+        _paths.graphics.lineStyle(pathsWidth, pathsColor, pathsAlpha, false, LineScaleMode.NONE);
         
         _paths.graphics.moveTo(path[0], path[1]);
         var i = 2;
@@ -194,13 +187,5 @@ class SimpleView
             _paths.graphics.moveTo(path[i], path[i + 1]);
             i += 2;
         }
-    }
-    
-    function vertexIsInsideAABB(vertex:Vertex, mesh:Mesh):Bool 
-	{
-        if (vertex.pos.x < 0 || vertex.pos.x > mesh.width || vertex.pos.y < 0 || vertex.pos.y > mesh.height) 
-            return false
-        else 
-			return true;
     }
 }
