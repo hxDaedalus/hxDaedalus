@@ -38,10 +38,14 @@ class Pathfinding extends Sprite
         _mesh = RectMesh.buildRectangle(600, 600);
         
         Lib.current.addChild(this);
+		
         // create a viewport
-        _view = new SimpleView();
-        addChild(_view.surface);
+		var viewSprite = new Sprite();
+        _view = new SimpleView(viewSprite);
+        addChild(viewSprite);
         
+		var meshView = new SimpleView(this);
+		
         // pseudo random generator
         var randGen : RandGenerator;
         randGen = new RandGenerator();
@@ -72,8 +76,8 @@ class Pathfinding extends Sprite
             _mesh.insertObject(object);
         }  // show result mesh on screen  
         
-        _view.drawMesh(_mesh);
-        
+        meshView.drawMesh(_mesh);
+		
         // we need an entity
         _entityAI = new EntityAI();
         // set radius as size for your entity
@@ -96,7 +100,7 @@ class Pathfinding extends Sprite
         // then configure the path sampler
         _pathSampler = new LinearPathSampler();
         _pathSampler.entity = _entityAI;
-        _pathSampler.samplingDistance = 5;
+        _pathSampler.samplingDistance = 10;
         _pathSampler.path = _path;
         
         // click/drag
@@ -108,7 +112,12 @@ class Pathfinding extends Sprite
         
         // key presses
         Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
-    }
+		
+	#if openfl
+		var fps = new openfl.display.FPS();
+		Lib.current.stage.addChild(fps);
+	#end
+	}
     
     function _onMouseUp( event: MouseEvent ): Void {
 		_newPath = false;
@@ -119,6 +128,8 @@ class Pathfinding extends Sprite
     }
     
     function _onEnterFrame( event: Event ): Void {
+		if (_newPath) _view.graphics.clear();
+
         if ( _newPath ) {
             // find path !
             _pathfinder.findPath( stage.mouseX, stage.mouseY, _path );
@@ -134,10 +145,10 @@ class Pathfinding extends Sprite
         if ( _pathSampler.hasNext ) {
             // move entity
             _pathSampler.next();            
-            
-			// show entity new position on screen
-            _view.drawEntity(_entityAI);
         }
+		
+		// show entity position on screen
+		_view.drawEntity(_entityAI);
     }
     
     function _onKeyDown( event:KeyboardEvent ): Void {
