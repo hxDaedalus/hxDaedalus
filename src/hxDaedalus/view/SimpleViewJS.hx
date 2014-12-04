@@ -68,14 +68,15 @@ class SimpleViewJS
                 {
                     if (incomingEdge.isConstrained) 
                     {
-                        basicCanvas.lineStyle(0.5, 0xFF0000);
+						basicCanvas.beginFill(0xFF0000);
+                        basicCanvas.lineStyle(2, 0xFF0000);
                         surface.moveTo(incomingEdge.originVertex.pos.x, incomingEdge.originVertex.pos.y);
                         surface.lineTo(incomingEdge.destinationVertex.pos.x, incomingEdge.destinationVertex.pos.y);
                         basicCanvas.endFill();
                     }
                     else 
                     {
-                        basicCanvas.lineStyle(0.5, 0x999999);
+                        basicCanvas.lineStyle(.25, 0x999999);
                         surface.moveTo(incomingEdge.originVertex.pos.x, incomingEdge.originVertex.pos.y);
                         surface.lineTo(incomingEdge.destinationVertex.pos.x, incomingEdge.destinationVertex.pos.y);
                         basicCanvas.endFill();
