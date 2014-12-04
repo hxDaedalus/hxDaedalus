@@ -1,10 +1,10 @@
-package hxDaedalus.graphics.internal;
+package hxDaedalus.graphics.flash;
 
 import hxDaedalus.graphics.ISimpleDrawingContext;
 import flash.display.Graphics;
 
 
-class FlashDrawingContext implements ISimpleDrawingContext
+class SimpleDrawingContext implements ISimpleDrawingContext
 {
 	public var graphics(default, null):Graphics;
 
@@ -14,7 +14,6 @@ class FlashDrawingContext implements ISimpleDrawingContext
 	
 	inline public function clear():Void {
 		graphics.clear();
-		trace("clear");
 	}
 	
 	inline public function lineStyle(thickness:Float, color:Int, ?alpha:Float):Void

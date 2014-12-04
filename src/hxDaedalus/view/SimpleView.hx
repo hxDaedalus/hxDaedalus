@@ -45,55 +45,12 @@ class SimpleView
         return _graphics;
     }
     
-    var _showEdges:Bool = true;
-    public var showEdges(default, set):Bool;
-    function set_showEdges(value:Bool):Bool {
-        if (value != _showEdges) redrawAll();
-		return _showEdges;
-    }
-    
-    var _showConstraints:Bool = true;
-    public var showConstraints(default, set):Bool;
-    function set_showConstraints(value:Bool):Bool {
-        if (value != _showConstraints) redrawAll();
-		return _showConstraints;
-    }
-    
-    var _showVertices:Bool = true;
-    public var showVertices(default, set):Bool;
-    function set_showVertices(value:Bool):Bool {
-        if (value != _showVertices) redrawAll();
-		return _showVertices;
-    }
-    
-    var _showPaths:Bool = true;
-    public var showPaths(default, set):Bool;
-    function set_showPaths(value:Bool):Bool {
-        if (value != _showPaths) redrawAll();
-		return _showPaths;
-    }
-    
-    var _showEntities:Bool = true;
-    public var showEntities(default, set):Bool;
-    function set_showEntities(value:Bool):Bool {
-        if (value != _showEntities) redrawAll();
-		return _showEntities;
-    }
-    
 
     public function new(sprite:Sprite)
     {
 		this._graphics = new SimpleDrawingContext(sprite.graphics);
     }
     
-	public function redrawAll():Void
-	{
-		/*_graphics.clear();
-		if (_showConstraints || _showEdges || _showVertices) drawMesh();
-		if (_showPaths) drawPath();
-		if (_showEntities) drawEntities();*/
-	}
-	
     function drawVertex(vertex : Vertex) : Void
 	{
 		_graphics.beginFill(verticesColor, verticesAlpha);
@@ -128,9 +85,9 @@ class SimpleView
 	}
 	
 	/** Draws vertices, edges and constraints onto the `surface` sprite. */
-    public function drawMesh(mesh:Mesh):Void 
+    public function drawMesh(mesh:Mesh, cleanBefore : Bool = false):Void 
 	{
-        //_graphics.clear();
+        if (cleanBefore) _graphics.clear();
         
         _graphics.lineStyle(constraintsWidth, constraintsColor, constraintsAlpha);
         _graphics.drawRect(0, 0, mesh.width, mesh.height);
@@ -138,7 +95,7 @@ class SimpleView
 		mesh.traverse(drawVertex, drawEdge);
     }
     
-    public function drawEntity(entity:EntityAI, cleanBefore:Bool = true):Void 
+    public function drawEntity(entity:EntityAI, cleanBefore:Bool = false):Void 
 	{
         if (cleanBefore) _graphics.clear();
         
@@ -148,18 +105,18 @@ class SimpleView
         _graphics.endFill();
     }
     
-    public function drawEntities(vEntities:Array<EntityAI>, cleanBefore:Bool = true):Void 
+    public function drawEntities(vEntities:Array<EntityAI>, cleanBefore:Bool = false):Void 
 	{
-        //if (cleanBefore) _graphics.clear();
+        if (cleanBefore) _graphics.clear();
         
         for (i in 0...vEntities.length) {
             drawEntity(vEntities[i], false);
         }
     }
     
-    public function drawPath(path:Array<Float>, cleanBefore:Bool = true): Void 
+    public function drawPath(path:Array<Float>, cleanBefore:Bool = false): Void 
 	{
-        //if (cleanBefore) _graphics.clear();
+        if (cleanBefore) _graphics.clear();
         
         if (path.length == 0) return;
         

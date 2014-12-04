@@ -6,11 +6,9 @@ import hxDaedalus.data.graph.Graph;
 import hxDaedalus.data.graph.GraphEdge;
 import hxDaedalus.data.graph.GraphNode;
 import hxDaedalus.data.math.Point2D;
-import hxPixels.Pixels;
 
-
-
-import hxDaedalus.data.math.Point2D;
+import flash.display.BitmapData;
+import flash.display.Shape;
 
 class Potrace
 {
@@ -18,7 +16,7 @@ class Potrace
     
     public static var maxDistance : Float = 1;
     
-    public static function buildShapes( bmpData: Pixels, debugBmp: Pixels = null, debugShape: Dynamic = null ) : Array<Array<Float>>
+    public static function buildShapes( bmpData: BitmapData, debugBmp: BitmapData = null, debugShape: Shape = null ) : Array<Array<Float>>
     {
         // OUTLINES STEP-LIKE SHAPES GENERATION
         var shapes = new Array<Array<Float>>();
@@ -36,7 +34,7 @@ class Potrace
         return shapes;
     }
     
-    public static function buildShape(bmpData : Pixels, fromPixelRow : Int, fromPixelCol : Int, dictPixelsDone : Map<String,Bool>, debugBmp : Pixels = null, debugShape : Dynamic = null) : Array<Float>
+    public static function buildShape(bmpData : BitmapData, fromPixelRow : Int, fromPixelCol : Int, dictPixelsDone : Map<String,Bool>, debugBmp : BitmapData = null, debugShape : Shape = null) : Array<Float>
     {
         var newX : Float = fromPixelCol;
         var newY : Float = fromPixelRow;

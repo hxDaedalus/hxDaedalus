@@ -87,11 +87,6 @@ class BitmapPathfinding extends Sprite {
 		// stamp it on the overlay bitmap
 		_overlay.bitmapData.draw(viewSprite);
 		
-		// hide vertices, edges and contraints (so they don't have to be redrawn every frame)
-		//_view.showVertices = false;
-		//_view.showEdges = false;
-		//_view.showConstraints = false;
-		
 		// we need an entity
 		_entityAI = new EntityAI();
 		
@@ -103,7 +98,7 @@ class BitmapPathfinding extends Sprite {
 		_entityAI.y = 50;
 		
 		// show entity on screen
-		_view.drawEntity( _entityAI );
+		_view.drawEntity( _entityAI, false );
 		
 		// now configure the pathfinder
 		_pathfinder = new PathFinder();
@@ -144,7 +139,9 @@ class BitmapPathfinding extends Sprite {
     }
     
     function _onEnterFrame( event: Event ): Void {
-        if ( _newPath ) {
+		if (_newPath) _view.graphics.clear();
+		
+		if ( _newPath ) {
 			// find path !
             _pathfinder.findPath( stage.mouseX, stage.mouseY, _path );
             
@@ -159,10 +156,10 @@ class BitmapPathfinding extends Sprite {
         if ( _pathSampler.hasNext ) {
 			// move entity
             _pathSampler.next();            
-            
-			// show entity new position on screen
-            _view.drawEntity(_entityAI);
         }
+            
+		// show entity position on screen
+		_view.drawEntity(_entityAI);
     }
 	
 	function _onKeyDown(event:KeyboardEvent):Void
