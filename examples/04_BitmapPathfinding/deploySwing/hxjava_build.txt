@@ -1,4 +1,4 @@
-D:\Downloads\Dev\Haxe\hxDaedalus_git\examples\01_Basics
+D:\Downloads\Dev\Haxe\hxDaedalus_git\examples\04_BitmapPathfinding
 begin defines
 canvasHeader
 dce
@@ -21,7 +21,7 @@ sys
 true
 end defines
 begin defines_data
-canvasHeader=600:400:60:FFFFFF
+canvasHeader=1024:780:60:FFFFFF
 dce=std
 debug=1
 haxe3=1
@@ -51,9 +51,12 @@ M java.sun.util.LocaleServiceProviderPool
 M java.javax.swing.JComponent
 M haxe.root.Std
 C haxe.root.Std
+M java.javax.swing.plaf.LabelUI
 M java.javax.swing.Popup
 M java.awt.image.ColorModel
 M java.nio.charset.Charset
+M hxDaedalus.ai.Funnel
+C hxDaedalus.ai.Funnel
 M java.awt.Shape
 M java.awt.event.KeyEvent
 M haxe.macro.Expr
@@ -62,6 +65,8 @@ M java.awt.dnd.DropTarget
 M java.sun.font.FontStrike
 M java.awt.image.ImageProducer
 M java.javax.swing.event.MenuEvent
+M haxe.root.BitmapPathfindingJava
+C haxe.root.BitmapPathfindingJava
 M java.awt.PageAttributes
 M java.nio.LongBuffer
 M java.lang.Enum
@@ -95,11 +100,14 @@ M java.nio.file.FileStore
 M hxDaedalus.data.math.Geom2D
 C hxDaedalus.data.math.Intersection
 C hxDaedalus.data.math.Geom2D
+M java.org.w3c.dom.DocumentType
 M haxe.root.EnumValue
 M java.sun.java2d.pipe.Region
 M java.awt.Composite
 M java.javax.swing.MenuElement
 M java.awt.event.ContainerEvent
+M java.javax.imageio.metadata.IIOMetadata
+M java.org.w3c.dom.UserDataHandler
 M java.awt.LayoutManager
 M java.awt.image.IndexColorModel
 M java.awt.peer.TextAreaPeer
@@ -109,6 +117,7 @@ C _Array.ArrayIterator
 M java.sun.awt.RequestFocusController
 M hxDaedalus.data.Edge
 C hxDaedalus.data.Edge
+M java.javax.imageio.event.IIOWriteWarningListener
 M java.javax.swing.plaf.PanelUI
 M java.io.BufferedReader
 M java.awt.dnd.DragGestureEvent
@@ -116,11 +125,13 @@ M java.util.spi.LocaleNameProvider
 M java.sun.awt.CausedFocusEvent
 M java.awt.Paint
 M java.awt.Container
+M java.org.w3c.dom.DOMImplementation
 M java.awt.Button
 M java.sun.awt.SubRegionShowable
 M java.NativeArray
 M java.sun.util.locale.LocaleObjectCache
 M java.util.List
+M java.javax.imageio.ImageTypeSpecifier
 M java.awt.dnd.DragSourceContext
 M java.nio.file.attribute.FileAttribute
 M java.util.AbstractCollection
@@ -131,6 +142,8 @@ M hxDaedalus.data.math.RandGenerator
 C hxDaedalus.data.math.RandGenerator
 M java.javax.swing.SingleSelectionModel
 M java.javax.swing.plaf.UIResource
+M hxDaedalus.data.math.NodeData
+C hxDaedalus.data.math.NodeData
 M java.awt.EventQueue
 M java.javax.accessibility.AccessibleAction
 M java.util.AbstractSet
@@ -150,6 +163,7 @@ M java.security.Guard
 M java.lang.Number
 M java.lang.Float
 M java.awt.peer.ScrollPanePeer
+M java.org.w3c.dom.Document
 M java.sun.swing.UIAction
 M java.awt.AWTKeyStroke
 M java.lang.ThreadGroup
@@ -164,11 +178,13 @@ M java.awt.GraphicsConfiguration
 M java.awt.dnd.DropTargetDropEvent
 M java.beans.PropertyChangeEvent
 M java.lang.Readable
+M java.org.w3c.dom.Element
 M java.javax.swing.Icon
 M java.awt.BufferCapabilities
 M java.awt.peer.LabelPeer
 M java.javax.swing.WindowConstants
 M java.awt.image.WritableRaster
+M java.javax.imageio.IIOParam
 M java.awt.dnd.DropTargetEvent
 M hxDaedalus.iterators.FromVertexToIncomingEdges
 C hxDaedalus.iterators.FromVertexToIncomingEdges
@@ -178,13 +194,20 @@ M java.awt.FontMetrics
 M java.io.ObjectStreamField
 M java.awt.ItemSelectable
 M java.nio.charset.CodingErrorAction
+M hxDaedalus.ai.trajectory.LinearPathSampler
+C hxDaedalus.ai.trajectory.LinearPathSampler
 M java.lang.ClassLoader
+M java.org.w3c.dom.EntityReference
 M hxDaedalus.iterators.FromFaceToInnerEdges
 C hxDaedalus.iterators.FromFaceToInnerEdges
 M java.io.File
 M java.nio.file.OpenOption
 M java.beans.VetoableChangeListener
 M java.util.Random
+M hxDaedalus.ai.PathFinder
+C hxDaedalus.ai.PathFinder
+M java.javax.imageio.spi.IIOServiceProvider
+M java.org.w3c.dom.Node
 M java.sun.util.resources.OpenListResourceBundle
 M java.lang.reflect.Constructor
 M java.util.EventListener
@@ -200,10 +223,13 @@ M haxe.io.BytesData
 M java.io.ObjectOutputStream
 M java.javax.swing.TransferHandler
 M java.awt.font.FontRenderContext
+M haxe.root.Sys
+C haxe.root.Sys
 M hxDaedalus.graphics.ISimpleDrawingContext
 C hxDaedalus.graphics.ISimpleDrawingContext
 M java.awt.event.ActionListener
 M java.awt.peer.FramePeer
+M java.org.w3c.dom.NodeList
 M java.lang.Class
 M java.security.Timestamp
 M haxe.io.Eof
@@ -212,6 +238,7 @@ M java.awt.Color
 M java.awt.DisplayMode
 M java.awt.peer.TextComponentPeer
 M java.lang.ref.WeakReference
+M java.javax.imageio.ImageWriter
 M java.javax.swing.event.ChangeListener
 M java.security.Principal
 M java.lang.Cloneable
@@ -234,6 +261,7 @@ M java.util.SortedMap
 M hxDaedalus.data.Face
 C hxDaedalus.data.Face
 M java.lang.StringBuilder
+M java.org.w3c.dom.DOMStringList
 M java.awt.Event
 M java.lang.reflect.Type
 M java.awt.im.InputMethodHighlight
@@ -241,8 +269,6 @@ M java.security.CodeSource
 M java.awt.FileDialog
 M java.nio.file.AccessMode
 M java.util.concurrent.locks.AbstractOwnableSynchronizer
-M haxe.root.BasicsJava
-C haxe.root.BasicsJava
 M haxe.root.StdTypes
 M java.awt.CheckboxGroup
 M java.awt.Toolkit
@@ -267,6 +293,7 @@ M java.javax.accessibility.AccessibleText
 M java.util.Iterator
 M java.awt.Graphics
 M java.awt.peer.MenuComponentPeer
+M java.javax.imageio.ImageIO
 M java.awt.peer.CanvasPeer
 M java.lang.Comparable
 M java.javax.swing.KeyStroke
@@ -287,6 +314,7 @@ M java.javax.accessibility.AccessibleStateSet
 M java.util.EventObject
 M java.awt.dnd.DragSourceMotionListener
 M java.nio.file.attribute.BasicFileAttributes
+M java.org.w3c.dom.NamedNodeMap
 M java.awt.Canvas
 M java.lang.Iterable
 M java.net.ContentHandler
@@ -321,8 +349,11 @@ M java.types.Int8
 M hxDaedalus.swing.Surface
 C hxDaedalus.swing.Surface
 M java.io.Closeable
+M java.javax.imageio.spi.ServiceRegistry
 M java.io.ObjectOutput
 M java.nio.channels.FileLock
+M haxe.io.Bytes
+C haxe.io.Bytes
 M java.io.Writer
 M java.awt.event.KeyListener
 M java.javax.swing.AbstractButton
@@ -331,10 +362,12 @@ M java.nio.MappedByteBuffer
 M java.awt.im.InputMethodRequests
 M java.util.AbstractMap
 M java.io.Serializable
+M java.javax.swing.JLabel
 M java.awt.event.WindowFocusListener
 M java.awt.dnd.peer.DragSourceContextPeer
 M java.net.SocketAddress
 M java.io.EOFException
+M java.org.w3c.dom.Attr
 M java.sun.util.locale.BaseLocale
 M java.awt.font.LineMetrics
 M java.awt.CheckboxMenuItem
@@ -345,6 +378,7 @@ M java.awt.image.VolatileImage
 M java.nio.channels.FileChannel
 M java.javax.swing.RootPaneContainer
 M java.io.Reader
+M java.javax.imageio.stream.ImageOutputStream
 M java.javax.swing.JButton
 M java.awt.image.WritableRenderedImage
 M java.Boot
@@ -365,9 +399,13 @@ M java.awt.peer.MenuPeer
 M java.awt.peer.ScrollbarPeer
 M java.awt.datatransfer.ClipboardOwner
 M java.awt.Desktop
+M hxDaedalus.data.graph.Graph
+C hxDaedalus.data.graph.Graph
+M java.javax.imageio.spi.ImageReaderSpi
 M java.nio.ByteBuffer
 M java.nio.file.FileSystem
 M java.lang.reflect.AnnotatedElement
+M java.javax.imageio.event.IIOReadUpdateListener
 M java.javax.swing.plaf.MenuItemUI
 M java.lang.StackTraceElement
 M java.awt.AWTEvent
@@ -376,6 +414,7 @@ M java.awt.Choice
 M java.lang.reflect.TypeVariable
 M java.lang.Boolean
 M java.beans.PropertyChangeListener
+M java.javax.imageio.metadata.IIOMetadataFormat
 M java.javax.swing.ActionPropertyChangeListener
 M java.nio.file.CopyOption
 M java.util.Properties
@@ -384,19 +423,28 @@ M java.lang.reflect.Member
 M java.awt.Font
 M java.awt.datatransfer.FlavorTable
 M java.lang.RuntimeException
+M hxDaedalus.data.math.Potrace
+C hxDaedalus.data.math.Potrace
 M java.awt.Point
+M java.javax.imageio.IIOParamController
 M java.awt.event.InputMethodEvent
 M java.awt.event.InputMethodListener
+M java.org.w3c.dom.CDATASection
 M java.awt.Window
 M java.javax.swing.JToolTip
 M java.nio.file.WatchKey
 M java.util.concurrent.TimeUnit
 M haxe.ds.StringMap
+C haxe.ds.StringMap
 M hxDaedalus.graphics.SimpleDrawingContext
 M java.lang.Throwable
 M java.awt.peer.PopupMenuPeer
+M hxDaedalus.data.math.EdgeData
+C hxDaedalus.data.math.EdgeData
 M java.nio.channels.CompletionHandler
 M haxe.ds.WeakMap
+M java.javax.imageio.metadata.IIOMetadataController
+M javax.swing.JLabel
 M java.awt.dnd.DragGestureRecognizer
 M java.nio.channels.spi.AbstractInterruptibleChannel
 M java.awt.event.ActionEvent
@@ -409,9 +457,13 @@ M java.awt.datatransfer.FlavorEvent
 M java.awt.dnd.DragSourceDropEvent
 M java.javax.accessibility.AccessibleTable
 M java.awt.GraphicsConfigTemplate
+M javax.swing.ImageIcon
+M hxDaedalus.data.graph.GraphNode
+C hxDaedalus.data.graph.GraphNode
 M java.awt.event.FocusListener
 M java.javax.accessibility.AccessibleContext
 M java.awt.Image
+M java.org.w3c.dom.ProcessingInstruction
 M hxDaedalus.iterators.FromVertexToHoldingFaces
 C hxDaedalus.iterators.FromVertexToHoldingFaces
 M java.lang.annotation.Annotation
@@ -425,6 +477,7 @@ M java.awt.event.MouseListener
 M javax.swing.JPanel
 M java.util.Comparator
 M java.sun.font.Font2D
+M java.javax.imageio.event.IIOReadProgressListener
 M java.util.ListIterator
 M java.lang.Double
 M java.awt.image.SampleModel
@@ -450,10 +503,15 @@ M java.awt.peer.LightweightPeer
 M java.awt.event.FocusEvent
 M hxDaedalus.data.Constants
 C hxDaedalus.data.Constants
+M hxDaedalus.graphics.Pixels
+C hxDaedalus.graphics._Pixels.Pixels_Impl_
+C hxDaedalus.graphics._Pixels.PixelsData
+C hxDaedalus.graphics.Converter
 M java.internal.StringExt
 C haxe.lang.StringExt
 C haxe.lang.StringRefl
 M haxe.EnumTools
+M java.javax.imageio.ImageReadParam
 M java.io.SerializablePermission
 M java.nio.file.spi.FileSystemProvider
 M hxDaedalus.ai.EntityAI
@@ -462,6 +520,7 @@ M java.util.AbstractList
 M java.io.ObjectStreamClass
 M java.lang.ref.ReferenceQueue
 M java.awt.event.TextListener
+M java.javax.imageio.spi.ImageReaderWriterSpi
 M java.beans.PropertyChangeSupport
 M java.javax.swing.Action
 M java.lang.SecurityManager
@@ -477,6 +536,7 @@ M java.lang.ThreadLocal
 M java.io.ObjectInputValidation
 M java.javax.swing.InputVerifier
 M java.awt.peer.ContainerPeer
+M java.javax.imageio.metadata.IIOMetadataNode
 M java.javax.swing.JMenuItem
 M java.net.URLStreamHandlerFactory
 M java.net.URL
@@ -503,7 +563,10 @@ M java.javax.swing.event.MenuKeyEvent
 M java.security.Permission
 M java.awt.TextComponent
 M java.awt.Panel
+M java.javax.imageio.event.IIOReadWarningListener
 M java.net.InterfaceAddress
+M hxDaedalus.factories.BitmapObject
+C hxDaedalus.factories.BitmapObject
 M java.StdTypes
 M java.awt.Component
 M java.javax.swing.plaf.ToolTipUI
@@ -522,13 +585,17 @@ M java.lang.Package
 M java.awt.event.ComponentListener
 M java.awt.Label
 M java.awt.dnd.DropTargetDragEvent
+M java.javax.imageio.ImageWriteParam
 M java.util.ResourceBundle
 M java.io.ByteArrayOutputStream
 M java.types.Char16
+M hxDaedalus.ai.AStar
+C hxDaedalus.ai.AStar
 M java.io.OutputStream
 M java.io.PrintStream
 M java.javax.swing.event.MenuDragMouseEvent
 M java.awt.peer.CheckboxPeer
+M java.org.w3c.dom.Text
 M java.javax.accessibility.AccessibleComponent
 M java.awt.event.ComponentEvent
 M java.javax.swing.event.MenuListener
@@ -542,13 +609,16 @@ M java.awt.peer.ListPeer
 M java.security.BasicPermission
 M java.nio.file.Watchable
 M java.lang.ref.SoftReference
+M java.javax.imageio.spi.ImageWriterSpi
 M java.util.spi.LocaleServiceProvider
 M java.nio.DoubleBuffer
 M java.util.RandomAccess
+M java.javax.imageio.event.IIOWriteProgressListener
 M java.io.ObjectInput
 M java.awt.Dialog
 M java.awt.List
 M java.lang.Short
+M java.org.w3c.dom.Comment
 M java.javax.swing.JPanel
 M java.javax.swing.plaf.RootPaneUI
 M java.types.Int16
@@ -556,12 +626,14 @@ M java.lang.StringBuffer
 M java.awt.image.TileObserver
 M java.awt.PaintContext
 M java.nio.file.attribute.UserPrincipal
+M java.org.w3c.dom.TypeInfo
 M java.awt.event.PaintEvent
 M java.awt.geom.Line2D
 M java.sun.font.FontStrikeDisposer
 M java.awt.ScrollPane
 M java.awt.color.ColorSpace
 M java.lang.Exception
+M java.awt.MediaTracker
 M java.lang.System
 M java.nio.channels.AsynchronousFileChannel
 M hxDaedalus.data.Mesh
@@ -576,18 +648,22 @@ M java.sun.font.FontStrikeDesc
 M java.javax.swing.event.ChangeEvent
 M java.javax.swing.border.Border
 M java.awt.event.ContainerListener
+M java.javax.imageio.ImageReader
+M java.javax.imageio.stream.IIOByteBuffer
 M java.javax.swing.JWindow
 M java.nio.Buffer
 M hxDaedalus.data.math.Point2D
 C hxDaedalus.data.math.Point2D
 M java.awt.Transparency
 M java.io.ObjectStreamConstants
+M java.javax.imageio.spi.RegisterableService
 M hxDaedalus.data.Object
 C hxDaedalus.data.Object
 M java.util.concurrent.Callable
 M java.util.concurrent.Future
 M java.javax.swing.event.PopupMenuEvent
 M java.text.CharacterIterator
+M java.javax.swing.ImageIcon
 M java.javax.swing.text.AttributeSet
 M java.nio.channels.GatheringByteChannel
 M java.awt.MenuItem
@@ -596,6 +672,7 @@ M java.javax.accessibility.AccessibleIcon
 M java.javax.swing.ButtonGroup
 M java.awt.SecondaryLoop
 M java.javax.accessibility.AccessibleKeyBinding
+M java.org.w3c.dom.DOMConfiguration
 M java.sun.font.CharToGlyphMapper
 M java.javax.swing.event.AncestorListener
 M java.nio.file.attribute.FileStoreAttributeView
@@ -622,6 +699,7 @@ M java.awt.font.TextHitInfo
 M java.nio.file.attribute.GroupPrincipal
 M java.awt.geom.Rectangle2D
 M java.io.FilterOutputStream
+M java.javax.imageio.ImageTranscoder
 M java.javax.swing.InputMap
 M java.javax.swing.plaf.MenuBarUI
 M java.awt.dnd.DropTargetListener
@@ -631,9 +709,11 @@ M java.lang.AutoCloseable
 M java.beans.ChangeListenerMap
 M java.javax.swing.JPopupMenu
 M java.nio.file.attribute.AttributeView
+M java.javax.imageio.stream.ImageInputStream
 M java.javax.swing.plaf.SeparatorUI
 M java.io.FileFilter
 M java.util.Locale
+M java.org.w3c.dom.DocumentFragment
 M java.util.Map
 M java.awt.BasicStroke
 M java.awt.event.MouseAdapter
@@ -655,20 +735,26 @@ M java.nio.channels.ReadableByteChannel
 M javax.swing.JFrame
 M java.awt.Graphics2D
 M java.awt.event.ItemEvent
+M java.javax.imageio.IIOImage
 M java.awt.event.AdjustmentEvent
 M java.awt.Frame
 M java.awt.MenuShortcut
 M java.nio.file.attribute.FileAttributeView
+M hxDaedalus.data.math.ShapeSimplifier
+C hxDaedalus.data.math.ShapeSimplifier
 M java.lang.reflect.Field
 M java.util.TimerTask
 M java.awt.geom.PathIterator
 M java.io.Flushable
 M java.awt.MenuComponent
+M java.org.w3c.dom.CharacterData
 M java.awt.peer.ChoicePeer
 M java.awt.geom.RectangularShape
 M java.awt.dnd.DragSourceListener
 M java.awt.image.renderable.RenderContext
 M java.javax.swing.event.AncestorEvent
+M hxDaedalus.data.graph.GraphEdge
+C hxDaedalus.data.graph.GraphEdge
 M java.awt.PopupMenu
 M java.awt.image.ImageConsumer
 M java.io.InputStream
@@ -681,7 +767,7 @@ C hxDaedalus.data.ConstraintSegment
 M java.awt.font.TextAttribute
 end modules
 begin main
-haxe.root.BasicsJava
+haxe.root.BitmapPathfindingJava
 end main
 begin resources
 end resources

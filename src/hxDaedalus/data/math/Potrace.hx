@@ -6,9 +6,8 @@ import hxDaedalus.data.graph.Graph;
 import hxDaedalus.data.graph.GraphEdge;
 import hxDaedalus.data.graph.GraphNode;
 import hxDaedalus.data.math.Point2D;
-
-import flash.display.BitmapData;
-import flash.display.Shape;
+import hxDaedalus.graphics.SimpleDrawingContext;
+import hxDaedalus.graphics.Pixels;
 
 class Potrace
 {
@@ -16,7 +15,7 @@ class Potrace
     
     public static var maxDistance : Float = 1;
     
-    public static function buildShapes( bmpData: BitmapData, debugBmp: BitmapData = null, debugShape: Shape = null ) : Array<Array<Float>>
+    public static function buildShapes( bmpData: Pixels, debugBmp: Pixels = null, debugShape: SimpleDrawingContext = null ) : Array<Array<Float>>
     {
         // OUTLINES STEP-LIKE SHAPES GENERATION
         var shapes = new Array<Array<Float>>();
@@ -34,7 +33,7 @@ class Potrace
         return shapes;
     }
     
-    public static function buildShape(bmpData : BitmapData, fromPixelRow : Int, fromPixelCol : Int, dictPixelsDone : Map<String,Bool>, debugBmp : BitmapData = null, debugShape : Shape = null) : Array<Float>
+    public static function buildShape(bmpData : Pixels, fromPixelRow : Int, fromPixelCol : Int, dictPixelsDone : Map<String,Bool>, debugBmp : Pixels = null, debugShape : SimpleDrawingContext = null) : Array<Float>
     {
         var newX : Float = fromPixelCol;
         var newY : Float = fromPixelRow;
@@ -115,14 +114,14 @@ class Potrace
         
         if (debugShape != null) 
         {
-            debugShape.graphics.lineStyle(0.5, 0x00FF00);
-            debugShape.graphics.moveTo(path[0], path[1]);
+            debugShape.lineStyle(0.5, 0x00FF00);
+            debugShape.moveTo(path[0], path[1]);
             var i : Int = 2;
             while (i < path.length){
-                debugShape.graphics.lineTo(path[i], path[i + 1]);
+                debugShape.lineTo(path[i], path[i + 1]);
                 i += 2;
             }
-            debugShape.graphics.lineTo(path[0], path[1]);
+            debugShape.lineTo(path[0], path[1]);
         }
         
         return path;

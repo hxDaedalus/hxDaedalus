@@ -7,7 +7,7 @@ import hxDaedalus.data.Mesh;
 import hxDaedalus.data.Object;
 import hxDaedalus.factories.BitmapObject;
 import hxDaedalus.factories.RectMesh;
-import hxDaedalus.view.SimpleViewSwing;
+import hxDaedalus.view.SimpleView;
 import hxDaedalus.swing.BasicSwing;
 
 import haxe.Timer;
@@ -26,7 +26,7 @@ class BitmapPathfindingJava extends BasicSwing {
 	var mouseY:Float;
 	
 	var _mesh:  Mesh;
-	var _view:  SimpleViewSwing;
+	var _view:  SimpleView;
 	var _entityAI: EntityAI;
 	var _pathfinder:PathFinder;
 	var _path: Array<Float>;
@@ -61,7 +61,7 @@ class BitmapPathfindingJava extends BasicSwing {
 		// show the image bmp
 		add(new JLabel(new ImageIcon(_overlay)));
 
-		_view = new SimpleViewSwing();
+		_view = new SimpleView(this);
 		surface.paintFunction = paintFunction;
 		
 		// create an object from bitmap
@@ -114,7 +114,7 @@ class BitmapPathfindingJava extends BasicSwing {
 		_pathSampler.samplingDistance = 10;
 		_pathSampler.path = _path;
 
-        var timer = new Timer( Math.floor( 1000/60 ) );
+        var timer = new Timer( Math.floor( 1000/30 ) );
         timer.run = _onEnterFrame;
     }
     
@@ -125,13 +125,14 @@ class BitmapPathfindingJava extends BasicSwing {
     
     function paintFunction( g: Graphics2D ):Void {
 		g.drawImage(_overlay, null, 0, 0);
-        _view.drawMesh( g, _mesh );
-        if ( _newPath ) {
+        _view.drawMesh( _mesh );
+        
+		if ( _newPath ) {
 			// find path !
             _pathfinder.findPath( mouseX, mouseY, _path );
             
 			// show path on screen
-            _view.drawPath( g, _path );
+            _view.drawPath( _path );
             
 			// reset the path sampler to manage new generated path
             _pathSampler.reset();
@@ -144,7 +145,7 @@ class BitmapPathfindingJava extends BasicSwing {
             
         }
 		// show entity new position on screen
-		_view.drawEntity(g, _entityAI);
+		_view.drawEntity( _entityAI);
     }
 	
     override public function mouseReleased(e:MouseEvent) {

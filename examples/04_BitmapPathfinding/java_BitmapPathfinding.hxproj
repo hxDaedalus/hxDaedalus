@@ -17,7 +17,6 @@
   <classpaths>
     <class path="src" />
     <class path="..\..\src" />
-    <class path="..\..\..\hxPixels_git\src" />
   </classpaths>
   <!-- Build options -->
   <build>

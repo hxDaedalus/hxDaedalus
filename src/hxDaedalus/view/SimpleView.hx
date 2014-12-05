@@ -53,6 +53,11 @@ class SimpleView
     {
 		this._graphics = new SimpleDrawingContext(canvas);
     }
+#elseif java
+    public function new(canvas:hxDaedalus.swing.BasicSwing)
+    {
+		this._graphics = new SimpleDrawingContext(canvas);
+    }
 #end
     
     function drawVertex(vertex : Vertex) : Void

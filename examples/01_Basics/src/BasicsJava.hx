@@ -5,7 +5,7 @@ import hxDaedalus.data.Mesh;
 import hxDaedalus.data.Object;
 import hxDaedalus.data.Vertex;
 import hxDaedalus.factories.RectMesh;
-import hxDaedalus.view.SimpleViewSwing;
+import hxDaedalus.view.SimpleView;
 import hxDaedalus.swing.BasicSwing;
 import java.awt.Graphics2D;
 import haxe.Timer;
@@ -14,7 +14,8 @@ class BasicsJava extends BasicSwing
     
     var mesh : Mesh;
     var object : Object;
-    var view: SimpleViewSwing;
+    var view: SimpleView;
+	
     public static function main():Void 
     {
         new BasicsJava();
@@ -28,7 +29,7 @@ class BasicsJava extends BasicSwing
         
         
         // create a viewport
-        view = new SimpleViewSwing();
+        view = new SimpleView(this);
         surface.paintFunction = paintFunction;
         
         // SINGLE VERTEX INSERTION / DELETION
@@ -92,7 +93,7 @@ class BasicsJava extends BasicSwing
     }
     
     function paintFunction( g: Graphics2D ):Void {
-        view.drawMesh( g, mesh );
+        view.drawMesh( mesh, true );
     }
 
 }

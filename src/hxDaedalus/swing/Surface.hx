@@ -7,10 +7,11 @@ import javax.swing.JPanel;
 
 class Surface extends JPanel
 {
-    public var g: Graphics2D;
+    //public var g: Graphics2D;
     public var paintFunction: Graphics2D -> Void;
     public function new(){ super( true ); }
-    @:overload public function paintComponent( g: Graphics ){
+    
+	@:overload public function paintComponent( g: Graphics ){
 		super.paintComponent( g );
         var g2D: Graphics2D = cast g;
         var rHint = RenderingHints;
