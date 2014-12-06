@@ -7,14 +7,7 @@ import hxDaedalus.data.graph.GraphEdge;
 import hxDaedalus.data.graph.GraphNode;
 import hxDaedalus.data.math.Point2D;
 import hxDaedalus.graphics.SimpleDrawingContext;
-#if ( !openfl && !nme && !html5 && js )
-	import hxDaedalus.graphics.js.CanvasPixelMatrix;
-#else
-	import hxDaedalus.graphics.Pixels;
-#end
-#if ( !openfl && !nme && !html5 && js )
-	typedef Pixels = hxDaedalus.graphics.js.CanvasPixelMatrix;
-#end
+import hxDaedalus.graphics.Pixels;
 	
 class Potrace
 {
