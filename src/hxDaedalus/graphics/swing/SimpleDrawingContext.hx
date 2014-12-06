@@ -29,14 +29,14 @@ class SimpleDrawingContext
 	public function lineStyle(thickness:Float, color:Int, ?alpha:Float = 1):Void
 	{
 		var a:Int = Std.int(alpha * 255);
-		var color = new Color(color | (a << 24));
+		var color = new Color(color | (a << 24), true);
 		graphics.setColor(color);
 		graphics.setStroke(new BasicStroke(thickness));
 	}
 	
 	public function beginFill(color:Int, ?alpha:Float = 1):Void {
 		var a:Int = Std.int(alpha * 255);
-		var color = new Color(color | (a << 24));
+		var color = new Color(color | (a << 24), true);
 		graphics.setPaint(color);
 	}
 	
@@ -55,13 +55,15 @@ class SimpleDrawingContext
 	}
 	
 	public function drawCircle(cx:Float, cy:Float, radius:Float):Void {
-		var r = Std.int(radius);
-		var x = Std.int(cx - radius / 2);
-		var y = Std.int(cy - radius / 2);
+		var r = Std.int(radius * 2);
+		var x = Std.int(cx - radius);
+		var y = Std.int(cy - radius);
+		graphics.fillOval(x, y, r, r);
 		graphics.drawOval(x, y, r, r);
 	}
 	
 	public function drawRect(x:Float, y:Float, width:Float, height:Float):Void {
+		graphics.fillRect(Std.int(x), Std.int(y), Std.int(width), Std.int(height));
 		graphics.drawRect(Std.int(x), Std.int(y), Std.int(width), Std.int(height));
 	}
 }
