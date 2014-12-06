@@ -41,10 +41,10 @@ class Pathfinding extends Sprite
 		
         // create a viewport
 		var viewSprite = new Sprite();
-        _view = new SimpleView(viewSprite);
+        _view = new SimpleView(viewSprite.graphics);
         addChild(viewSprite);
         
-		var meshView = new SimpleView(this);
+		var meshView = new SimpleView(this.graphics);
 		
         // pseudo random generator
         var randGen : RandGenerator;

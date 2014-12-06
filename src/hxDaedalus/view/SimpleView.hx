@@ -34,7 +34,7 @@ class SimpleView
 	public var entitiesWidth:Float = 1;
 	public var entitiesAlpha:Float = .75;
 
-    var graphics: SimpleDrawingContext;
+    public var graphics: SimpleDrawingContext;
     
     #if java
     public function refreshGraphics2D( g: java.awt.Graphics2D ){
@@ -120,11 +120,11 @@ class SimpleView
         var i = 2;
         while (i < path.length) {
             //TODO: remove this conditionals once openfl behaves consistently
-        #if sys
+        #if (openfl && sys)
             graphics.beginFill(0, 1);
         #end
             graphics.lineTo(path[i], path[i + 1]);
-        #if sys
+        #if (openfl && sys)
             graphics.endFill();
         #end
             graphics.moveTo(path[i], path[i + 1]);
