@@ -124,6 +124,7 @@ class BitmapPathfindingJava extends BasicSwing {
     }
     
     function paintFunction( g: Graphics2D ):Void {
+        _view.refreshGraphics2D( g );
 		g.drawImage(_overlay, null, 0, 0);
         _view.drawMesh( _mesh );
         
