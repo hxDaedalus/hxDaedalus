@@ -10,7 +10,7 @@ import java.awt.Color;
 import java.awt.geom.GeneralPath;
 
 
-class SimpleDrawingContext
+class SimpleDrawingContext implements ISimpleDrawingContext
 {
 	public var graphics:Graphics2D;
 	
