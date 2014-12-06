@@ -34,7 +34,7 @@ class SimpleView
 	public var entitiesWidth:Float = 1;
 	public var entitiesAlpha:Float = .75;
 
-    public var graphics: SimpleDrawingContext;
+    public var graphics(default, null): SimpleDrawingContext;
     
     #if java
     public function refreshGraphics2D( g: java.awt.Graphics2D ){
