@@ -7,7 +7,7 @@ import javax.swing.JPanel;
 
 class Surface extends JPanel
 {
-    //public var g: Graphics2D;
+    public var g: Graphics2D;
     public var paintFunction: Graphics2D -> Void;
     public function new(){ super( true ); }
     

@@ -10,15 +10,14 @@ import java.awt.Color;
 import java.awt.geom.GeneralPath;
 
 
-class SimpleDrawingContext implements ISimpleDrawingContext
+class SimpleDrawingContext
 {
-	public var graphics(default, null):Graphics2D;
+	public var graphics:Graphics2D;
 	
 	var bounds:Rectangle;
 	var path:GeneralPath;
 
 	public function new(graphics:BasicSwing) {
-		this.graphics = cast graphics.surface.getGraphics();
 		this.bounds = graphics.surface.getBounds();
 		this.path = new GeneralPath();
 	}

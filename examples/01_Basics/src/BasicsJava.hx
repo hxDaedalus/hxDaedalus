@@ -93,6 +93,7 @@ class BasicsJava extends BasicSwing
     }
     
     function paintFunction( g: Graphics2D ):Void {
+        view.refreshGraphics2D( g );
         view.drawMesh( mesh, true );
     }
 

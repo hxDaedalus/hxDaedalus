@@ -1,6 +1,5 @@
 package hxDaedalus.view;
 
-
 import hxDaedalus.ai.EntityAI;
 import hxDaedalus.data.Edge;
 import hxDaedalus.data.Face;
@@ -11,7 +10,7 @@ import hxDaedalus.graphics.SimpleDrawingContext;
 import hxDaedalus.iterators.FromMeshToVertices;
 import hxDaedalus.iterators.FromVertexToHoldingFaces;
 import hxDaedalus.iterators.FromVertexToIncomingEdges;
-
+import hxDaedalus.graphics.TargetCanvas;
 
 class SimpleView
 {
@@ -35,37 +34,25 @@ class SimpleView
 	public var entitiesWidth:Float = 1;
 	public var entitiesAlpha:Float = .75;
 
-    var _graphics:SimpleDrawingContext;
-	
-    public var graphics(get, null):SimpleDrawingContext;
-    function get_graphics():SimpleDrawingContext {
-        return _graphics;
-    }
+    var graphics: SimpleDrawingContext;
     
-
-#if (flash || openfl || nme) 
-    public function new(sprite:flash.display.Sprite)
-    {
-		this._graphics = new SimpleDrawingContext(sprite.graphics);
+    #if java
+    public function refreshGraphics2D( g: java.awt.Graphics2D ){
+        graphics.graphics = g;
     }
-#elseif js
-    public function new(canvas:hxDaedalus.canvas.BasicCanvas)
+    #end
+    
+    public function new( targetCanvas: TargetCanvas )
     {
-		this._graphics = new SimpleDrawingContext(canvas);
+        graphics = new SimpleDrawingContext( targetCanvas );
     }
-#elseif java
-    public function new(canvas:hxDaedalus.swing.BasicSwing)
-    {
-		this._graphics = new SimpleDrawingContext(canvas);
-    }
-#end
     
     function drawVertex(vertex : Vertex) : Void
 	{
-		_graphics.lineStyle(verticesRadius, verticesColor, verticesAlpha);
-		_graphics.beginFill(verticesColor, verticesAlpha);
-		_graphics.drawCircle(vertex.pos.x, vertex.pos.y, verticesRadius);
-		_graphics.endFill();
+		graphics.lineStyle(verticesRadius, verticesColor, verticesAlpha);
+		graphics.beginFill(verticesColor, verticesAlpha);
+		graphics.drawCircle(vertex.pos.x, vertex.pos.y, verticesRadius);
+		graphics.endFill();
 		
 		#if showVerticesIndices 
 			var tf : TextField = new TextField();
@@ -82,39 +69,39 @@ class SimpleView
 	{
 		if (edge.isConstrained) 
 		{
-			_graphics.lineStyle(constraintsWidth, constraintsColor, constraintsAlpha);
-			_graphics.moveTo(edge.originVertex.pos.x, edge.originVertex.pos.y);
-			_graphics.lineTo(edge.destinationVertex.pos.x, edge.destinationVertex.pos.y);
+			graphics.lineStyle(constraintsWidth, constraintsColor, constraintsAlpha);
+			graphics.moveTo(edge.originVertex.pos.x, edge.originVertex.pos.y);
+			graphics.lineTo(edge.destinationVertex.pos.x, edge.destinationVertex.pos.y);
 		}
 		else 
 		{
-			_graphics.lineStyle(edgesWidth, edgesColor, edgesAlpha);
-			_graphics.moveTo(edge.originVertex.pos.x, edge.originVertex.pos.y);
-			_graphics.lineTo(edge.destinationVertex.pos.x, edge.destinationVertex.pos.y);
+			graphics.lineStyle(edgesWidth, edgesColor, edgesAlpha);
+			graphics.moveTo(edge.originVertex.pos.x, edge.originVertex.pos.y);
+			graphics.lineTo(edge.destinationVertex.pos.x, edge.destinationVertex.pos.y);
 		}
 	}
 	
 	/** Draws vertices, edges and constraints onto the `surface` sprite. */
     public function drawMesh(mesh:Mesh, cleanBefore : Bool = false):Void 
 	{
-        if (cleanBefore) _graphics.clear();
+        if (cleanBefore) graphics.clear();
 		
 		mesh.traverse(drawVertex, drawEdge);
     }
     
     public function drawEntity(entity:EntityAI, cleanBefore:Bool = false):Void 
 	{
-        if (cleanBefore) _graphics.clear();
+        if (cleanBefore) graphics.clear();
         
-        _graphics.lineStyle(entitiesWidth, entitiesColor, entitiesAlpha);
-        _graphics.beginFill(entitiesColor, entitiesAlpha);
-        _graphics.drawCircle(entity.x, entity.y, entity.radius);
-        _graphics.endFill();
+        graphics.lineStyle(entitiesWidth, entitiesColor, entitiesAlpha);
+        graphics.beginFill(entitiesColor, entitiesAlpha);
+        graphics.drawCircle(entity.x, entity.y, entity.radius);
+        graphics.endFill();
     }
     
     public function drawEntities(vEntities:Array<EntityAI>, cleanBefore:Bool = false):Void 
 	{
-        if (cleanBefore) _graphics.clear();
+        if (cleanBefore) graphics.clear();
         
         for (i in 0...vEntities.length) {
             drawEntity(vEntities[i], false);
@@ -123,24 +110,24 @@ class SimpleView
     
     public function drawPath(path:Array<Float>, cleanBefore:Bool = false): Void 
 	{
-        if (cleanBefore) _graphics.clear();
+        if (cleanBefore) graphics.clear();
         
         if (path.length == 0) return;
         
-        _graphics.lineStyle(pathsWidth, pathsColor, pathsAlpha);
+        graphics.lineStyle(pathsWidth, pathsColor, pathsAlpha);
         
-        _graphics.moveTo(path[0], path[1]);
+        graphics.moveTo(path[0], path[1]);
         var i = 2;
         while (i < path.length) {
-			//TODO: remove this conditionals once openfl behaves consistently
-		#if sys
-			_graphics.beginFill(0, 1);
-		#end
-			_graphics.lineTo(path[i], path[i + 1]);
-		#if sys
-			_graphics.endFill();
-		#end
-            _graphics.moveTo(path[i], path[i + 1]);
+            //TODO: remove this conditionals once openfl behaves consistently
+        #if sys
+            graphics.beginFill(0, 1);
+        #end
+            graphics.lineTo(path[i], path[i + 1]);
+        #if sys
+            graphics.endFill();
+        #end
+            graphics.moveTo(path[i], path[i + 1]);
             i += 2;
         }
     }
