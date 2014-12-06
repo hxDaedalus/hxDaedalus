@@ -1,33 +1,4 @@
 (function () { "use strict";
-var BasicsJS = function() {
-	this.mesh = hxDaedalus.factories.RectMesh.buildRectangle(600,400);
-	this.basicCanvas = new hxDaedalus.canvas.BasicCanvas();
-	this.view = new hxDaedalus.view.SimpleView(this.basicCanvas);
-	var vertex = this.mesh.insertVertex(550,50);
-	var segment = this.mesh.insertConstraintSegment(70,300,530,320);
-	var shape = this.mesh.insertConstraintShape([50.,50.,100.,50.,100.,50.,100.,100.,100.,100.,50.,100.,50.,100.,50.,50.,20.,50.,130.,100.]);
-	var objectCoords = new Array();
-	this.object = new hxDaedalus.data.Object();
-	this.object.set_coordinates([-50.,0.,50.,0.,0.,-50.,0.,50.,-30.,-30.,30.,30.,30.,-30.,-30.,30.]);
-	this.mesh.insertObject(this.object);
-	this.object.set_x(400);
-	this.object.set_y(200);
-	this.object.set_scaleX(2);
-	this.object.set_scaleY(2);
-	this.basicCanvas.onEnterFrame = $bind(this,this.onEnterFrame);
-};
-BasicsJS.__name__ = true;
-BasicsJS.main = function() {
-	new BasicsJS();
-};
-BasicsJS.prototype = {
-	onEnterFrame: function() {
-		var _g = this.object;
-		_g.set_rotation(_g.get_rotation() + 0.05);
-		this.mesh.updateObjects();
-		this.view.drawMesh(this.mesh,true);
-	}
-};
 var HxOverrides = function() { };
 HxOverrides.__name__ = true;
 HxOverrides.cca = function(s,index) {
@@ -59,6 +30,83 @@ HxOverrides.indexOf = function(a,obj,i) {
 var IMap = function() { };
 IMap.__name__ = true;
 Math.__name__ = true;
+var PathfindingJS = function() {
+	this.newPath = false;
+	this.mesh = hxDaedalus.factories.RectMesh.buildRectangle(600,600);
+	this.basicCanvas = new hxDaedalus.canvas.BasicCanvas();
+	this.view = new hxDaedalus.view.SimpleView(this.basicCanvas);
+	var randGen;
+	randGen = new hxDaedalus.data.math.RandGenerator();
+	randGen.set_seed(7259);
+	var object;
+	var shapeCoords;
+	var _g = 0;
+	while(_g < 50) {
+		var i = _g++;
+		haxe.Log.trace(" i " + i,{ fileName : "PathfindingJS.hx", lineNumber : 56, className : "PathfindingJS", methodName : "new"});
+		object = new hxDaedalus.data.Object();
+		shapeCoords = new Array();
+		shapeCoords = [-1,-1,1,-1,1,-1,1,1,1,1,-1,1,-1,1,-1,-1];
+		object.set_coordinates(shapeCoords);
+		randGen.rangeMin = 10;
+		randGen.rangeMax = 40;
+		object.set_scaleX(randGen.next());
+		object.set_scaleY(randGen.next());
+		randGen.rangeMin = 0;
+		randGen.rangeMax = 1000;
+		object.set_rotation(randGen.next() / 1000 * Math.PI / 2);
+		randGen.rangeMin = 50;
+		randGen.rangeMax = 600;
+		object.set_x(randGen.next());
+		object.set_y(randGen.next());
+		this.mesh.insertObject(object);
+	}
+	this.view.drawMesh(this.mesh);
+	this.entityAI = new hxDaedalus.ai.EntityAI();
+	this.entityAI.set_radius(4);
+	this.entityAI.x = 20;
+	this.entityAI.y = 20;
+	this.view.drawEntity(this.entityAI);
+	this.pathfinder = new hxDaedalus.ai.PathFinder();
+	this.pathfinder.entity = this.entityAI;
+	this.pathfinder.set_mesh(this.mesh);
+	this.path = new Array();
+	this.pathSampler = new hxDaedalus.ai.trajectory.LinearPathSampler();
+	this.pathSampler.entity = this.entityAI;
+	this.pathSampler.set_samplingDistance(10);
+	this.pathSampler.set_path(this.path);
+	this.basicCanvas.canvas.onmousedown = $bind(this,this.onMouseDown);
+	this.basicCanvas.canvas.onmouseup = $bind(this,this.onMouseUp);
+	this.basicCanvas.canvas.onmousemove = $bind(this,this.onMouseMove);
+	this.basicCanvas.onEnterFrame = $bind(this,this.onEnterFrame);
+};
+PathfindingJS.__name__ = true;
+PathfindingJS.main = function() {
+	new PathfindingJS();
+};
+PathfindingJS.prototype = {
+	onMouseMove: function(e) {
+		var p = e;
+		this.x = p.clientX;
+		this.y = p.clientY;
+	}
+	,onMouseUp: function(event) {
+		this.newPath = false;
+	}
+	,onMouseDown: function(event) {
+		this.newPath = true;
+	}
+	,onEnterFrame: function() {
+		if(this.newPath) this.view.drawMesh(this.mesh,true);
+		if(this.newPath) {
+			this.pathfinder.findPath(this.x,this.y,this.path);
+			this.view.drawPath(this.path);
+			this.pathSampler.reset();
+		}
+		if(this.pathSampler.get_hasNext()) this.pathSampler.next();
+		this.view.drawEntity(this.entityAI);
+	}
+};
 var Std = function() { };
 Std.__name__ = true;
 Std.string = function(s) {
@@ -110,6 +158,293 @@ haxe.ds.ObjectMap.prototype = {
 };
 var hxDaedalus = {};
 hxDaedalus.ai = {};
+hxDaedalus.ai.AStar = function() {
+	this.iterEdge = new hxDaedalus.iterators.FromFaceToInnerEdges();
+};
+hxDaedalus.ai.AStar.__name__ = true;
+hxDaedalus.ai.AStar.prototype = {
+	dispose: function() {
+		this._mesh = null;
+		this.closedFaces = null;
+		this.sortedOpenedFaces = null;
+		this.openedFaces = null;
+		this.entryEdges = null;
+		this.entryX = null;
+		this.entryY = null;
+		this.scoreF = null;
+		this.scoreG = null;
+		this.scoreH = null;
+		this.predecessor = null;
+	}
+	,get_radius: function() {
+		return this._radius;
+	}
+	,set_radius: function(value) {
+		this._radius = value;
+		this.radiusSquared = this._radius * this._radius;
+		this.diameter = this._radius * 2;
+		this.diameterSquared = this.diameter * this.diameter;
+		return value;
+	}
+	,set_mesh: function(value) {
+		this._mesh = value;
+		return value;
+	}
+	,findPath: function(fromX,fromY,toX,toY,resultListFaces,resultListEdges) {
+		this.closedFaces = new haxe.ds.ObjectMap();
+		this.sortedOpenedFaces = new Array();
+		this.openedFaces = new haxe.ds.ObjectMap();
+		this.entryEdges = new haxe.ds.ObjectMap();
+		this.entryX = new haxe.ds.ObjectMap();
+		this.entryY = new haxe.ds.ObjectMap();
+		this.scoreF = new haxe.ds.ObjectMap();
+		this.scoreG = new haxe.ds.ObjectMap();
+		this.scoreH = new haxe.ds.ObjectMap();
+		this.predecessor = new haxe.ds.ObjectMap();
+		var loc;
+		var locEdge;
+		var locVertex;
+		var distance;
+		var p1;
+		var p2;
+		var p3;
+		loc = hxDaedalus.data.math.Geom2D.locatePosition(fromX,fromY,this._mesh);
+		switch(loc[1]) {
+		case 0:
+			var vertex = loc[2];
+			locVertex = vertex;
+			return;
+		case 1:
+			var edge = loc[2];
+			locEdge = edge;
+			if(locEdge.get_isConstrained()) return;
+			this.fromFace = locEdge.get_leftFace();
+			break;
+		case 2:
+			var face = loc[2];
+			this.fromFace = face;
+			break;
+		case 3:
+			break;
+		}
+		loc = hxDaedalus.data.math.Geom2D.locatePosition(toX,toY,this._mesh);
+		switch(loc[1]) {
+		case 0:
+			var vertex1 = loc[2];
+			locVertex = vertex1;
+			this.toFace = locVertex.get_edge().get_leftFace();
+			break;
+		case 1:
+			var edge1 = loc[2];
+			locEdge = edge1;
+			this.toFace = locEdge.get_leftFace();
+			break;
+		case 2:
+			var face1 = loc[2];
+			this.toFace = face1;
+			break;
+		case 3:
+			break;
+		}
+		this.sortedOpenedFaces.push(this.fromFace);
+		this.entryEdges.set(this.fromFace,null);
+		null;
+		this.entryX.set(this.fromFace,fromX);
+		fromX;
+		this.entryY.set(this.fromFace,fromY);
+		fromY;
+		this.scoreG.set(this.fromFace,0);
+		0;
+		var dist = Math.sqrt((toX - fromX) * (toX - fromX) + (toY - fromY) * (toY - fromY));
+		this.scoreH.set(this.fromFace,dist);
+		dist;
+		this.scoreF.set(this.fromFace,dist);
+		dist;
+		var innerEdge;
+		var neighbourFace;
+		var f;
+		var g;
+		var h;
+		var fromPoint = new hxDaedalus.data.math.Point2D();
+		var entryPoint = new hxDaedalus.data.math.Point2D();
+		var distancePoint = new hxDaedalus.data.math.Point2D();
+		var fillDatas;
+		while(true) {
+			if(this.sortedOpenedFaces.length == 0) {
+				haxe.Log.trace("AStar no path found",{ fileName : "AStar.hx", lineNumber : 157, className : "hxDaedalus.ai.AStar", methodName : "findPath"});
+				this.curFace = null;
+				break;
+			}
+			this.curFace = this.sortedOpenedFaces.pop();
+			if(this.curFace == this.toFace) break;
+			this.iterEdge.set_fromFace(this.curFace);
+			while((innerEdge = this.iterEdge.next()) != null) {
+				if(innerEdge.get_isConstrained()) continue;
+				neighbourFace = innerEdge.get_rightFace();
+				if(!this.closedFaces.h[neighbourFace.__id__]) {
+					if(this.curFace != this.fromFace && this._radius > 0 && !this.isWalkableByRadius(this.entryEdges.h[this.curFace.__id__],this.curFace,innerEdge)) continue;
+					fromPoint.x = this.entryX.h[this.curFace.__id__];
+					fromPoint.y = this.entryY.h[this.curFace.__id__];
+					entryPoint.x = fromPoint.x;
+					entryPoint.y = fromPoint.y;
+					entryPoint.x = (innerEdge.get_originVertex().get_pos().x + innerEdge.get_destinationVertex().get_pos().x) / 2;
+					entryPoint.y = (innerEdge.get_originVertex().get_pos().y + innerEdge.get_destinationVertex().get_pos().y) / 2;
+					distancePoint.x = entryPoint.x - toX;
+					distancePoint.y = entryPoint.y - toY;
+					h = distancePoint.get_length();
+					distancePoint.x = fromPoint.x - entryPoint.x;
+					distancePoint.y = fromPoint.y - entryPoint.y;
+					g = this.scoreG.h[this.curFace.__id__] + distancePoint.get_length();
+					f = h + g;
+					fillDatas = false;
+					if(this.openedFaces.h[neighbourFace.__id__] == null || !this.openedFaces.h[neighbourFace.__id__]) {
+						this.sortedOpenedFaces.push(neighbourFace);
+						this.openedFaces.set(neighbourFace,true);
+						true;
+						fillDatas = true;
+					} else if(this.scoreF.h[neighbourFace.__id__] > f) fillDatas = true;
+					if(fillDatas) {
+						this.entryEdges.set(neighbourFace,innerEdge);
+						innerEdge;
+						var v = entryPoint.x;
+						this.entryX.set(neighbourFace,v);
+						v;
+						var v1 = entryPoint.y;
+						this.entryY.set(neighbourFace,v1);
+						v1;
+						this.scoreF.set(neighbourFace,f);
+						f;
+						this.scoreG.set(neighbourFace,g);
+						g;
+						this.scoreH.set(neighbourFace,h);
+						h;
+						var v2 = this.curFace;
+						this.predecessor.set(neighbourFace,v2);
+						v2;
+					}
+				}
+			}
+			this.openedFaces.set(this.curFace,false);
+			false;
+			this.closedFaces.set(this.curFace,true);
+			true;
+			this.sortedOpenedFaces.sort($bind(this,this.sortingFaces));
+		}
+		if(this.curFace == null) return;
+		resultListFaces.push(this.curFace);
+		while(this.curFace != this.fromFace) {
+			resultListEdges.unshift(this.entryEdges.h[this.curFace.__id__]);
+			this.curFace = this.predecessor.h[this.curFace.__id__];
+			resultListFaces.unshift(this.curFace);
+		}
+	}
+	,sortingFaces: function(a,b) {
+		if(this.scoreF.h[a.__id__] == this.scoreF.h[b.__id__]) return 0; else if(this.scoreF.h[a.__id__] < this.scoreF.h[b.__id__]) return 1; else return -1;
+	}
+	,isWalkableByRadius: function(fromEdge,throughFace,toEdge) {
+		var vA = null;
+		var vB = null;
+		var vC = null;
+		if(fromEdge.get_originVertex() == toEdge.get_originVertex()) {
+			vA = fromEdge.get_destinationVertex();
+			vB = toEdge.get_destinationVertex();
+			vC = fromEdge.get_originVertex();
+		} else if(fromEdge.get_destinationVertex() == toEdge.get_destinationVertex()) {
+			vA = fromEdge.get_originVertex();
+			vB = toEdge.get_originVertex();
+			vC = fromEdge.get_destinationVertex();
+		} else if(fromEdge.get_originVertex() == toEdge.get_destinationVertex()) {
+			vA = fromEdge.get_destinationVertex();
+			vB = toEdge.get_originVertex();
+			vC = fromEdge.get_originVertex();
+		} else if(fromEdge.get_destinationVertex() == toEdge.get_originVertex()) {
+			vA = fromEdge.get_originVertex();
+			vB = toEdge.get_destinationVertex();
+			vC = fromEdge.get_destinationVertex();
+		}
+		var dot;
+		var result;
+		var distSquared;
+		dot = (vC.get_pos().x - vA.get_pos().x) * (vB.get_pos().x - vA.get_pos().x) + (vC.get_pos().y - vA.get_pos().y) * (vB.get_pos().y - vA.get_pos().y);
+		if(dot <= 0) {
+			distSquared = (vC.get_pos().x - vA.get_pos().x) * (vC.get_pos().x - vA.get_pos().x) + (vC.get_pos().y - vA.get_pos().y) * (vC.get_pos().y - vA.get_pos().y);
+			if(distSquared >= this.diameterSquared) return true; else return false;
+		}
+		dot = (vC.get_pos().x - vB.get_pos().x) * (vA.get_pos().x - vB.get_pos().x) + (vC.get_pos().y - vB.get_pos().y) * (vA.get_pos().y - vB.get_pos().y);
+		if(dot <= 0) {
+			distSquared = (vC.get_pos().x - vB.get_pos().x) * (vC.get_pos().x - vB.get_pos().x) + (vC.get_pos().y - vB.get_pos().y) * (vC.get_pos().y - vB.get_pos().y);
+			if(distSquared >= this.diameterSquared) return true; else return false;
+		}
+		var adjEdge;
+		if(throughFace.get_edge() != fromEdge && throughFace.get_edge().get_oppositeEdge() != fromEdge && throughFace.get_edge() != toEdge && throughFace.get_edge().get_oppositeEdge() != toEdge) adjEdge = throughFace.get_edge(); else if(throughFace.get_edge().get_nextLeftEdge() != fromEdge && throughFace.get_edge().get_nextLeftEdge().get_oppositeEdge() != fromEdge && throughFace.get_edge().get_nextLeftEdge() != toEdge && throughFace.get_edge().get_nextLeftEdge().get_oppositeEdge() != toEdge) adjEdge = throughFace.get_edge().get_nextLeftEdge(); else adjEdge = throughFace.get_edge().get_prevLeftEdge();
+		if(adjEdge.get_isConstrained()) {
+			var proj = new hxDaedalus.data.math.Point2D(vC.get_pos().x,vC.get_pos().y);
+			hxDaedalus.data.math.Geom2D.projectOrthogonaly(proj,adjEdge);
+			distSquared = (proj.x - vC.get_pos().x) * (proj.x - vC.get_pos().x) + (proj.y - vC.get_pos().y) * (proj.y - vC.get_pos().y);
+			if(distSquared >= this.diameterSquared) return true; else return false;
+		} else {
+			var distSquaredA = (vC.get_pos().x - vA.get_pos().x) * (vC.get_pos().x - vA.get_pos().x) + (vC.get_pos().y - vA.get_pos().y) * (vC.get_pos().y - vA.get_pos().y);
+			var distSquaredB = (vC.get_pos().x - vB.get_pos().x) * (vC.get_pos().x - vB.get_pos().x) + (vC.get_pos().y - vB.get_pos().y) * (vC.get_pos().y - vB.get_pos().y);
+			if(distSquaredA < this.diameterSquared || distSquaredB < this.diameterSquared) return false; else {
+				var vFaceToCheck = new Array();
+				var vFaceIsFromEdge = new Array();
+				var facesDone = new haxe.ds.ObjectMap();
+				vFaceIsFromEdge.push(adjEdge);
+				if(adjEdge.get_leftFace() == throughFace) {
+					vFaceToCheck.push(adjEdge.get_rightFace());
+					var k = adjEdge.get_rightFace();
+					facesDone.set(k,true);
+					true;
+				} else {
+					vFaceToCheck.push(adjEdge.get_leftFace());
+					var k1 = adjEdge.get_leftFace();
+					facesDone.set(k1,true);
+					true;
+				}
+				var currFace;
+				var faceFromEdge;
+				var currEdgeA;
+				var nextFaceA;
+				var currEdgeB;
+				var nextFaceB;
+				while(vFaceToCheck.length > 0) {
+					currFace = vFaceToCheck.shift();
+					faceFromEdge = vFaceIsFromEdge.shift();
+					if(currFace.get_edge() == faceFromEdge || currFace.get_edge() == faceFromEdge.get_oppositeEdge()) {
+						currEdgeA = currFace.get_edge().get_nextLeftEdge();
+						currEdgeB = currFace.get_edge().get_nextLeftEdge().get_nextLeftEdge();
+					} else if(currFace.get_edge().get_nextLeftEdge() == faceFromEdge || currFace.get_edge().get_nextLeftEdge() == faceFromEdge.get_oppositeEdge()) {
+						currEdgeA = currFace.get_edge();
+						currEdgeB = currFace.get_edge().get_nextLeftEdge().get_nextLeftEdge();
+					} else {
+						currEdgeA = currFace.get_edge();
+						currEdgeB = currFace.get_edge().get_nextLeftEdge();
+					}
+					if(currEdgeA.get_leftFace() == currFace) nextFaceA = currEdgeA.get_rightFace(); else nextFaceA = currEdgeA.get_leftFace();
+					if(currEdgeB.get_leftFace() == currFace) nextFaceB = currEdgeB.get_rightFace(); else nextFaceB = currEdgeB.get_leftFace();
+					if(!facesDone.h[nextFaceA.__id__] && hxDaedalus.data.math.Geom2D.distanceSquaredVertexToEdge(vC,currEdgeA) < this.diameterSquared) {
+						if(currEdgeA.get_isConstrained()) return false; else {
+							vFaceToCheck.push(nextFaceA);
+							vFaceIsFromEdge.push(currEdgeA);
+							facesDone.set(nextFaceA,true);
+							true;
+						}
+					}
+					if(!facesDone.h[nextFaceB.__id__] && hxDaedalus.data.math.Geom2D.distanceSquaredVertexToEdge(vC,currEdgeB) < this.diameterSquared) {
+						if(currEdgeB.get_isConstrained()) return false; else {
+							vFaceToCheck.push(nextFaceB);
+							vFaceIsFromEdge.push(currEdgeB);
+							facesDone.set(nextFaceB,true);
+							true;
+						}
+					}
+				}
+				return true;
+			}
+		}
+		return true;
+	}
+};
 hxDaedalus.ai.EntityAI = function() {
 	this._radius = 10;
 	this.x = this.y = 0;
@@ -149,6 +484,804 @@ hxDaedalus.ai.EntityAI.prototype = {
 		this._radius = value;
 		this._radiusSquared = this._radius * this._radius;
 		return value;
+	}
+};
+hxDaedalus.ai.Funnel = function() {
+	this._currPoolPointsIndex = 0;
+	this._poolPointsSize = 3000;
+	this._numSamplesCircle = 16;
+	this._radiusSquared = 0;
+	this._radius = 0;
+	this._poolPoints = new Array();
+	var _g1 = 0;
+	var _g = this._poolPointsSize;
+	while(_g1 < _g) {
+		var i = _g1++;
+		this._poolPoints.push(new hxDaedalus.data.math.Point2D());
+	}
+};
+hxDaedalus.ai.Funnel.__name__ = true;
+hxDaedalus.ai.Funnel.prototype = {
+	dispose: function() {
+		this._sampleCircle = null;
+	}
+	,getPoint: function(x,y) {
+		if(y == null) y = 0;
+		if(x == null) x = 0;
+		this.__point = this._poolPoints[this._currPoolPointsIndex];
+		this.__point.setXY(x,y);
+		this._currPoolPointsIndex++;
+		if(this._currPoolPointsIndex == this._poolPointsSize) {
+			this._poolPoints.push(new hxDaedalus.data.math.Point2D());
+			this._poolPointsSize++;
+		}
+		return this.__point;
+	}
+	,getCopyPoint: function(pointToCopy) {
+		return this.getPoint(pointToCopy.x,pointToCopy.y);
+	}
+	,get_radius: function() {
+		return this._radius;
+	}
+	,set_radius: function(value) {
+		this._radius = Math.max(0,value);
+		this._radiusSquared = this._radius * this._radius;
+		this._sampleCircle = new Array();
+		if(this.get_radius() == 0) return 0;
+		var _g1 = 0;
+		var _g = this._numSamplesCircle;
+		while(_g1 < _g) {
+			var i = _g1++;
+			this._sampleCircle.push(new hxDaedalus.data.math.Point2D(this._radius * Math.cos(-2 * Math.PI * i / this._numSamplesCircle),this._radius * Math.sin(-2 * Math.PI * i / this._numSamplesCircle)));
+		}
+		this._sampleCircleDistanceSquared = (this._sampleCircle[0].x - this._sampleCircle[1].x) * (this._sampleCircle[0].x - this._sampleCircle[1].x) + (this._sampleCircle[0].y - this._sampleCircle[1].y) * (this._sampleCircle[0].y - this._sampleCircle[1].y);
+		return this._radius;
+	}
+	,findPath: function(fromX,fromY,toX,toY,listFaces,listEdges,resultPath) {
+		this._currPoolPointsIndex = 0;
+		if(this._radius > 0) {
+			var checkFace = listFaces[0];
+			var distanceSquared;
+			var distance;
+			var p1;
+			var p2;
+			var p3;
+			p1 = checkFace.get_edge().get_originVertex().get_pos();
+			p2 = checkFace.get_edge().get_destinationVertex().get_pos();
+			p3 = checkFace.get_edge().get_nextLeftEdge().get_destinationVertex().get_pos();
+			distanceSquared = (p1.x - fromX) * (p1.x - fromX) + (p1.y - fromY) * (p1.y - fromY);
+			if(distanceSquared <= this._radiusSquared) {
+				distance = Math.sqrt(distanceSquared);
+				fromX = this._radius * 1.01 * ((fromX - p1.x) / distance) + p1.x;
+				fromY = this._radius * 1.01 * ((fromY - p1.y) / distance) + p1.y;
+			} else {
+				distanceSquared = (p2.x - fromX) * (p2.x - fromX) + (p2.y - fromY) * (p2.y - fromY);
+				if(distanceSquared <= this._radiusSquared) {
+					distance = Math.sqrt(distanceSquared);
+					fromX = this._radius * 1.01 * ((fromX - p2.x) / distance) + p2.x;
+					fromY = this._radius * 1.01 * ((fromY - p2.y) / distance) + p2.y;
+				} else {
+					distanceSquared = (p3.x - fromX) * (p3.x - fromX) + (p3.y - fromY) * (p3.y - fromY);
+					if(distanceSquared <= this._radiusSquared) {
+						distance = Math.sqrt(distanceSquared);
+						fromX = this._radius * 1.01 * ((fromX - p3.x) / distance) + p3.x;
+						fromY = this._radius * 1.01 * ((fromY - p3.y) / distance) + p3.y;
+					}
+				}
+			}
+			checkFace = listFaces[listFaces.length - 1];
+			p1 = checkFace.get_edge().get_originVertex().get_pos();
+			p2 = checkFace.get_edge().get_destinationVertex().get_pos();
+			p3 = checkFace.get_edge().get_nextLeftEdge().get_destinationVertex().get_pos();
+			distanceSquared = (p1.x - toX) * (p1.x - toX) + (p1.y - toY) * (p1.y - toY);
+			if(distanceSquared <= this._radiusSquared) {
+				distance = Math.sqrt(distanceSquared);
+				toX = this._radius * 1.01 * ((toX - p1.x) / distance) + p1.x;
+				toY = this._radius * 1.01 * ((toY - p1.y) / distance) + p1.y;
+			} else {
+				distanceSquared = (p2.x - toX) * (p2.x - toX) + (p2.y - toY) * (p2.y - toY);
+				if(distanceSquared <= this._radiusSquared) {
+					distance = Math.sqrt(distanceSquared);
+					toX = this._radius * 1.01 * ((toX - p2.x) / distance) + p2.x;
+					toY = this._radius * 1.01 * ((toY - p2.y) / distance) + p2.y;
+				} else {
+					distanceSquared = (p3.x - toX) * (p3.x - toX) + (p3.y - toY) * (p3.y - toY);
+					if(distanceSquared <= this._radiusSquared) {
+						distance = Math.sqrt(distanceSquared);
+						toX = this._radius * 1.01 * ((toX - p3.x) / distance) + p3.x;
+						toY = this._radius * 1.01 * ((toY - p3.y) / distance) + p3.y;
+					}
+				}
+			}
+		}
+		var startPoint;
+		var endPoint;
+		startPoint = new hxDaedalus.data.math.Point2D(fromX,fromY);
+		endPoint = new hxDaedalus.data.math.Point2D(toX,toY);
+		if(listFaces.length == 1) {
+			resultPath.push(startPoint.x);
+			resultPath.push(startPoint.y);
+			resultPath.push(endPoint.x);
+			resultPath.push(endPoint.y);
+			return;
+		}
+		var i;
+		var j;
+		var k;
+		var currEdge = null;
+		var currVertex = null;
+		var direction;
+		{
+			var _g = hxDaedalus.data.math.Geom2D.isInFace(fromX,fromY,listFaces[0]);
+			switch(_g[1]) {
+			case 1:
+				var edge = _g[2];
+				if(listEdges[0] == edge) {
+					listEdges.shift();
+					listFaces.shift();
+				}
+				break;
+			default:
+			}
+		}
+		var funnelLeft = new Array();
+		var funnelRight = new Array();
+		funnelLeft.push(startPoint);
+		funnelRight.push(startPoint);
+		var verticesDoneSide = new haxe.ds.ObjectMap();
+		var pointsList = new Array();
+		var pointSides = new haxe.ds.ObjectMap();
+		var pointSuccessor = new haxe.ds.ObjectMap();
+		pointSides.set(startPoint,0);
+		0;
+		currEdge = listEdges[0];
+		var relativPos = hxDaedalus.data.math.Geom2D.getRelativePosition2(fromX,fromY,currEdge);
+		var prevPoint;
+		var newPointA;
+		var newPointB;
+		newPointA = this.getCopyPoint(currEdge.get_destinationVertex().get_pos());
+		newPointB = this.getCopyPoint(currEdge.get_originVertex().get_pos());
+		pointsList.push(newPointA);
+		pointsList.push(newPointB);
+		pointSuccessor.set(startPoint,newPointA);
+		newPointA;
+		pointSuccessor.set(newPointA,newPointB);
+		newPointB;
+		prevPoint = newPointB;
+		if(relativPos == 1) {
+			pointSides.set(newPointA,1);
+			1;
+			pointSides.set(newPointB,-1);
+			-1;
+			var k1 = currEdge.get_destinationVertex();
+			verticesDoneSide.set(k1,1);
+			1;
+			var k2 = currEdge.get_originVertex();
+			verticesDoneSide.set(k2,-1);
+			-1;
+		} else if(relativPos == -1) {
+			pointSides.set(newPointA,-1);
+			-1;
+			pointSides.set(newPointB,1);
+			1;
+			var k3 = currEdge.get_destinationVertex();
+			verticesDoneSide.set(k3,-1);
+			-1;
+			var k4 = currEdge.get_originVertex();
+			verticesDoneSide.set(k4,1);
+			1;
+		}
+		var fromVertex = listEdges[0].get_originVertex();
+		var fromFromVertex = listEdges[0].get_destinationVertex();
+		var _g1 = 1;
+		var _g2 = listEdges.length;
+		while(_g1 < _g2) {
+			var i1 = _g1++;
+			currEdge = listEdges[i1];
+			if(currEdge.get_originVertex() == fromVertex) currVertex = currEdge.get_destinationVertex(); else if(currEdge.get_destinationVertex() == fromVertex) currVertex = currEdge.get_originVertex(); else if(currEdge.get_originVertex() == fromFromVertex) {
+				currVertex = currEdge.get_destinationVertex();
+				fromVertex = fromFromVertex;
+			} else if(currEdge.get_destinationVertex() == fromFromVertex) {
+				currVertex = currEdge.get_originVertex();
+				fromVertex = fromFromVertex;
+			} else haxe.Log.trace("IMPOSSIBLE TO IDENTIFY THE VERTEX !!!",{ fileName : "Funnel.hx", lineNumber : 286, className : "hxDaedalus.ai.Funnel", methodName : "findPath"});
+			newPointA = this.getCopyPoint(currVertex.get_pos());
+			pointsList.push(newPointA);
+			direction = -verticesDoneSide.h[fromVertex.__id__];
+			pointSides.set(newPointA,direction);
+			direction;
+			pointSuccessor.set(prevPoint,newPointA);
+			newPointA;
+			verticesDoneSide.set(currVertex,direction);
+			direction;
+			prevPoint = newPointA;
+			fromFromVertex = fromVertex;
+			fromVertex = currVertex;
+		}
+		pointSuccessor.set(prevPoint,endPoint);
+		endPoint;
+		pointSides.set(endPoint,0);
+		0;
+		var pathPoints = new Array();
+		var pathSides = new haxe.ds.ObjectMap();
+		pathPoints.push(startPoint);
+		pathSides.set(startPoint,0);
+		0;
+		var currPos;
+		var _g11 = 0;
+		var _g3 = pointsList.length;
+		while(_g11 < _g3) {
+			var i2 = _g11++;
+			currPos = pointsList[i2];
+			if(pointSides.h[currPos.__id__] == -1) {
+				j = funnelLeft.length - 2;
+				while(j >= 0) {
+					direction = hxDaedalus.data.math.Geom2D.getDirection(funnelLeft[j].x,funnelLeft[j].y,funnelLeft[j + 1].x,funnelLeft[j + 1].y,currPos.x,currPos.y);
+					if(direction != -1) {
+						funnelLeft.shift();
+						var _g21 = 0;
+						while(_g21 < j) {
+							var k5 = _g21++;
+							pathPoints.push(funnelLeft[0]);
+							pathSides.set(funnelLeft[0],1);
+							1;
+							funnelLeft.shift();
+						}
+						pathPoints.push(funnelLeft[0]);
+						pathSides.set(funnelLeft[0],1);
+						1;
+						funnelRight.splice(0,funnelRight.length);
+						funnelRight.push(funnelLeft[0]);
+						funnelRight.push(currPos);
+						break;
+					}
+					j--;
+				}
+				funnelRight.push(currPos);
+				j = funnelRight.length - 3;
+				while(j >= 0) {
+					direction = hxDaedalus.data.math.Geom2D.getDirection(funnelRight[j].x,funnelRight[j].y,funnelRight[j + 1].x,funnelRight[j + 1].y,currPos.x,currPos.y);
+					if(direction == -1) break; else funnelRight.splice(j + 1,1);
+					j--;
+				}
+			} else {
+				j = funnelRight.length - 2;
+				while(j >= 0) {
+					direction = hxDaedalus.data.math.Geom2D.getDirection(funnelRight[j].x,funnelRight[j].y,funnelRight[j + 1].x,funnelRight[j + 1].y,currPos.x,currPos.y);
+					if(direction != 1) {
+						funnelRight.shift();
+						var _g22 = 0;
+						while(_g22 < j) {
+							var k6 = _g22++;
+							pathPoints.push(funnelRight[0]);
+							pathSides.set(funnelRight[0],-1);
+							-1;
+							funnelRight.shift();
+						}
+						pathPoints.push(funnelRight[0]);
+						pathSides.set(funnelRight[0],-1);
+						-1;
+						funnelLeft.splice(0,funnelLeft.length);
+						funnelLeft.push(funnelRight[0]);
+						funnelLeft.push(currPos);
+						break;
+					}
+					j--;
+				}
+				funnelLeft.push(currPos);
+				j = funnelLeft.length - 3;
+				while(j >= 0) {
+					direction = hxDaedalus.data.math.Geom2D.getDirection(funnelLeft[j].x,funnelLeft[j].y,funnelLeft[j + 1].x,funnelLeft[j + 1].y,currPos.x,currPos.y);
+					if(direction == 1) break; else funnelLeft.splice(j + 1,1);
+					j--;
+				}
+			}
+		}
+		var blocked = false;
+		j = funnelRight.length - 2;
+		while(j >= 0) {
+			direction = hxDaedalus.data.math.Geom2D.getDirection(funnelRight[j].x,funnelRight[j].y,funnelRight[j + 1].x,funnelRight[j + 1].y,toX,toY);
+			if(direction != 1) {
+				funnelRight.shift();
+				var _g12 = 0;
+				var _g4 = j + 1;
+				while(_g12 < _g4) {
+					var k7 = _g12++;
+					pathPoints.push(funnelRight[0]);
+					pathSides.set(funnelRight[0],-1);
+					-1;
+					funnelRight.shift();
+				}
+				pathPoints.push(endPoint);
+				pathSides.set(endPoint,0);
+				0;
+				blocked = true;
+				break;
+			}
+			j--;
+		}
+		if(!blocked) {
+			j = funnelLeft.length - 2;
+			while(j >= 0) {
+				direction = hxDaedalus.data.math.Geom2D.getDirection(funnelLeft[j].x,funnelLeft[j].y,funnelLeft[j + 1].x,funnelLeft[j + 1].y,toX,toY);
+				if(direction != -1) {
+					funnelLeft.shift();
+					var _g13 = 0;
+					var _g5 = j + 1;
+					while(_g13 < _g5) {
+						var k8 = _g13++;
+						pathPoints.push(funnelLeft[0]);
+						pathSides.set(funnelLeft[0],1);
+						1;
+						funnelLeft.shift();
+					}
+					pathPoints.push(endPoint);
+					pathSides.set(endPoint,0);
+					0;
+					blocked = true;
+					break;
+				}
+				j--;
+			}
+		}
+		if(!blocked) {
+			pathPoints.push(endPoint);
+			pathSides.set(endPoint,0);
+			0;
+			blocked = true;
+		}
+		var adjustedPoints = new Array();
+		if(this.get_radius() > 0) {
+			var newPath = new Array();
+			if(pathPoints.length == 2) this.adjustWithTangents(pathPoints[0],false,pathPoints[1],false,pointSides,pointSuccessor,newPath,adjustedPoints); else if(pathPoints.length > 2) {
+				this.adjustWithTangents(pathPoints[0],false,pathPoints[1],true,pointSides,pointSuccessor,newPath,adjustedPoints);
+				if(pathPoints.length > 3) {
+					var _g14 = 1;
+					var _g6 = pathPoints.length - 3 + 1;
+					while(_g14 < _g6) {
+						var i3 = _g14++;
+						this.adjustWithTangents(pathPoints[i3],true,pathPoints[i3 + 1],true,pointSides,pointSuccessor,newPath,adjustedPoints);
+					}
+				}
+				var pathLength = pathPoints.length;
+				this.adjustWithTangents(pathPoints[pathLength - 2],true,pathPoints[pathLength - 1],false,pointSides,pointSuccessor,newPath,adjustedPoints);
+			}
+			newPath.push(endPoint);
+			this.checkAdjustedPath(newPath,adjustedPoints,pointSides);
+			var smoothPoints = new Array();
+			i = newPath.length - 2;
+			while(i >= 1) {
+				this.smoothAngle(adjustedPoints[i * 2 - 1],newPath[i],adjustedPoints[i * 2],pointSides.h[newPath[i].__id__],smoothPoints);
+				while(smoothPoints.length != 0) {
+					var temp = i * 2;
+					adjustedPoints.splice(temp,0);
+					var x = smoothPoints.pop();
+					adjustedPoints.splice(temp,0,x);
+				}
+				i--;
+			}
+		} else adjustedPoints = pathPoints;
+		var _g15 = 0;
+		var _g7 = adjustedPoints.length;
+		while(_g15 < _g7) {
+			var i4 = _g15++;
+			resultPath.push(adjustedPoints[i4].x);
+			resultPath.push(adjustedPoints[i4].y);
+		}
+	}
+	,adjustWithTangents: function(p1,applyRadiusToP1,p2,applyRadiusToP2,pointSides,pointSuccessor,newPath,adjustedPoints) {
+		var tangentsResult = new Array();
+		var side1 = pointSides.h[p1.__id__];
+		var side2 = pointSides.h[p2.__id__];
+		var pTangent1 = null;
+		var pTangent2 = null;
+		if(!applyRadiusToP1 && !applyRadiusToP2) {
+			pTangent1 = p1;
+			pTangent2 = p2;
+		} else if(!applyRadiusToP1) {
+			if(hxDaedalus.data.math.Geom2D.tangentsPointToCircle(p1.x,p1.y,p2.x,p2.y,this._radius,tangentsResult)) {
+				if(side2 == 1) {
+					pTangent1 = p1;
+					pTangent2 = this.getPoint(tangentsResult[2],tangentsResult[3]);
+				} else {
+					pTangent1 = p1;
+					pTangent2 = this.getPoint(tangentsResult[0],tangentsResult[1]);
+				}
+			} else {
+				haxe.Log.trace("NO TANGENT",{ fileName : "Funnel.hx", lineNumber : 580, className : "hxDaedalus.ai.Funnel", methodName : "adjustWithTangents"});
+				return;
+			}
+		} else if(!applyRadiusToP2) {
+			if(hxDaedalus.data.math.Geom2D.tangentsPointToCircle(p2.x,p2.y,p1.x,p1.y,this._radius,tangentsResult)) {
+				if(tangentsResult.length > 0) {
+					if(side1 == 1) {
+						pTangent1 = this.getPoint(tangentsResult[0],tangentsResult[1]);
+						pTangent2 = p2;
+					} else {
+						pTangent1 = this.getPoint(tangentsResult[2],tangentsResult[3]);
+						pTangent2 = p2;
+					}
+				}
+			} else {
+				haxe.Log.trace("NO TANGENT",{ fileName : "Funnel.hx", lineNumber : 605, className : "hxDaedalus.ai.Funnel", methodName : "adjustWithTangents"});
+				return;
+			}
+		} else if(side1 == 1 && side2 == 1) {
+			hxDaedalus.data.math.Geom2D.tangentsParalCircleToCircle(this._radius,p1.x,p1.y,p2.x,p2.y,tangentsResult);
+			pTangent1 = this.getPoint(tangentsResult[2],tangentsResult[3]);
+			pTangent2 = this.getPoint(tangentsResult[4],tangentsResult[5]);
+		} else if(side1 == -1 && side2 == -1) {
+			hxDaedalus.data.math.Geom2D.tangentsParalCircleToCircle(this._radius,p1.x,p1.y,p2.x,p2.y,tangentsResult);
+			pTangent1 = this.getPoint(tangentsResult[0],tangentsResult[1]);
+			pTangent2 = this.getPoint(tangentsResult[6],tangentsResult[7]);
+		} else if(side1 == 1 && side2 == -1) {
+			if(hxDaedalus.data.math.Geom2D.tangentsCrossCircleToCircle(this._radius,p1.x,p1.y,p2.x,p2.y,tangentsResult)) {
+				pTangent1 = this.getPoint(tangentsResult[2],tangentsResult[3]);
+				pTangent2 = this.getPoint(tangentsResult[6],tangentsResult[7]);
+			} else {
+				haxe.Log.trace("NO TANGENT, points are too close for radius",{ fileName : "Funnel.hx", lineNumber : 642, className : "hxDaedalus.ai.Funnel", methodName : "adjustWithTangents"});
+				return;
+			}
+		} else if(hxDaedalus.data.math.Geom2D.tangentsCrossCircleToCircle(this._radius,p1.x,p1.y,p2.x,p2.y,tangentsResult)) {
+			pTangent1 = this.getPoint(tangentsResult[0],tangentsResult[1]);
+			pTangent2 = this.getPoint(tangentsResult[4],tangentsResult[5]);
+		} else {
+			haxe.Log.trace("NO TANGENT, points are too close for radius",{ fileName : "Funnel.hx", lineNumber : 659, className : "hxDaedalus.ai.Funnel", methodName : "adjustWithTangents"});
+			return;
+		}
+		var successor = pointSuccessor.h[p1.__id__];
+		var distance;
+		while(successor != p2) {
+			distance = hxDaedalus.data.math.Geom2D.distanceSquaredPointToSegment(successor.x,successor.y,pTangent1.x,pTangent1.y,pTangent2.x,pTangent2.y);
+			if(distance < this._radiusSquared) {
+				this.adjustWithTangents(p1,applyRadiusToP1,successor,true,pointSides,pointSuccessor,newPath,adjustedPoints);
+				this.adjustWithTangents(successor,true,p2,applyRadiusToP2,pointSides,pointSuccessor,newPath,adjustedPoints);
+				return;
+			} else successor = pointSuccessor.h[successor.__id__];
+		}
+		adjustedPoints.push(pTangent1);
+		adjustedPoints.push(pTangent2);
+		newPath.push(p1);
+	}
+	,checkAdjustedPath: function(newPath,adjustedPoints,pointSides) {
+		var needCheck = true;
+		var point0;
+		var point0Side;
+		var point1;
+		var point1Side;
+		var point2;
+		var point2Side;
+		var pt1;
+		var pt2;
+		var pt3;
+		var dot;
+		var tangentsResult = new Array();
+		var pTangent1 = null;
+		var pTangent2 = null;
+		while(needCheck) {
+			needCheck = false;
+			var i = 2;
+			while(i < newPath.length) {
+				point2 = newPath[i];
+				point2Side = pointSides.h[point2.__id__];
+				point1 = newPath[i - 1];
+				point1Side = pointSides.h[point1.__id__];
+				point0 = newPath[i - 2];
+				point0Side = pointSides.h[point0.__id__];
+				if(point1Side == point2Side) {
+					pt1 = adjustedPoints[(i - 2) * 2];
+					pt2 = adjustedPoints[(i - 1) * 2 - 1];
+					pt3 = adjustedPoints[(i - 1) * 2];
+					dot = (pt1.x - pt2.x) * (pt3.x - pt2.x) + (pt1.y - pt2.y) * (pt3.y - pt2.y);
+					if(dot > 0) {
+						if(i == 2) {
+							hxDaedalus.data.math.Geom2D.tangentsPointToCircle(point0.x,point0.y,point2.x,point2.y,this._radius,tangentsResult);
+							if(point2Side == 1) {
+								pTangent1 = point0;
+								pTangent2 = this.getPoint(tangentsResult[2],tangentsResult[3]);
+							} else {
+								pTangent1 = point0;
+								pTangent2 = this.getPoint(tangentsResult[0],tangentsResult[1]);
+							}
+						} else if(i == newPath.length - 1) {
+							hxDaedalus.data.math.Geom2D.tangentsPointToCircle(point2.x,point2.y,point0.x,point0.y,this._radius,tangentsResult);
+							if(point0Side == 1) {
+								pTangent1 = this.getPoint(tangentsResult[0],tangentsResult[1]);
+								pTangent2 = point2;
+							} else {
+								pTangent1 = this.getPoint(tangentsResult[2],tangentsResult[3]);
+								pTangent2 = point2;
+							}
+						} else if(point0Side == 1 && point2Side == -1) {
+							hxDaedalus.data.math.Geom2D.tangentsCrossCircleToCircle(this._radius,point0.x,point0.y,point2.x,point2.y,tangentsResult);
+							pTangent1 = this.getPoint(tangentsResult[2],tangentsResult[3]);
+							pTangent2 = this.getPoint(tangentsResult[6],tangentsResult[7]);
+						} else if(point0Side == -1 && point2Side == 1) {
+							hxDaedalus.data.math.Geom2D.tangentsCrossCircleToCircle(this._radius,point0.x,point0.y,point2.x,point2.y,tangentsResult);
+							pTangent1 = this.getPoint(tangentsResult[0],tangentsResult[1]);
+							pTangent2 = this.getPoint(tangentsResult[4],tangentsResult[5]);
+						} else if(point0Side == 1 && point2Side == 1) {
+							hxDaedalus.data.math.Geom2D.tangentsParalCircleToCircle(this._radius,point0.x,point0.y,point2.x,point2.y,tangentsResult);
+							pTangent1 = this.getPoint(tangentsResult[2],tangentsResult[3]);
+							pTangent2 = this.getPoint(tangentsResult[4],tangentsResult[5]);
+						} else if(point0Side == -1 && point2Side == -1) {
+							hxDaedalus.data.math.Geom2D.tangentsParalCircleToCircle(this._radius,point0.x,point0.y,point2.x,point2.y,tangentsResult);
+							pTangent1 = this.getPoint(tangentsResult[0],tangentsResult[1]);
+							pTangent2 = this.getPoint(tangentsResult[6],tangentsResult[7]);
+						}
+						var temp = (i - 2) * 2;
+						adjustedPoints.splice(temp,1);
+						adjustedPoints.splice(temp,0,pTangent1);
+						temp = i * 2 - 1;
+						adjustedPoints.splice(temp,1);
+						adjustedPoints.splice(temp,0,pTangent2);
+						newPath.splice(i - 1,1);
+						adjustedPoints.splice((i - 1) * 2 - 1,2);
+						tangentsResult.splice(0,tangentsResult.length);
+						i--;
+					}
+				}
+				i++;
+			}
+		}
+	}
+	,smoothAngle: function(prevPoint,pointToSmooth,nextPoint,side,encirclePoints) {
+		var angleType = hxDaedalus.data.math.Geom2D.getDirection(prevPoint.x,prevPoint.y,pointToSmooth.x,pointToSmooth.y,nextPoint.x,nextPoint.y);
+		var distanceSquared = (prevPoint.x - nextPoint.x) * (prevPoint.x - nextPoint.x) + (prevPoint.y - nextPoint.y) * (prevPoint.y - nextPoint.y);
+		if(distanceSquared <= this._sampleCircleDistanceSquared) return;
+		var index = 0;
+		var side1;
+		var side2;
+		var pointInArea;
+		var xToCheck;
+		var yToCheck;
+		var _g1 = 0;
+		var _g = this._numSamplesCircle;
+		while(_g1 < _g) {
+			var i = _g1++;
+			pointInArea = false;
+			xToCheck = pointToSmooth.x + this._sampleCircle[i].x;
+			yToCheck = pointToSmooth.y + this._sampleCircle[i].y;
+			side1 = hxDaedalus.data.math.Geom2D.getDirection(prevPoint.x,prevPoint.y,pointToSmooth.x,pointToSmooth.y,xToCheck,yToCheck);
+			side2 = hxDaedalus.data.math.Geom2D.getDirection(pointToSmooth.x,pointToSmooth.y,nextPoint.x,nextPoint.y,xToCheck,yToCheck);
+			if(side == 1) {
+				if(angleType == -1) {
+					if(side1 == -1 && side2 == -1) pointInArea = true;
+				} else if(side1 == -1 || side2 == -1) pointInArea = true;
+			} else if(angleType == 1) {
+				if(side1 == 1 && side2 == 1) pointInArea = true;
+			} else if(side1 == 1 || side2 == 1) pointInArea = true;
+			if(pointInArea) {
+				encirclePoints.splice(index,0);
+				var x = new hxDaedalus.data.math.Point2D(xToCheck,yToCheck);
+				encirclePoints.splice(index,0,x);
+				index++;
+			} else index = 0;
+		}
+		if(side == -1) encirclePoints.reverse();
+	}
+};
+hxDaedalus.ai.PathFinder = function() {
+	this.astar = new hxDaedalus.ai.AStar();
+	this.funnel = new hxDaedalus.ai.Funnel();
+	this.listFaces = new Array();
+	this.listEdges = new Array();
+};
+hxDaedalus.ai.PathFinder.__name__ = true;
+hxDaedalus.ai.PathFinder.prototype = {
+	dispose: function() {
+		this._mesh = null;
+		this.astar.dispose();
+		this.astar = null;
+		this.funnel.dispose();
+		this.funnel = null;
+		this.listEdges = null;
+		this.listFaces = null;
+	}
+	,get_mesh: function() {
+		return this._mesh;
+	}
+	,set_mesh: function(value) {
+		this._mesh = value;
+		this.astar.set_mesh(this._mesh);
+		return value;
+	}
+	,findPath: function(toX,toY,resultPath) {
+		resultPath.splice(0,resultPath.length);
+		hxDaedalus.debug.Debug.assertFalse(this._mesh == null,"Mesh missing",{ fileName : "PathFinder.hx", lineNumber : 51, className : "hxDaedalus.ai.PathFinder", methodName : "findPath"});
+		hxDaedalus.debug.Debug.assertFalse(this.entity == null,"Entity missing",{ fileName : "PathFinder.hx", lineNumber : 52, className : "hxDaedalus.ai.PathFinder", methodName : "findPath"});
+		if(hxDaedalus.data.math.Geom2D.isCircleIntersectingAnyConstraint(toX,toY,this.entity.get_radius(),this._mesh)) return;
+		this.astar.set_radius(this.entity.get_radius());
+		this.funnel.set_radius(this.entity.get_radius());
+		this.listFaces.splice(0,this.listFaces.length);
+		this.listEdges.splice(0,this.listEdges.length);
+		this.astar.findPath(this.entity.x,this.entity.y,toX,toY,this.listFaces,this.listEdges);
+		if(this.listFaces.length == 0) {
+			haxe.Log.trace("PathFinder listFaces.length == 0",{ fileName : "PathFinder.hx", lineNumber : 63, className : "hxDaedalus.ai.PathFinder", methodName : "findPath"});
+			return;
+		}
+		this.funnel.findPath(this.entity.x,this.entity.y,toX,toY,this.listFaces,this.listEdges,resultPath);
+	}
+};
+hxDaedalus.ai.trajectory = {};
+hxDaedalus.ai.trajectory.LinearPathSampler = function() {
+	this._samplingDistanceSquared = 1;
+	this._samplingDistance = 1;
+	this._preCompX = new Array();
+	this._preCompY = new Array();
+};
+hxDaedalus.ai.trajectory.LinearPathSampler.__name__ = true;
+hxDaedalus.ai.trajectory.LinearPathSampler.pythag = function(a,b) {
+	return Math.sqrt(a * a + b * b);
+};
+hxDaedalus.ai.trajectory.LinearPathSampler.prototype = {
+	dispose: function() {
+		this.entity = null;
+		this._path = null;
+		this._preCompX = null;
+		this._preCompY = null;
+	}
+	,get_x: function() {
+		return this._currentX;
+	}
+	,get_y: function() {
+		return this._currentY;
+	}
+	,get_hasPrev: function() {
+		return this._hasPrev;
+	}
+	,get_hasNext: function() {
+		return this._hasNext;
+	}
+	,get_count: function() {
+		return this._count;
+	}
+	,set_count: function(value) {
+		this._count = value;
+		if(this._count < 0) this._count = 0;
+		if(this._count > this.get_countMax() - 1) this._count = this.get_countMax() - 1;
+		if(this._count == 0) this._hasPrev = false; else this._hasPrev = true;
+		if(this._count == this.get_countMax() - 1) this._hasNext = false; else this._hasNext = true;
+		this._currentX = this._preCompX[this._count];
+		this._currentY = this._preCompY[this._count];
+		this.updateEntity();
+		return this._count;
+	}
+	,get_countMax: function() {
+		return this._preCompX.length - 1;
+	}
+	,get_samplingDistance: function() {
+		return this._samplingDistance;
+	}
+	,set_samplingDistance: function(value) {
+		this._samplingDistance = value;
+		this._samplingDistanceSquared = this._samplingDistance * this._samplingDistance;
+		return value;
+	}
+	,set_path: function(value) {
+		this._path = value;
+		this._preComputed = false;
+		this.reset();
+		return value;
+	}
+	,reset: function() {
+		if(this._path.length > 0) {
+			hxDaedalus.debug.Debug.assertTrue((this._path.length & 1) == 0,"Wrong length",{ fileName : "LinearPathSampler.hx", lineNumber : 100, className : "hxDaedalus.ai.trajectory.LinearPathSampler", methodName : "reset"});
+			this._currentX = this._path[0];
+			this._currentY = this._path[1];
+			this._iPrev = 0;
+			this._iNext = 2;
+			this._hasPrev = false;
+			this._hasNext = true;
+			this._count = 0;
+			this.updateEntity();
+		} else {
+			this._hasPrev = false;
+			this._hasNext = false;
+			this._count = 0;
+		}
+	}
+	,preCompute: function() {
+		this._preCompX.splice(0,this._preCompX.length);
+		this._preCompY.splice(0,this._preCompY.length);
+		this._count = 0;
+		this._preCompX.push(this._currentX);
+		this._preCompY.push(this._currentY);
+		this._preComputed = false;
+		while(this.next()) {
+			this._preCompX.push(this._currentX);
+			this._preCompY.push(this._currentY);
+		}
+		this.reset();
+		this._preComputed = true;
+	}
+	,prev: function() {
+		if(!this._hasPrev) return false;
+		this._hasNext = true;
+		if(this._preComputed) {
+			this._count--;
+			if(this._count == 0) this._hasPrev = false;
+			this._currentX = this._preCompX[this._count];
+			this._currentY = this._preCompY[this._count];
+			this.updateEntity();
+			return true;
+		}
+		var remainingDist;
+		var dist;
+		remainingDist = this._samplingDistance;
+		while(true) {
+			var pathPrev = this._path[this._iPrev];
+			var pathPrev1 = this._path[this._iPrev + 1];
+			dist = hxDaedalus.ai.trajectory.LinearPathSampler.pythag(this._currentX - pathPrev,this._currentY - pathPrev1);
+			if(dist < remainingDist) {
+				remainingDist -= dist;
+				this._iPrev -= 2;
+				this._iNext -= 2;
+				if(this._iNext == 0) break;
+			} else break;
+		}
+		if(this._iNext == 0) {
+			this._currentX = this._path[0];
+			this._currentY = this._path[1];
+			this._hasPrev = false;
+			this._iNext = 2;
+			this._iPrev = 0;
+			this.updateEntity();
+			return true;
+		} else {
+			this._currentX = this._currentX + (this._path[this._iPrev] - this._currentX) * remainingDist / dist;
+			this._currentY = this._currentY + (this._path[this._iPrev + 1] - this._currentY) * remainingDist / dist;
+			this.updateEntity();
+			return true;
+		}
+	}
+	,next: function() {
+		if(!this._hasNext) return false;
+		this._hasPrev = true;
+		if(this._preComputed) {
+			this._count++;
+			if(this._count == this._preCompX.length - 1) this._hasNext = false;
+			this._currentX = this._preCompX[this._count];
+			this._currentY = this._preCompY[this._count];
+			this.updateEntity();
+			return true;
+		}
+		var remainingDist;
+		var dist;
+		remainingDist = this._samplingDistance;
+		while(true) {
+			var pathNext = this._path[this._iNext];
+			var pathNext1 = this._path[this._iNext + 1];
+			dist = hxDaedalus.ai.trajectory.LinearPathSampler.pythag(this._currentX - pathNext,this._currentY - pathNext1);
+			if(dist < remainingDist) {
+				remainingDist -= dist;
+				this._currentX = this._path[this._iNext];
+				this._currentY = this._path[this._iNext + 1];
+				this._iPrev += 2;
+				this._iNext += 2;
+				if(this._iNext == this._path.length) break;
+			} else break;
+		}
+		if(this._iNext == this._path.length) {
+			this._currentX = this._path[this._iPrev];
+			this._currentY = this._path[this._iPrev + 1];
+			this._hasNext = false;
+			this._iNext = this._path.length - 2;
+			this._iPrev = this._iNext - 2;
+			this.updateEntity();
+			return true;
+		} else {
+			this._currentX = this._currentX + (this._path[this._iNext] - this._currentX) * remainingDist / dist;
+			this._currentY = this._currentY + (this._path[this._iNext + 1] - this._currentY) * remainingDist / dist;
+			this.updateEntity();
+			return true;
+		}
+	}
+	,updateEntity: function() {
+		if(this.entity == null) return;
+		hxDaedalus.debug.Debug.assertFalse(isNaN(this._currentX) && isNaN(this._currentY),null,{ fileName : "LinearPathSampler.hx", lineNumber : 228, className : "hxDaedalus.ai.trajectory.LinearPathSampler", methodName : "updateEntity"});
+		this.entity.x = this._currentX;
+		this.entity.y = this._currentY;
 	}
 };
 hxDaedalus.canvas = {};
@@ -229,7 +1362,7 @@ hxDaedalus.canvas.BasicCanvas.prototype = {
 	}
 };
 hxDaedalus.canvas.CanvasHeader = function() {
-	var canvasHeader = "600:400:60:FFFFFF".split(":");
+	var canvasHeader = "600:600:60:FFFFFF".split(":");
 	this.width = Std.parseInt(canvasHeader[0]);
 	this.height = Std.parseInt(canvasHeader[1]);
 	this.frameRate = Std.parseInt(canvasHeader[2]);
@@ -2936,7 +4069,7 @@ hxDaedalus.data.Object.INC = 0;
 hxDaedalus.data.Vertex.INC = 0;
 hxDaedalus.data.math.Geom2D.__samples = new Array();
 hxDaedalus.data.math.Geom2D.__circumcenter = new hxDaedalus.data.math.Point2D();
-BasicsJS.main();
+PathfindingJS.main();
 })();
 
-//# sourceMappingURL=daedalusBasic.js.map
+//# sourceMappingURL=daedalusPathfinding.js.map

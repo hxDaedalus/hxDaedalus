@@ -45,8 +45,9 @@ class FromBitmap extends Sprite
         addChild( _bmp );
         
         // create a viewport
-        _view = new SimpleView();
-        addChild( _view.surface );
+		var viewSprite = new Sprite();
+        _view = new SimpleView(viewSprite);
+        addChild( viewSprite );
         
         // create an object from bitmap
         _object = BitmapObject.buildFromBmpData(_bmp.bitmapData);

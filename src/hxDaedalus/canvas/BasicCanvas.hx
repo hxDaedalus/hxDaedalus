@@ -34,6 +34,8 @@ class BasicCanvas
         style.left = Std.string( 0 + 'px' );
         style.top = Std.string( 0 + 'px' );
         style.position = "absolute";
+		style.backgroundColor = header.bgColor;
+		surface.fillStyle = header.bgColor;
         image = cast dom;        
         var s = Browser.document.createStyleElement();
         s.innerHTML = "@keyframes spin { from { transform:rotate( 0deg ); } to { transform:rotate( 360deg ); } }";
@@ -52,7 +54,7 @@ class BasicCanvas
     }
     
     public function clear():Void {
-        surface.clearRect ( 0, 0 
+		surface.clearRect ( 0, 0 
         , header.width
         , header.height );
     }
@@ -62,21 +64,44 @@ class BasicCanvas
         surface.arc( x, y, radius, 0, 2*Math.PI, false );
         surface.stroke();
         surface.closePath();
-        surface.fill();
     }
-    public function lineStyle( wid: Float, col: Int )
+	
+	public function drawRect(x:Float, y:Float, width:Float, height:Float)
+	{
+        surface.beginPath();
+        surface.moveTo( x, y );
+		surface.lineTo(x + width, y);
+		surface.lineTo(x + width, y + height);
+		surface.lineTo(x, y + height);
+        surface.stroke();
+        surface.closePath();
+	}
+	
+    public function lineStyle( wid: Float, col: Int, ?alpha:Float )
     {
         surface.lineWidth = wid;
-        surface.strokeStyle = '#' + StringTools.hex( col, 6 );
+        surface.setStrokeColor('#' + StringTools.hex( col, 6 ), alpha);
     }
     
+	public function moveTo(x : Float, y : Float)
+	{
+		surface.beginPath();
+		surface.moveTo(x, y);
+	}
     
-    public function beginFill( col: Int ){
-        surface.fillStyle = '#' + StringTools.hex( col, 6 );
+	public function lineTo(x : Float, y : Float)
+	{
+		surface.lineTo(x, y);
+		surface.closePath();
+		surface.stroke();
+	}
+    
+    public function beginFill( col: Int, ?alpha:Float ){
+		surface.setFillColor('#' + StringTools.hex( col, 6 ), alpha);
         surface.beginPath();
     }
     
-    public function endDraw():Void {
+    public function endFill():Void {
         surface.stroke();
         surface.closePath();
         surface.fill();
