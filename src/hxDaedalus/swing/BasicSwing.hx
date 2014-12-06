@@ -10,6 +10,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseEvent;
+import java.awt.Dimension;
 import java.lang.System;
 import java.awt.Graphics2D;
 import haxe.macro.Compiler;
@@ -30,12 +31,14 @@ implements MouseMotionListener
         setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
         setBackground( new Color( header.bgColor ) );
         surface = new Surface();
+		getContentPane().setPreferredSize( new Dimension( header.width, header.height ) );
         getContentPane().add( surface );
         surface.addKeyListener( this );
         surface.setFocusable( true );
         surface.requestFocusInWindow();
         surface.addMouseListener( this );
         surface.addMouseMotionListener( this );
+		pack();
         //surface.repaint();
         setVisible( true );
     }
