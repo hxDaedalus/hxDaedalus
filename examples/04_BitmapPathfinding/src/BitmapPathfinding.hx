@@ -68,7 +68,7 @@ class BitmapPathfinding extends Sprite {
 		addChild(_overlay);
 		
 		var viewSprite = new Sprite();
-		_view = new SimpleView(viewSprite);
+		_view = new SimpleView(viewSprite.graphics);
 		addChild( viewSprite );
 		
 		// create an object from bitmap
