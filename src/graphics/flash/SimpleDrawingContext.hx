@@ -1,14 +1,14 @@
-package hxDaedalus.graphics.js;
+package graphics.flash;
 
-import hxDaedalus.canvas.BasicCanvas;
-import hxDaedalus.graphics.ISimpleDrawingContext;
+import graphics.ISimpleDrawingContext;
+import flash.display.Graphics;
 
 
 class SimpleDrawingContext implements ISimpleDrawingContext
 {
-	public var graphics(default, null):BasicCanvas;
+	public var graphics(default, null):Graphics;
 
-	public function new(graphics:BasicCanvas) {
+	public function new(graphics:Graphics) {
 		this.graphics = graphics;
 	}
 	

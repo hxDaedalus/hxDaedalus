@@ -7,8 +7,9 @@ import hxDaedalus.data.Mesh;
 import hxDaedalus.data.Object;
 import hxDaedalus.factories.BitmapObject;
 import hxDaedalus.factories.RectMesh;
-import hxDaedalus.view.SimpleView;
-import hxDaedalus.swing.BasicSwing;
+import graphics.SimpleView;
+import graphics.swing.BasicSwing;
+import graphics.swing.SimpleDrawingContext;
 
 import haxe.Timer;
 
@@ -61,7 +62,7 @@ class BitmapPathfindingJava extends BasicSwing {
 		// show the image bmp
 		add(new JLabel(new ImageIcon(_overlay)));
 
-		_view = new SimpleView(this);
+		_view = new SimpleView(new SimpleDrawingContext(this));
 		surface.paintFunction = paintFunction;
 		
 		// create an object from bitmap
@@ -124,7 +125,9 @@ class BitmapPathfindingJava extends BasicSwing {
     }
     
     function paintFunction( g: Graphics2D ):Void {
-        _view.refreshGraphics2D( g );
+        var graphics:SimpleDrawingContext = cast _view.graphics;
+		graphics.refreshGraphics2D( g );
+		
 		g.drawImage(_overlay, null, 0, 0);
         _view.drawMesh( _mesh );
         

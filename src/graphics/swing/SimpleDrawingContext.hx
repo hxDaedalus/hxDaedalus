@@ -1,7 +1,7 @@
-package hxDaedalus.graphics.swing;
+package graphics.swing;
 
-import hxDaedalus.graphics.ISimpleDrawingContext;
-import hxDaedalus.swing.BasicSwing;
+import graphics.ISimpleDrawingContext;
+import graphics.swing.BasicSwing;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -20,6 +20,10 @@ class SimpleDrawingContext implements ISimpleDrawingContext
 	public function new(graphics:BasicSwing) {
 		this.bounds = graphics.surface.getBounds();
 		this.path = new GeneralPath();
+	}
+	
+	public function refreshGraphics2D( g:Graphics2D ) {
+		this.graphics = g;
 	}
 	
 	public function clear():Void {

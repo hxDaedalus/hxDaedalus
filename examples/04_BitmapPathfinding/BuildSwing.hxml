@@ -1,6 +1,5 @@
 -cp src/
 -cp ../../src/
--cp ../../../hxPixels_git/src/
 -main BitmapPathfindingJava
 -java deploySwing
 -D canvasHeader=1024:780:60:FFFFFF

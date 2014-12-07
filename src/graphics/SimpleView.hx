@@ -1,4 +1,4 @@
-package hxDaedalus.view;
+package graphics;
 
 import hxDaedalus.ai.EntityAI;
 import hxDaedalus.data.Edge;
@@ -6,11 +6,11 @@ import hxDaedalus.data.Face;
 import hxDaedalus.data.math.Point2D;
 import hxDaedalus.data.Mesh;
 import hxDaedalus.data.Vertex;
-import hxDaedalus.graphics.SimpleDrawingContext;
 import hxDaedalus.iterators.FromMeshToVertices;
 import hxDaedalus.iterators.FromVertexToHoldingFaces;
 import hxDaedalus.iterators.FromVertexToIncomingEdges;
-import hxDaedalus.graphics.TargetCanvas;
+import graphics.ISimpleDrawingContext;
+
 
 class SimpleView
 {
@@ -34,17 +34,11 @@ class SimpleView
 	public var entitiesWidth:Float = 1;
 	public var entitiesAlpha:Float = .75;
 
-    public var graphics(default, null): SimpleDrawingContext;
+    public var graphics(default, null): ISimpleDrawingContext;
     
-    #if java
-    public function refreshGraphics2D( g: java.awt.Graphics2D ){
-        graphics.graphics = g;
-    }
-    #end
-    
-    public function new( targetCanvas: TargetCanvas )
+    public function new( drawingContext: ISimpleDrawingContext )
     {
-        graphics = new SimpleDrawingContext( targetCanvas );
+        graphics = drawingContext;
     }
     
     function drawVertex(vertex : Vertex) : Void

@@ -7,24 +7,20 @@ import hxDaedalus.data.graph.GraphEdge;
 import hxDaedalus.data.graph.GraphNode;
 import hxDaedalus.data.math.Geom2D;
 import hxDaedalus.data.math.Potrace;
-
-import flash.display.BitmapData;
-import flash.display.Shape;
-import flash.geom.Point;
+import hxDaedalus.data.Pixels;
 
 class BitmapMesh
 {
     
-    public static function buildFromBmpData(    bmpData:    BitmapData
-                                            ,   debugBmp:   BitmapData = null
-                                            ,   debugShape: Shape = null
+    public static function buildFromBmpData(    bmpData:    Pixels
+                                            ,   debugBmp:   Pixels = null
                                             ) : Mesh
     {
         var i : Int;
         var j : Int;
         
         // OUTLINES STEP-LIKE SHAPES GENERATION
-        var shapes : Array<Array<Float>> = Potrace.buildShapes(bmpData, debugBmp, debugShape);
+        var shapes : Array<Array<Float>> = Potrace.buildShapes(bmpData, debugBmp);
         
         // GRAPHS OF POTENTIAL SEGMENTS GENERATION
         var graphs : Array<Graph> = new Array<Graph>();
@@ -36,7 +32,7 @@ class BitmapMesh
         
         var polygons : Array<Array<Float>> = new Array<Array<Float>>();
         for (i in 0...graphs.length){
-            polygons.push(Potrace.buildPolygon(graphs[i], debugShape));
+            polygons.push(Potrace.buildPolygon(graphs[i]));
         }  // MESH GENERATION  
         
         

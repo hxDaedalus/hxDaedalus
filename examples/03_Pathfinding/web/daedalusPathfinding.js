@@ -33,8 +33,8 @@ Math.__name__ = true;
 var PathfindingJS = function() {
 	this.newPath = false;
 	this.mesh = hxDaedalus.factories.RectMesh.buildRectangle(600,600);
-	this.basicCanvas = new hxDaedalus.canvas.BasicCanvas();
-	this.view = new hxDaedalus.view.SimpleView(this.basicCanvas);
+	this.basicCanvas = new graphics.js.BasicCanvas();
+	this.view = new graphics.SimpleView(new graphics.js.SimpleDrawingContext(this.basicCanvas));
 	var randGen;
 	randGen = new hxDaedalus.data.math.RandGenerator();
 	randGen.set_seed(7259);
@@ -43,7 +43,7 @@ var PathfindingJS = function() {
 	var _g = 0;
 	while(_g < 50) {
 		var i = _g++;
-		haxe.Log.trace(" i " + i,{ fileName : "PathfindingJS.hx", lineNumber : 56, className : "PathfindingJS", methodName : "new"});
+		haxe.Log.trace(" i " + i,{ fileName : "PathfindingJS.hx", lineNumber : 57, className : "PathfindingJS", methodName : "new"});
 		object = new hxDaedalus.data.Object();
 		shapeCoords = new Array();
 		shapeCoords = [-1,-1,1,-1,1,-1,1,1,1,1,-1,1,-1,1,-1,-1];
@@ -135,6 +135,209 @@ StringTools.hex = function(n,digits) {
 	} while(n > 0);
 	if(digits != null) while(s.length < digits) s = "0" + s;
 	return s;
+};
+var graphics = {};
+graphics.ISimpleDrawingContext = function() { };
+graphics.ISimpleDrawingContext.__name__ = true;
+graphics.SimpleView = function(drawingContext) {
+	this.entitiesAlpha = .75;
+	this.entitiesWidth = 1;
+	this.entitiesColor = 65280;
+	this.pathsAlpha = .75;
+	this.pathsWidth = 1.5;
+	this.pathsColor = 16760848;
+	this.verticesAlpha = .25;
+	this.verticesRadius = .5;
+	this.verticesColor = 255;
+	this.constraintsAlpha = 1.0;
+	this.constraintsWidth = 2;
+	this.constraintsColor = 16711680;
+	this.edgesAlpha = .25;
+	this.edgesWidth = 1;
+	this.edgesColor = 10066329;
+	this.graphics = drawingContext;
+};
+graphics.SimpleView.__name__ = true;
+graphics.SimpleView.prototype = {
+	drawVertex: function(vertex) {
+		this.graphics.lineStyle(this.verticesRadius,this.verticesColor,this.verticesAlpha);
+		this.graphics.beginFill(this.verticesColor,this.verticesAlpha);
+		this.graphics.drawCircle(vertex.get_pos().x,vertex.get_pos().y,this.verticesRadius);
+		this.graphics.endFill();
+	}
+	,drawEdge: function(edge) {
+		if(edge.get_isConstrained()) {
+			this.graphics.lineStyle(this.constraintsWidth,this.constraintsColor,this.constraintsAlpha);
+			this.graphics.moveTo(edge.get_originVertex().get_pos().x,edge.get_originVertex().get_pos().y);
+			this.graphics.lineTo(edge.get_destinationVertex().get_pos().x,edge.get_destinationVertex().get_pos().y);
+		} else {
+			this.graphics.lineStyle(this.edgesWidth,this.edgesColor,this.edgesAlpha);
+			this.graphics.moveTo(edge.get_originVertex().get_pos().x,edge.get_originVertex().get_pos().y);
+			this.graphics.lineTo(edge.get_destinationVertex().get_pos().x,edge.get_destinationVertex().get_pos().y);
+		}
+	}
+	,drawMesh: function(mesh,cleanBefore) {
+		if(cleanBefore == null) cleanBefore = false;
+		if(cleanBefore) this.graphics.clear();
+		mesh.traverse($bind(this,this.drawVertex),$bind(this,this.drawEdge));
+	}
+	,drawEntity: function(entity,cleanBefore) {
+		if(cleanBefore == null) cleanBefore = false;
+		if(cleanBefore) this.graphics.clear();
+		this.graphics.lineStyle(this.entitiesWidth,this.entitiesColor,this.entitiesAlpha);
+		this.graphics.beginFill(this.entitiesColor,this.entitiesAlpha);
+		this.graphics.drawCircle(entity.x,entity.y,entity.get_radius());
+		this.graphics.endFill();
+	}
+	,drawEntities: function(vEntities,cleanBefore) {
+		if(cleanBefore == null) cleanBefore = false;
+		if(cleanBefore) this.graphics.clear();
+		var _g1 = 0;
+		var _g = vEntities.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			this.drawEntity(vEntities[i],false);
+		}
+	}
+	,drawPath: function(path,cleanBefore) {
+		if(cleanBefore == null) cleanBefore = false;
+		if(cleanBefore) this.graphics.clear();
+		if(path.length == 0) return;
+		this.graphics.lineStyle(this.pathsWidth,this.pathsColor,this.pathsAlpha);
+		this.graphics.moveTo(path[0],path[1]);
+		var i = 2;
+		while(i < path.length) {
+			this.graphics.lineTo(path[i],path[i + 1]);
+			this.graphics.moveTo(path[i],path[i + 1]);
+			i += 2;
+		}
+	}
+};
+graphics.js = {};
+graphics.js.BasicCanvas = function() {
+	var _this = window.document;
+	this.canvas = _this.createElement("canvas");
+	this.dom = this.canvas;
+	this.body = window.document.body;
+	this.surface = this.canvas.getContext("2d");
+	this.style = this.dom.style;
+	this.header = new graphics.js.CanvasHeader();
+	this.canvas.width = this.header.width;
+	this.canvas.height = this.header.height;
+	this.style.paddingLeft = "0px";
+	this.style.paddingTop = "0px";
+	this.style.left = Std.string(0 + "px");
+	this.style.top = Std.string(0 + "px");
+	this.style.position = "absolute";
+	this.style.backgroundColor = this.header.bgColor;
+	this.surface.fillStyle = this.header.bgColor;
+	this.image = this.dom;
+	var s;
+	var _this1 = window.document;
+	s = _this1.createElement("style");
+	s.innerHTML = "@keyframes spin { from { transform:rotate( 0deg ); } to { transform:rotate( 360deg ); } }";
+	window.document.getElementsByTagName("head")[0].appendChild(s);
+	s.animation = "spin 1s linear infinite";
+	this.loop(this.header.frameRate);
+	var body = window.document.body;
+	body.appendChild(this.dom);
+};
+graphics.js.BasicCanvas.__name__ = true;
+graphics.js.BasicCanvas.prototype = {
+	loop: function(tim) {
+		window.requestAnimationFrame($bind(this,this.loop));
+		if(this.onEnterFrame != null) this.onEnterFrame();
+		return true;
+	}
+	,clear: function() {
+		this.surface.clearRect(0,0,this.header.width,this.header.height);
+	}
+	,drawCircle: function(x,y,radius) {
+		this.surface.beginPath();
+		this.surface.arc(x,y,radius,0,2 * Math.PI,false);
+		this.surface.stroke();
+		this.surface.closePath();
+	}
+	,drawRect: function(x,y,width,height) {
+		this.surface.beginPath();
+		this.surface.moveTo(x,y);
+		this.surface.lineTo(x + width,y);
+		this.surface.lineTo(x + width,y + height);
+		this.surface.lineTo(x,y + height);
+		this.surface.stroke();
+		this.surface.closePath();
+	}
+	,lineStyle: function(wid,col,alpha) {
+		this.surface.lineWidth = wid;
+		this.surface.setStrokeColor("#" + StringTools.hex(col,6),alpha);
+	}
+	,moveTo: function(x,y) {
+		this.surface.beginPath();
+		this.surface.moveTo(x,y);
+	}
+	,lineTo: function(x,y) {
+		this.surface.lineTo(x,y);
+		this.surface.closePath();
+		this.surface.stroke();
+	}
+	,beginFill: function(col,alpha) {
+		this.surface.setFillColor("#" + StringTools.hex(col,6),alpha);
+		this.surface.beginPath();
+	}
+	,endFill: function() {
+		this.surface.stroke();
+		this.surface.closePath();
+		this.surface.fill();
+	}
+};
+graphics.js.CanvasHeader = function() {
+	var canvasHeader = "600:600:60:FFFFFF".split(":");
+	this.width = Std.parseInt(canvasHeader[0]);
+	this.height = Std.parseInt(canvasHeader[1]);
+	this.frameRate = Std.parseInt(canvasHeader[2]);
+	this.bgColor = "#" + canvasHeader[3];
+};
+graphics.js.CanvasHeader.__name__ = true;
+graphics.js.CanvasHeader.prototype = {
+	parseInt: function(e) {
+		return Std.parseInt(e);
+	}
+	,toHashColor: function(e) {
+		return "#" + e;
+	}
+};
+graphics.js.SimpleDrawingContext = function(graphics) {
+	this.graphics = graphics;
+};
+graphics.js.SimpleDrawingContext.__name__ = true;
+graphics.js.SimpleDrawingContext.__interfaces__ = [graphics.ISimpleDrawingContext];
+graphics.js.SimpleDrawingContext.prototype = {
+	clear: function() {
+		this.graphics.clear();
+	}
+	,lineStyle: function(thickness,color,alpha) {
+		if(alpha == null) alpha = 1;
+		this.graphics.lineStyle(thickness,color,alpha);
+	}
+	,beginFill: function(color,alpha) {
+		if(alpha == null) alpha = 1;
+		this.graphics.beginFill(color,alpha);
+	}
+	,endFill: function() {
+		this.graphics.endFill();
+	}
+	,moveTo: function(x,y) {
+		this.graphics.moveTo(x,y);
+	}
+	,lineTo: function(x,y) {
+		this.graphics.lineTo(x,y);
+	}
+	,drawCircle: function(cx,cy,radius) {
+		this.graphics.drawCircle(cx,cy,radius);
+	}
+	,drawRect: function(x,y,width,height) {
+		this.graphics.drawRect(x,y,width,height);
+	}
 };
 var haxe = {};
 haxe.Log = function() { };
@@ -1282,99 +1485,6 @@ hxDaedalus.ai.trajectory.LinearPathSampler.prototype = {
 		hxDaedalus.debug.Debug.assertFalse(isNaN(this._currentX) && isNaN(this._currentY),null,{ fileName : "LinearPathSampler.hx", lineNumber : 228, className : "hxDaedalus.ai.trajectory.LinearPathSampler", methodName : "updateEntity"});
 		this.entity.x = this._currentX;
 		this.entity.y = this._currentY;
-	}
-};
-hxDaedalus.canvas = {};
-hxDaedalus.canvas.BasicCanvas = function() {
-	var _this = window.document;
-	this.canvas = _this.createElement("canvas");
-	this.dom = this.canvas;
-	this.body = window.document.body;
-	this.surface = this.canvas.getContext("2d");
-	this.style = this.dom.style;
-	this.header = new hxDaedalus.canvas.CanvasHeader();
-	this.canvas.width = this.header.width;
-	this.canvas.height = this.header.height;
-	this.style.paddingLeft = "0px";
-	this.style.paddingTop = "0px";
-	this.style.left = Std.string(0 + "px");
-	this.style.top = Std.string(0 + "px");
-	this.style.position = "absolute";
-	this.style.backgroundColor = this.header.bgColor;
-	this.surface.fillStyle = this.header.bgColor;
-	this.image = this.dom;
-	var s;
-	var _this1 = window.document;
-	s = _this1.createElement("style");
-	s.innerHTML = "@keyframes spin { from { transform:rotate( 0deg ); } to { transform:rotate( 360deg ); } }";
-	window.document.getElementsByTagName("head")[0].appendChild(s);
-	s.animation = "spin 1s linear infinite";
-	this.loop(this.header.frameRate);
-	var body = window.document.body;
-	body.appendChild(this.dom);
-};
-hxDaedalus.canvas.BasicCanvas.__name__ = true;
-hxDaedalus.canvas.BasicCanvas.prototype = {
-	loop: function(tim) {
-		window.requestAnimationFrame($bind(this,this.loop));
-		if(this.onEnterFrame != null) this.onEnterFrame();
-		return true;
-	}
-	,clear: function() {
-		this.surface.clearRect(0,0,this.header.width,this.header.height);
-	}
-	,drawCircle: function(x,y,radius) {
-		this.surface.beginPath();
-		this.surface.arc(x,y,radius,0,2 * Math.PI,false);
-		this.surface.stroke();
-		this.surface.closePath();
-	}
-	,drawRect: function(x,y,width,height) {
-		this.surface.beginPath();
-		this.surface.moveTo(x,y);
-		this.surface.lineTo(x + width,y);
-		this.surface.lineTo(x + width,y + height);
-		this.surface.lineTo(x,y + height);
-		this.surface.stroke();
-		this.surface.closePath();
-	}
-	,lineStyle: function(wid,col,alpha) {
-		this.surface.lineWidth = wid;
-		this.surface.setStrokeColor("#" + StringTools.hex(col,6),alpha);
-	}
-	,moveTo: function(x,y) {
-		this.surface.beginPath();
-		this.surface.moveTo(x,y);
-	}
-	,lineTo: function(x,y) {
-		this.surface.lineTo(x,y);
-		this.surface.closePath();
-		this.surface.stroke();
-	}
-	,beginFill: function(col,alpha) {
-		this.surface.setFillColor("#" + StringTools.hex(col,6),alpha);
-		this.surface.beginPath();
-	}
-	,endFill: function() {
-		this.surface.stroke();
-		this.surface.closePath();
-		this.surface.fill();
-	}
-};
-hxDaedalus.canvas.CanvasHeader = function() {
-	var canvasHeader = "600:600:60:FFFFFF".split(":");
-	this.width = Std.parseInt(canvasHeader[0]);
-	this.height = Std.parseInt(canvasHeader[1]);
-	this.frameRate = Std.parseInt(canvasHeader[2]);
-	this.bgColor = "#" + canvasHeader[3];
-};
-hxDaedalus.canvas.CanvasHeader.__name__ = true;
-hxDaedalus.canvas.CanvasHeader.prototype = {
-	parseInt: function(e) {
-		return Std.parseInt(e);
-	}
-	,toHashColor: function(e) {
-		return "#" + e;
 	}
 };
 hxDaedalus.data = {};
@@ -3734,43 +3844,6 @@ hxDaedalus.factories.RectMesh.buildRectangle = function(width,height) {
 	mesh.set_clipping(true);
 	return mesh;
 };
-hxDaedalus.graphics = {};
-hxDaedalus.graphics.ISimpleDrawingContext = function() { };
-hxDaedalus.graphics.ISimpleDrawingContext.__name__ = true;
-hxDaedalus.graphics.js = {};
-hxDaedalus.graphics.js.SimpleDrawingContext = function(graphics) {
-	this.graphics = graphics;
-};
-hxDaedalus.graphics.js.SimpleDrawingContext.__name__ = true;
-hxDaedalus.graphics.js.SimpleDrawingContext.__interfaces__ = [hxDaedalus.graphics.ISimpleDrawingContext];
-hxDaedalus.graphics.js.SimpleDrawingContext.prototype = {
-	clear: function() {
-		this.graphics.clear();
-	}
-	,lineStyle: function(thickness,color,alpha) {
-		if(alpha == null) alpha = 1;
-		this.graphics.lineStyle(thickness,color,alpha);
-	}
-	,beginFill: function(color,alpha) {
-		if(alpha == null) alpha = 1;
-		this.graphics.beginFill(color,alpha);
-	}
-	,endFill: function() {
-		this.graphics.endFill();
-	}
-	,moveTo: function(x,y) {
-		this.graphics.moveTo(x,y);
-	}
-	,lineTo: function(x,y) {
-		this.graphics.lineTo(x,y);
-	}
-	,drawCircle: function(cx,cy,radius) {
-		this.graphics.drawCircle(cx,cy,radius);
-	}
-	,drawRect: function(x,y,width,height) {
-		this.graphics.drawRect(x,y,width,height);
-	}
-};
 hxDaedalus.iterators = {};
 hxDaedalus.iterators.FromFaceToInnerEdges = function() {
 };
@@ -3881,84 +3954,6 @@ hxDaedalus.iterators.FromVertexToOutgoingEdges.prototype = {
 		return this._resultEdge;
 	}
 };
-hxDaedalus.view = {};
-hxDaedalus.view.SimpleView = function(canvas) {
-	this.entitiesAlpha = .75;
-	this.entitiesWidth = 1;
-	this.entitiesColor = 65280;
-	this.pathsAlpha = .75;
-	this.pathsWidth = 1.5;
-	this.pathsColor = 16760848;
-	this.verticesAlpha = .25;
-	this.verticesRadius = .5;
-	this.verticesColor = 255;
-	this.constraintsAlpha = 1.0;
-	this.constraintsWidth = 2;
-	this.constraintsColor = 16711680;
-	this.edgesAlpha = .25;
-	this.edgesWidth = 1;
-	this.edgesColor = 10066329;
-	this._graphics = new hxDaedalus.graphics.js.SimpleDrawingContext(canvas);
-};
-hxDaedalus.view.SimpleView.__name__ = true;
-hxDaedalus.view.SimpleView.prototype = {
-	get_graphics: function() {
-		return this._graphics;
-	}
-	,drawVertex: function(vertex) {
-		this._graphics.graphics.lineStyle(this.verticesRadius,this.verticesColor,this.verticesAlpha);
-		this._graphics.graphics.beginFill(this.verticesColor,this.verticesAlpha);
-		this._graphics.graphics.drawCircle(vertex.get_pos().x,vertex.get_pos().y,this.verticesRadius);
-		this._graphics.graphics.endFill();
-	}
-	,drawEdge: function(edge) {
-		if(edge.get_isConstrained()) {
-			this._graphics.graphics.lineStyle(this.constraintsWidth,this.constraintsColor,this.constraintsAlpha);
-			this._graphics.graphics.moveTo(edge.get_originVertex().get_pos().x,edge.get_originVertex().get_pos().y);
-			this._graphics.graphics.lineTo(edge.get_destinationVertex().get_pos().x,edge.get_destinationVertex().get_pos().y);
-		} else {
-			this._graphics.graphics.lineStyle(this.edgesWidth,this.edgesColor,this.edgesAlpha);
-			this._graphics.graphics.moveTo(edge.get_originVertex().get_pos().x,edge.get_originVertex().get_pos().y);
-			this._graphics.graphics.lineTo(edge.get_destinationVertex().get_pos().x,edge.get_destinationVertex().get_pos().y);
-		}
-	}
-	,drawMesh: function(mesh,cleanBefore) {
-		if(cleanBefore == null) cleanBefore = false;
-		if(cleanBefore) this._graphics.graphics.clear();
-		mesh.traverse($bind(this,this.drawVertex),$bind(this,this.drawEdge));
-	}
-	,drawEntity: function(entity,cleanBefore) {
-		if(cleanBefore == null) cleanBefore = false;
-		if(cleanBefore) this._graphics.graphics.clear();
-		this._graphics.graphics.lineStyle(this.entitiesWidth,this.entitiesColor,this.entitiesAlpha);
-		this._graphics.graphics.beginFill(this.entitiesColor,this.entitiesAlpha);
-		this._graphics.drawCircle(entity.x,entity.y,entity.get_radius());
-		this._graphics.graphics.endFill();
-	}
-	,drawEntities: function(vEntities,cleanBefore) {
-		if(cleanBefore == null) cleanBefore = false;
-		if(cleanBefore) this._graphics.graphics.clear();
-		var _g1 = 0;
-		var _g = vEntities.length;
-		while(_g1 < _g) {
-			var i = _g1++;
-			this.drawEntity(vEntities[i],false);
-		}
-	}
-	,drawPath: function(path,cleanBefore) {
-		if(cleanBefore == null) cleanBefore = false;
-		if(cleanBefore) this._graphics.graphics.clear();
-		if(path.length == 0) return;
-		this._graphics.graphics.lineStyle(this.pathsWidth,this.pathsColor,this.pathsAlpha);
-		this._graphics.graphics.moveTo(path[0],path[1]);
-		var i = 2;
-		while(i < path.length) {
-			this._graphics.graphics.lineTo(path[i],path[i + 1]);
-			this._graphics.graphics.moveTo(path[i],path[i + 1]);
-			i += 2;
-		}
-	}
-};
 var js = {};
 js.Boot = function() { };
 js.Boot.__name__ = true;
@@ -4055,9 +4050,9 @@ if(Array.prototype.indexOf) HxOverrides.indexOf = function(a,o,i) {
 };
 String.__name__ = true;
 Array.__name__ = true;
+graphics.js.CanvasHeader.__meta__ = { fields : { parseInt : { 'static' : null}, toHashColor : { 'static' : null}}};
 haxe.ds.ObjectMap.count = 0;
 hxDaedalus.ai.EntityAI.NUM_SEGMENTS = 6;
-hxDaedalus.canvas.CanvasHeader.__meta__ = { fields : { parseInt : { 'static' : null}, toHashColor : { 'static' : null}}};
 hxDaedalus.data.Constants.EPSILON = 0.01;
 hxDaedalus.data.Constants.EPSILON_SQUARED = 0.0001;
 hxDaedalus.data.ConstraintSegment.INC = 0;

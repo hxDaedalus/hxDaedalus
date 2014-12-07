@@ -1,4 +1,4 @@
-package hxDaedalus.swing;
+package graphics.swing;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;

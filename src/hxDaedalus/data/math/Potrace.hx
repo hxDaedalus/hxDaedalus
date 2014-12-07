@@ -6,8 +6,7 @@ import hxDaedalus.data.graph.Graph;
 import hxDaedalus.data.graph.GraphEdge;
 import hxDaedalus.data.graph.GraphNode;
 import hxDaedalus.data.math.Point2D;
-import hxDaedalus.graphics.SimpleDrawingContext;
-import hxDaedalus.graphics.Pixels;
+import hxDaedalus.data.Pixels;
 
 class Potrace
 {
@@ -15,7 +14,7 @@ class Potrace
     
     public static var maxDistance : Float = 1;
     
-    public static function buildShapes( bmpData: Pixels, debugBmp: Pixels = null, debugShape: SimpleDrawingContext = null ) : Array<Array<Float>>
+    public static function buildShapes( bmpData: Pixels, debugBmp: Pixels = null ) : Array<Array<Float>>
     {
         // OUTLINES STEP-LIKE SHAPES GENERATION
         var shapes = new Array<Array<Float>>();
@@ -25,7 +24,7 @@ class Potrace
                 if (bmpData.getPixel(col, row) == 0xFFFFFF && bmpData.getPixel(col + 1, row) < 0xFFFFFF) 
                 {
                     if (!dictPixelsDone[(col + 1) + "_" + row]) 
-                        shapes.push(buildShape(bmpData, row, col + 1, dictPixelsDone, debugBmp, debugShape));
+                        shapes.push(buildShape(bmpData, row, col + 1, dictPixelsDone, debugBmp));
                 }
             }
         }
@@ -33,7 +32,7 @@ class Potrace
         return shapes;
     }
     
-    public static function buildShape(bmpData : Pixels, fromPixelRow : Int, fromPixelCol : Int, dictPixelsDone : Map<String,Bool>, debugBmp : Pixels = null, debugShape : SimpleDrawingContext = null) : Array<Float>
+    public static function buildShape(bmpData : Pixels, fromPixelRow : Int, fromPixelCol : Int, dictPixelsDone : Map<String,Bool>, debugBmp : Pixels = null) : Array<Float>
     {
         var newX : Float = fromPixelCol;
         var newY : Float = fromPixelRow;
@@ -110,18 +109,6 @@ class Potrace
             {
                 break;
             }
-        }
-        
-        if (debugShape != null) 
-        {
-            debugShape.lineStyle(0.5, 0x00FF00);
-            debugShape.moveTo(path[0], path[1]);
-            var i : Int = 2;
-            while (i < path.length){
-                debugShape.lineTo(path[i], path[i + 1]);
-                i += 2;
-            }
-            debugShape.lineTo(path[0], path[1]);
         }
         
         return path;
@@ -240,18 +227,6 @@ class Potrace
         {
             polygon.shift();
             polygon.shift();
-        }
-        
-        if (debugShape != null) 
-        {
-            debugShape.graphics.lineStyle(0.5, 0x0000FF);
-            debugShape.graphics.moveTo(polygon[0], polygon[1]);
-            var i : Int = 2;
-            while (i < polygon.length){
-                debugShape.graphics.lineTo(polygon[i], polygon[i + 1]);
-                i += 2;
-            }
-            debugShape.graphics.lineTo(polygon[0], polygon[1]);
         }
         
         return polygon;

@@ -1,4 +1,4 @@
-package hxDaedalus.canvas;
+package graphics.js;
 
 import js.Browser;
 import js.html.Element;

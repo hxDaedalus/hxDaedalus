@@ -1,4 +1,5 @@
 
+import graphics.flash.SimpleDrawingContext;
 import hxDaedalus.ai.EntityAI;
 import hxDaedalus.ai.PathFinder;
 import hxDaedalus.ai.trajectory.LinearPathSampler;
@@ -7,7 +8,7 @@ import hxDaedalus.data.Object;
 import hxDaedalus.data.math.Point2D;
 import hxDaedalus.data.math.RandGenerator;
 import hxDaedalus.factories.RectMesh;
-import hxDaedalus.view.SimpleView;
+import graphics.SimpleView;
 
 import flash.Lib;
 import flash.display.Sprite;
@@ -41,10 +42,10 @@ class Pathfinding extends Sprite
 		
         // create a viewport
 		var viewSprite = new Sprite();
-        _view = new SimpleView(viewSprite.graphics);
+        _view = new SimpleView(new SimpleDrawingContext(viewSprite.graphics));
         addChild(viewSprite);
         
-		var meshView = new SimpleView(this.graphics);
+		var meshView = new SimpleView(new SimpleDrawingContext(this.graphics));
 		
         // pseudo random generator
         var randGen : RandGenerator;
