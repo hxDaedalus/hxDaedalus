@@ -2,13 +2,14 @@
 import hxDaedalus.ai.EntityAI;
 import hxDaedalus.ai.PathFinder;
 import hxDaedalus.ai.trajectory.LinearPathSampler;
-import hxDaedalus.canvas.BasicCanvas;
 import hxDaedalus.data.Mesh;
 import hxDaedalus.data.Object;
 import hxDaedalus.data.math.Point2D;
 import hxDaedalus.data.math.RandGenerator;
 import hxDaedalus.factories.RectMesh;
-import hxDaedalus.view.SimpleView;
+import graphics.js.SimpleDrawingContext;
+import graphics.js.BasicCanvas;
+import graphics.SimpleView;
 import js.Browser;
 import js.html.Event;
 import js.html.MouseEvent;
@@ -41,7 +42,7 @@ class PathfindingJS
         basicCanvas = new BasicCanvas();
 		
         // create a viewport
-        view = new SimpleView(basicCanvas);
+        view = new SimpleView(new SimpleDrawingContext(basicCanvas));
         
         
         // pseudo random generator

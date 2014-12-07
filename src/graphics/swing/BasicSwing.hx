@@ -1,4 +1,4 @@
-package hxDaedalus.swing;
+package graphics.swing;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;

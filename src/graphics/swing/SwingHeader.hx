@@ -1,5 +1,6 @@
-package hxDaedalus.swing;
+package graphics.swing;
 import haxe.macro.Compiler;
+
 class SwingHeader{
     
     public var width: Int;

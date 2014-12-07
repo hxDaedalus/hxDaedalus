@@ -1,4 +1,4 @@
-package hxDaedalus.canvas;
+package graphics.js;
 
 abstract AlphaColorJS( Int ) from Int to Int
 {

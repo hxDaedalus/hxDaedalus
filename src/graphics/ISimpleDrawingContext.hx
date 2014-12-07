@@ -1,4 +1,4 @@
-package hxDaedalus.graphics;
+package graphics;
 
 interface ISimpleDrawingContext 
 {

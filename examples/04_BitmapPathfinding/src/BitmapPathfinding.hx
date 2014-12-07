@@ -7,7 +7,9 @@ import hxDaedalus.data.Mesh;
 import hxDaedalus.data.Object;
 import hxDaedalus.factories.BitmapObject;
 import hxDaedalus.factories.RectMesh;
-import hxDaedalus.view.SimpleView;
+import hxDaedalus.factories.BitmapMesh;
+import graphics.flash.SimpleDrawingContext;
+import graphics.SimpleView;
 
 import flash.display.MovieClip;
 import flash.display.Stage;
@@ -68,7 +70,7 @@ class BitmapPathfinding extends Sprite {
 		addChild(_overlay);
 		
 		var viewSprite = new Sprite();
-		_view = new SimpleView(viewSprite.graphics);
+		_view = new SimpleView(new SimpleDrawingContext(viewSprite.graphics));
 		addChild( viewSprite );
 		
 		// create an object from bitmap

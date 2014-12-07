@@ -1,4 +1,4 @@
-package hxDadedalus.canvas;
+package graphics.js;
 
 abstract ColorJS( Int ) from Int to Int
 {

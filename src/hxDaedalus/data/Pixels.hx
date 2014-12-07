@@ -1,4 +1,4 @@
-package hxDaedalus.graphics;
+package hxDaedalus.data;
 
 import haxe.io.Bytes;
 import haxe.io.BytesData;
@@ -202,7 +202,7 @@ abstract Pixels(PixelsData)
 #end
 }
 
-@:allow(hxDaedalus.graphics.Pixels)
+@:allow(hxDaedalus.data.Pixels)
 private class PixelsData
 {
 	/** Length (in pixels NOT bytes). */

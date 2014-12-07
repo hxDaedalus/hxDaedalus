@@ -1,5 +1,6 @@
-package hxDaedalus.canvas;
+package graphics.js;
 import haxe.macro.Compiler;
+
 class CanvasHeader{
     
     public var width: Int;
