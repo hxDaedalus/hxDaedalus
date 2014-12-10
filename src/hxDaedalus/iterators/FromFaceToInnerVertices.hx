@@ -10,7 +10,7 @@ class FromFaceToInnerVertices {
     
     public function new(){}
     
-    function setFromFace( value: Face) : Face {
+    function set_fromFace( value: Face) : Face {
         _fromFace = value;
         _nextEdge = _fromFace.edge;
         return value;
