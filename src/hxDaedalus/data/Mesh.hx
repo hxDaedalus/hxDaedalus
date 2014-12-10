@@ -1610,7 +1610,7 @@ class Mesh
         }
 	}
     
-    function vertexIsInsideAABB(vertex : Vertex, mesh : Mesh) : Bool 
+    public function vertexIsInsideAABB(vertex : Vertex, mesh : Mesh) : Bool 
 	{
         if (vertex.pos.x < 0 || vertex.pos.x > mesh.width || vertex.pos.y < 0 || vertex.pos.y > mesh.height) 
             return false
