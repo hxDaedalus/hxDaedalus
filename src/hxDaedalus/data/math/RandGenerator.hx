@@ -51,4 +51,25 @@ class RandGenerator
         if( _numIter == 200 ) reset();
         return res;
     }
+	
+	public function nextInRange(rangeMin:Int, rangeMax:Int):Int
+	{
+		this.rangeMin = rangeMin;
+		this.rangeMax = rangeMax;
+		return next();
+	}
+	
+	// Knuth shuffle
+	public function shuffle<T>(array:Array<T>):Void {
+		var currIdx = array.length;
+		
+		while (currIdx > 0) {
+			var rndIdx = nextInRange(0, currIdx);
+			currIdx--;
+			
+			var tmp = array[currIdx];
+			array[currIdx] = array[rndIdx];
+			array[rndIdx] = tmp;
+		}
+	}
 }
