@@ -9,7 +9,7 @@ class FromVertexToNeighbourVertices {
     
     public function new(){}
     
-    function setFromVertex( value: Vertex ) : Vertex {
+    function set_fromVertex( value: Vertex ) : Vertex {
         _fromVertex = value;
         _nextEdge = _fromVertex.edge;
         return value;
