@@ -7,9 +7,8 @@ import hxDaedalus.data.Object;
 import hxDaedalus.data.math.Point2D;
 import hxDaedalus.data.math.RandGenerator;
 import hxDaedalus.factories.RectMesh;
-import graphics.js.SimpleDrawingContext;
-import graphics.js.BasicCanvas;
-import graphics.SimpleView;
+import hxDaedalus.canvas.BasicCanvas;
+import hxDaedalus.view.SimpleView;
 import js.Browser;
 import js.html.Event;
 import js.html.MouseEvent;
@@ -19,8 +18,8 @@ class GridMazeDemoJS
     
     var mesh : Mesh;
     var view : SimpleView;
-	var entityView:graphics.SimpleView;
-	var meshView:graphics.SimpleView;
+	//var entityView:graphics.SimpleView;
+	//var meshView:graphics.SimpleView;
     
     var entityAI : EntityAI;
     var pathfinder : PathFinder;
@@ -49,11 +48,13 @@ class GridMazeDemoJS
         basicCanvas = new BasicCanvas();
 		
         // create a viewport
-        view = new SimpleView(new SimpleDrawingContext(basicCanvas));
+        view = new SimpleView(basicCanvas);
         
 		GridMaze.generate(600, 600, cols, rows);
 		mesh.insertObject(GridMaze.object);
 		
+		view.constraintsWidth = 4;
+		view.edgesWidth = .5;
         view.drawMesh(mesh);
 		
         // we need an entity
@@ -88,6 +89,9 @@ class GridMazeDemoJS
 		
         // animate
         basicCanvas.onEnterFrame = onEnterFrame;
+		
+		// keypress
+		js.Browser.document.onkeydown = onKeyDown;
     }
     
     function onMouseMove( e: Event ): Void {
@@ -102,6 +106,7 @@ class GridMazeDemoJS
     
     function onMouseDown( event: Event ): Void {
         newPath = true;
+		event.preventDefault();
     }
     
     function onEnterFrame(): Void {
@@ -128,13 +133,29 @@ class GridMazeDemoJS
 		view.drawEntity(entityAI);
     }
 
-	function reset():Void {
-		mesh = RectMesh.buildRectangle(600, 600);
+    function onKeyDown( event:js.html.KeyboardEvent ): Void {
+		if (event.keyCode == 32) { // SPACE
+			reset(true);
+			event.preventDefault();
+		} else if (event.keyCode == 13) { // ENTER
+			reset(false);
+			event.preventDefault();
+		}
+    }
+
+	function reset(newMaze:Bool = false):Void {
 		var seed = Std.int(Math.random() * 10000 + 1000);
-		GridMaze.generate(600, 600, cols, rows, seed);
-		mesh.insertObject(GridMaze.object);
-		meshView.drawMesh(mesh, true);
-		view.graphics.clear();
+		if (newMaze) {
+			mesh = RectMesh.buildRectangle(600, 600);
+			GridMaze.generate(600, 600, 30, 30, seed);
+			GridMaze.object.scaleX = .92;
+			GridMaze.object.scaleY = .92;
+			GridMaze.object.x = 23;
+			GridMaze.object.y = 23;
+			mesh.insertObject(GridMaze.object);
+		}
+        entityAI.radius = GridMaze.tileWidth * .27;
+		view.drawMesh(mesh, true);
 		pathfinder.mesh = mesh;
 		entityAI.x = GridMaze.tileWidth / 2;
 		entityAI.y = GridMaze.tileHeight / 2;

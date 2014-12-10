@@ -64,7 +64,7 @@ class RandGenerator
 		var currIdx = array.length;
 		
 		while (currIdx > 0) {
-			var rndIdx = nextInRange(0, currIdx);
+			var rndIdx = nextInRange(0, currIdx-1);
 			currIdx--;
 			
 			var tmp = array[currIdx];

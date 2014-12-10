@@ -1,5 +1,4 @@
 
-import graphics.flash.SimpleDrawingContext;
 import hxDaedalus.ai.EntityAI;
 import hxDaedalus.ai.PathFinder;
 import hxDaedalus.ai.trajectory.LinearPathSampler;
@@ -11,7 +10,7 @@ import hxDaedalus.data.math.Point2D;
 import hxDaedalus.data.math.RandGenerator;
 import hxDaedalus.data.Vertex;
 import hxDaedalus.factories.RectMesh;
-import graphics.SimpleView;
+import hxDaedalus.view.SimpleView;
 
 import flash.Lib;
 import flash.display.Sprite;
@@ -25,8 +24,8 @@ class GridMazeDemo extends Sprite
     
     var mesh : Mesh;
     var view : SimpleView;
-	var entityView:graphics.SimpleView;
-	var meshView:graphics.SimpleView;
+	var entityView:SimpleView;
+	var meshView:SimpleView;
     
     var entityAI : EntityAI;
     var pathfinder : PathFinder;
@@ -50,14 +49,14 @@ class GridMazeDemo extends Sprite
         mesh = RectMesh.buildRectangle(600, 600);
         
         // create a viewport
-		meshView = new SimpleView(new SimpleDrawingContext(this.graphics));
+		meshView = new SimpleView(this.graphics);
 		
 		var viewSprite = new Sprite();
-        view = new SimpleView(new SimpleDrawingContext(viewSprite.graphics));
+        view = new SimpleView(viewSprite.graphics);
         addChild(viewSprite);
         
 		var entitySprite = new Sprite();
-		entityView = new SimpleView(new SimpleDrawingContext(entitySprite.graphics));
+		entityView = new SimpleView(entitySprite.graphics);
 		addChild(entitySprite);
         
 		GridMaze.generate(600, 600, cols, rows);
@@ -142,25 +141,30 @@ class GridMazeDemo extends Sprite
 			Sys.exit(1);
 		#end
         } else if (event.keyCode == 32) { // SPACE
-			reset();
+			reset(true);
+		} else if (event.keyCode == 13) { // ENTER
+			reset(false);
 		}
     }
-	
-	function reset():Void {
-		mesh = RectMesh.buildRectangle(600, 600);
+
+	function reset(newMaze:Bool = false):Void {
 		var seed = Std.int(Math.random() * 10000 + 1000);
-		GridMaze.generate(600, 600, 30, 30, seed);
-		GridMaze.object.scaleX = .92;
-		GridMaze.object.scaleY = .92;
-		GridMaze.object.x = 23;
-		GridMaze.object.y = 23;
-        entityAI.radius = GridMaze.tileWidth * .3;
-		mesh.insertObject(GridMaze.object);
+		if (newMaze) {
+			mesh = RectMesh.buildRectangle(600, 600);
+			GridMaze.generate(600, 600, 30, 30, seed);
+			GridMaze.object.scaleX = .92;
+			GridMaze.object.scaleY = .92;
+			GridMaze.object.x = 23;
+			GridMaze.object.y = 23;
+			mesh.insertObject(GridMaze.object);
+		}
+        entityAI.radius = GridMaze.tileWidth * .27;
 		meshView.drawMesh(mesh, true);
-		view.graphics.clear();
 		pathfinder.mesh = mesh;
 		entityAI.x = GridMaze.tileWidth / 2;
 		entityAI.y = GridMaze.tileHeight / 2;
+		entityView.graphics.clear();
+		view.graphics.clear();
 		path = [];
 		pathSampler.path = path;
 	}

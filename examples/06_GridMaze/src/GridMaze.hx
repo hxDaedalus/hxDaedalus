@@ -18,8 +18,8 @@ class GridMaze
 	static public var rows(default, null):Int;
 	static public var cols(default, null):Int;
 	
-	static var grid:Array<Array<Cell>>;
-	static var rng:RandGenerator;
+	static public var grid:Array<Array<Cell>>;
+	static public var rng:RandGenerator;
 	
 	static public function generate(width:Float, height:Float, cols:Int, rows:Int, seed:Int = 7459) 
 	{
