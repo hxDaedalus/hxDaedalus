@@ -10,6 +10,7 @@ https://github.com/Justinfront/hxDaedalus-Examples
 This library can be locally installed to be used with the examples eg:
 
 cd src
+
 haxelib local hxDaedalus.zip
 
 You can view some of the examples:
