@@ -77,10 +77,16 @@ class BasicCanvas
         surface.closePath();
 	}
 	
-    public function lineStyle( wid: Float, col: Int, ?alpha:Float )
+    public function lineStyle( wid: Float, col: Int, ?alpha: Float )
     {
         surface.lineWidth = wid;
-        surface.setStrokeColor('#' + StringTools.hex( col, 6 ), alpha);
+		if( alpha != null )
+		{
+			// alpha not implemented!
+			surface.strokeStyle = '#' + StringTools.hex( col, 6 );// + StringTools.hex( Std.int( alpha*255 ), 2 );
+		}else {
+        	surface.strokeStyle = '#' + StringTools.hex( col, 6 );
+		}
     }
     
 	public function moveTo(x : Float, y : Float)
@@ -97,7 +103,13 @@ class BasicCanvas
 	}
     
     public function beginFill( col: Int, ?alpha:Float ){
-		surface.setFillColor('#' + StringTools.hex( col, 6 ), alpha);
+		if( alpha != null ){
+			// alpha not implemented!
+			surface.fillStyle = '#' + StringTools.hex( col, 6 );// + StringTools.hex( Std.int( alpha*255 ), 2 );
+		} else {
+			surface.fillStyle = '#' + StringTools.hex( col, 6 );
+		}
+		
         surface.beginPath();
     }
     

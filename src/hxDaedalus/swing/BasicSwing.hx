@@ -24,7 +24,8 @@ implements MouseMotionListener
     public var surface: Surface;
     public function new()
     {
-        super( 'Java Daedalus Example' );//Compiler.getDefine("windowTitle") );
+        super( '' ); //'Java Daedalus Example' );//
+		setTitle( Compiler.getDefine("windowTitle") );
         System.setProperty( "sun.java2d.opengl", "True" );
         var header = new SwingHeader();
         setSize( header.width, header.height );

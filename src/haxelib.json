@@ -1,0 +1,15 @@
+{
+  "name": "hxDaedalus",
+  "url" :
+      "https://github.com/Justinfront/hxDaedalus",
+  "license": "MIT",
+  "tags": ["flash","openfl","nme","js","java"],
+  "description":
+      "Pathfinding 2D Library ported from AS3",
+  "version": "0.0.1",
+  "releasenote":
+      "Initial release, Flash, OpenFL, NME versions working fine, Java Swing and JS Canvas versions require more work",
+  "contributors": ["Flash.Cedric","Giuseppe Di Mauro","Justin L Mills"],
+  "dependencies": {
+  }
+}
