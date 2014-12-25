@@ -10,7 +10,11 @@ https://github.com/Justinfront/hxDaedalus-Examples
 This library can be locally installed to be used with the examples eg:
 
 cd src
-
 haxelib local hxDaedalus.zip
+
+You can view some of the examples:
+[Basic](http://rawgit.com/Justinfront/hxDaedalus-Examples/master/hxDaedalus-Examples/web/DaedalusBasic.html)
+[Pathfinding](http://rawgit.com/Justinfront/hxDaedalus-Examples/master/hxDaedalus-Examples/web/DaedalusPathfinding.html)
+[Maze](http://rawgit.com/Justinfront/hxDaedalus-Examples/master/hxDaedalus-Examples/web/GridMazeDemo.html)
 
 Licence is MIT for the original and this port.
