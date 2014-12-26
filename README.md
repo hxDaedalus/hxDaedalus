@@ -4,8 +4,11 @@ hxDaedalus
 This is a Haxe version of the as3 Daedalus-lib you can find the original library here:
 https://code.google.com/p/daedalus-lib/
 
-Examples are now to be found at 
+Direct target examples for Java Swing, Javascript Canvas and Flash with hxml files are now to be found at 
 https://github.com/Justinfront/hxDaedalus-Examples
+
+The same examples for OpenFL/NME ( flash, c++, html5 webgl ) are currently being reorganised at
+https://github.com/Justinfront/hxDaedalus-NME-OpenFL-Examples
 
 This library can be locally installed to be used with the examples eg:
 
