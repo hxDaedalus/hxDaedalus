@@ -7,7 +7,14 @@ import hxDaedalus.data.graph.Graph;
 import hxDaedalus.data.math.Potrace;
 import hxDaedalus.debug.Debug;
 import hxDaedalus.graphics.SimpleDrawingContext;
-import hxDaedalus.graphics.Pixels;
+#if js
+	import hxDaedalus.graphics.js.CanvasPixelMatrix;
+#else
+	import hxDaedalus.graphics.Pixels;
+#end
+#if js
+	typedef Pixels = hxDaedalus.graphics.js.CanvasPixelMatrix;
+#end
 
 class BitmapObject
 {

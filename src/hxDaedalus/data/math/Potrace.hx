@@ -7,8 +7,15 @@ import hxDaedalus.data.graph.GraphEdge;
 import hxDaedalus.data.graph.GraphNode;
 import hxDaedalus.data.math.Point2D;
 import hxDaedalus.graphics.SimpleDrawingContext;
-import hxDaedalus.graphics.Pixels;
-
+#if js
+	import hxDaedalus.graphics.js.CanvasPixelMatrix;
+#else
+	import hxDaedalus.graphics.Pixels;
+#end
+#if js
+	typedef Pixels = hxDaedalus.graphics.js.CanvasPixelMatrix;
+#end
+	
 class Potrace
 {
 	inline  static var MAX_INT:Int = 0x7FFFFFFF;
@@ -56,6 +63,7 @@ class Potrace
             
             newPixelRow = Std.int( fromPixelRow + curDir.x + curDir.y );
             newPixelCol = Std.int( fromPixelCol + curDir.x - curDir.y );
+			
             // if the pixel is not white
             if (bmpData.getPixel(newPixelCol, newPixelRow) < 0xFFFFFF) 
             {

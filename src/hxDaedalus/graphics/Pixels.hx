@@ -28,7 +28,6 @@ abstract Pixels(PixelsData)
 	
 	inline public function getPixel(x:Int, y:Int) {
 		var pos = (y * this.width + x) << 2;
-		
 		var r = this.bytes.get(pos + 1) << 16;
 		var g = this.bytes.get(pos + 2) << 8;
 		var b = this.bytes.get(pos + 3);
