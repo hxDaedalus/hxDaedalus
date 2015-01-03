@@ -1,6 +1,8 @@
 -cmd rm hxDaedalus.zip
 --next
--cmd zip -r hxDaedalus.zip *
+##-cmd zip -r hxDaedalus.zip *
+## need to get 7za and add to path for window
+-cmd 7za a -r hxDaedalus.zip *
 --next
 -cmd haxelib remove hxDaedalus
 --next

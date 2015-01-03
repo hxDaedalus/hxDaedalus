@@ -137,7 +137,7 @@ abstract Pixels(PixelsData)
 	
 	public function applyTo(bmd:flash.display.BitmapData) {
 	#if !js
-	
+		
 		var ba = bmd.getPixels(bmd.rect);
 		
 		#if (openfl && !flash)
@@ -151,12 +151,12 @@ abstract Pixels(PixelsData)
 		bmd.setPixels(bmd.rect, ba);
 		
 	#else
-	
 		for (y in 0...this.height) {
 			for (x in 0...this.width) {
 				bmd.setPixel32(x, y, getPixel32(x, y));
 			}
 		}
+
 		
 	#end
 	
