@@ -9,7 +9,7 @@
   "version": "0.0.1",
   "releasenote":
       "Initial release works with Flash, JS Canvas, Java Swing, OpenFL/NME ",
-  "contributors": ["Flash.Cedric","Giuseppe Di Mauro","Justin L Mills"],
+  "contributors": ["Justinfront"],
   "dependencies": {
   }
 }
