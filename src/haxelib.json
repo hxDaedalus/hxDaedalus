@@ -6,9 +6,9 @@
   "tags": ["flash","openfl","nme","js","java","canvas","swing"],
   "description":
       "Pathfinding 2D Library ported from AS3",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "releasenote":
-      "Initial release works with Flash, JS Canvas, Java Swing, OpenFL/NME ",
+      "Works with Flash, JS Canvas, Java Swing, OpenFL/NME, improved html alpha ",
   "contributors": ["Justinfront"],
   "dependencies": {
   }
