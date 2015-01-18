@@ -80,10 +80,12 @@ class BasicCanvas
     public function lineStyle( wid: Float, col: Int, ?alpha: Float )
     {
         surface.lineWidth = wid;
-		if( alpha != null )
+		if( alpha != null && alpha != 1.0 )
 		{
-			// alpha not implemented!
-			surface.strokeStyle = '#' + StringTools.hex( col, 6 );// + StringTools.hex( Std.int( alpha*255 ), 2 );
+			var r = (col >> 16) & 0xFF;
+			var g = (col >> 8) & 0xFF;
+			var b = (col) & 0xFF;
+			surface.strokeStyle = 'rgba($r,$g,$b,$alpha)';
 		}else {
         	surface.strokeStyle = '#' + StringTools.hex( col, 6 );
 		}
@@ -103,9 +105,11 @@ class BasicCanvas
 	}
     
     public function beginFill( col: Int, ?alpha:Float ){
-		if( alpha != null ){
-			// alpha not implemented!
-			surface.fillStyle = '#' + StringTools.hex( col, 6 );// + StringTools.hex( Std.int( alpha*255 ), 2 );
+		if( alpha != null && alpha != 1.0 ){
+			var r = (col >> 16) & 0xFF;
+			var g = (col >> 8) & 0xFF;
+			var b = (col) & 0xFF;
+			surface.fillStyle = 'rgba($r,$g,$b,$alpha)';
 		} else {
 			surface.fillStyle = '#' + StringTools.hex( col, 6 );
 		}
