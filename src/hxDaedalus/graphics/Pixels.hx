@@ -197,7 +197,21 @@ abstract Pixels(PixelsData)
 		
 		image.getRaster().setPixels(0, 0, this.width, this.height, buffer);
 	}
-	
+
+#elseif js	// plain js - conversion from ImageData
+
+	@:from static public function fromImageData(image:js.html.ImageData) {
+		var pixels = new Pixels(image.width, image.height, true);
+		
+		var data = image.data;
+		
+		for (i in 0...data.byteLength) {
+			pixels.bytes.set(i, data[i]);
+		}
+		
+		return pixels;
+	}
+
 #end
 }
 
