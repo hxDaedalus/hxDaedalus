@@ -6,6 +6,7 @@ This is a Haxe cross target version of the as3 Daedalus-lib you can find the ori
 https://code.google.com/p/daedalus-lib/
 
 Examples for OpenFL,NME,Flash,c++,js can be found: 
+
 https://github.com/Justinfront/hxDaedalus-Examples
 https://github.com/Justinfront/hxDaedalus-NME-OpenFL-Examples
 
