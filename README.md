@@ -1,3 +1,4 @@
+![](http://haxe.io/img/301/hxdaedalus.png)
 hxDaedalus
 ==========
 
