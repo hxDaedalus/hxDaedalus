@@ -5,12 +5,13 @@ hxDaedalus
 This is a Haxe cross target version of the as3 Daedalus-lib you can find the original library here:
 https://code.google.com/p/daedalus-lib/
 
-Examples for OpenFL,NME,Flash,c++,js can be found: 
+Examples for OpenFL,NME,Flash,c++,js can be found at the following repositories: 
 
-https://github.com/Justinfront/hxDaedalus-Examples
-https://github.com/Justinfront/hxDaedalus-NME-OpenFL-Examples
+[hxDaedalus-Exmples](https://github.com/Justinfront/hxDaedalus-Examples)
 
-You can view some of the examples:
+[hxDaedalus-NME-OpenFl-Examples](https://github.com/Justinfront/hxDaedalus-NME-OpenFL-Examples)
+
+You can view and play with the javascript html examples via raw github in your browser.
 
 [Basic](http://rawgit.com/Justinfront/hxDaedalus-Examples/master/hxDaedalus-Examples/web/DaedalusBasic.html)
 
