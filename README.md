@@ -21,7 +21,7 @@ haxelib local hxDaedalus.zip
 You can view some of the examples:
 [Basic](http://rawgit.com/Justinfront/hxDaedalus-Examples/master/hxDaedalus-Examples/web/DaedalusBasic.html)
 [Pathfinding](http://rawgit.com/Justinfront/hxDaedalus-Examples/master/hxDaedalus-Examples/web/DaedalusPathfinding.html)
-[Galapagos Islands - BitmapPathfinding](https://rawgit.com/Justinfront/hxDaedalus-Examples/master/hxDaedalus-Examples/web/DaedalusBitmapPathfinding.html)
+[Galapagos Islands](https://rawgit.com/Justinfront/hxDaedalus-Examples/master/hxDaedalus-Examples/web/DaedalusBitmapPathfinding.html)
 [Maze](http://rawgit.com/Justinfront/hxDaedalus-Examples/master/hxDaedalus-Examples/web/GridMazeDemo.html)
 
 Licence is MIT for the original and this port.
