@@ -7,7 +7,7 @@ https://code.google.com/p/daedalus-lib/
 
 Examples for OpenFL,NME,Flash,c++,js can be found at the following repositories: 
 
-[hxDaedalus-Exmples](https://github.com/Justinfront/hxDaedalus-Examples)
+[hxDaedalus-Examples](https://github.com/Justinfront/hxDaedalus-Examples)
 
 [hxDaedalus-NME-OpenFl-Examples](https://github.com/Justinfront/hxDaedalus-NME-OpenFL-Examples)
 
