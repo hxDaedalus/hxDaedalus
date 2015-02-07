@@ -177,8 +177,6 @@ class AStar {
                     
                     fromPoint.x = entryX[ curFace ];
                     fromPoint.y = entryY[ curFace ];
-                    entryPoint.x = fromPoint.x;
-                    entryPoint.y = fromPoint.y;
                     entryPoint.x = ( innerEdge.originVertex.pos.x + innerEdge.destinationVertex.pos.x ) / 2;
                     entryPoint.y = ( innerEdge.originVertex.pos.y + innerEdge.destinationVertex.pos.y ) / 2;
                     distancePoint.x = entryPoint.x - toX;
