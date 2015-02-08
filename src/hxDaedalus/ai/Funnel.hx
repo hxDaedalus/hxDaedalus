@@ -8,11 +8,6 @@ import hxDaedalus.data.math.Geom2D;
 import hxDaedalus.data.Vertex;
 import hxDaedalus.data.math.Point2D;
 import hxDaedalus.debug.Debug;
-#if js
-
-#else
-    //import flash.display.Sprite;
-#end
 
 class Funnel
 {

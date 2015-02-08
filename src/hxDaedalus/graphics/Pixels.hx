@@ -28,6 +28,7 @@ abstract Pixels(PixelsData)
 	
 	inline public function getPixel(x:Int, y:Int) {
 		var pos = (y * this.width + x) << 2;
+		
 		var r = this.bytes.get(pos + 1) << 16;
 		var g = this.bytes.get(pos + 2) << 8;
 		var b = this.bytes.get(pos + 3);
@@ -101,12 +102,15 @@ abstract Pixels(PixelsData)
 	#if js	
 	
 		var pixels = new Pixels(bmd.width, bmd.height);
-		/*var bv = bmd.getPixels(bmd.rect).byteView;
+		
+		/* NOTE: alternative way, but seems slower
+		var bv = bmd.getPixels(bmd.rect).byteView;
 
 		for (i in 0...bv.length) {
 			var pos = (i % 4) != 3 ? i + 1 : i - 3; // `bv` is in RGBA and we want ARGB
 			pixels.bytes.set(pos, bv[i]);
 		}*/
+		
 		for (y in 0...pixels.height) {
 			for (x in 0...pixels.width) {
 				pixels.setPixel32(x, y, bmd.getPixel32(x, y));
@@ -151,12 +155,12 @@ abstract Pixels(PixelsData)
 		bmd.setPixels(bmd.rect, ba);
 		
 	#else
+	
 		for (y in 0...this.height) {
 			for (x in 0...this.width) {
 				bmd.setPixel32(x, y, getPixel32(x, y));
 			}
 		}
-
 		
 	#end
 	
@@ -170,7 +174,7 @@ abstract Pixels(PixelsData)
 		
 		var imageARGB = image;
 		
-		/* TODO: it seems the buffer has always bytes in RGBA, so maybe there's no need to convert?
+		/* NOTE: it seems the buffer has always bytes in RGBA, so there's no need to convert
 		if (image.getType() != java.awt.image.BufferedImage.TYPE_INT_ARGB) {
 			trace("before", image.getType());
 			imageARGB = Converter.convert(image, java.awt.image.BufferedImage.TYPE_INT_ARGB);

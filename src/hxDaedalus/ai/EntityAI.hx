@@ -6,7 +6,6 @@ import hxDaedalus.data.Object;
 class EntityAI
 {
     public var approximateObject(get, never) : Object;
-    public var angleFOV : Float;
     public var dirNormY : Float;
     public var dirNormX : Float;
     public var y : Float;
@@ -21,7 +20,6 @@ class EntityAI
      var _y : Float;
      var _dirNormX : Float;
      var _dirNormY : Float;
-     var _angleFOV : Float;
      var _approximateObject : Object;
      static inline var NUM_SEGMENTS : Int = 6;
     
@@ -31,7 +29,6 @@ class EntityAI
         x = y = 0;
         dirNormX = 1;
         dirNormY = 0;
-        angleFOV = 60;
     }
     
     public function buildApproximation() : Void {

@@ -81,7 +81,6 @@ class SimpleView
 		}
 	}
 	
-	/** Draws vertices, edges and constraints onto the `surface` sprite. */
     public function drawMesh(mesh:Mesh, cleanBefore : Bool = false):Void 
 	{
         if (cleanBefore) graphics.clear();
@@ -119,7 +118,7 @@ class SimpleView
         graphics.moveTo(path[0], path[1]);
         var i = 2;
         while (i < path.length) {
-            //TODO: remove this conditionals once openfl behaves consistently
+            //TODO: remove these conditionals once openfl behaves consistently
         #if (openfl && sys)
             graphics.beginFill(0, 1);
         #end

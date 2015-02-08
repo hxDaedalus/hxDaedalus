@@ -4,6 +4,7 @@ bin-debug/
 bin-release/
 
 # Other files and folders
+.DS_Store
 .settings/
 deploySwing/
 !deploySwing/*.jar
