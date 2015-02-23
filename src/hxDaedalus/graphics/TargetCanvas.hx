@@ -1,6 +1,8 @@
 package hxDaedalus.graphics;
 
-#if (flash || openfl || nme) 
+#if flambe 
+typedef TargetCanvas = hxDaedalus.graphics.flambe.GraphicsComponent;
+#elseif (flash || openfl || nme) 
 typedef TargetCanvas = flash.display.Graphics;
 #elseif js
 typedef TargetCanvas = hxDaedalus.canvas.BasicCanvas;
