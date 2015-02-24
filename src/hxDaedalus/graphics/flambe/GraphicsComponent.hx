@@ -25,7 +25,9 @@ class GraphicsComponent extends Component
 	public function new(thickness:Float = 1, color:Int = 0x000000, alpha:Float = 1) 
 	{
 		lineStyle(thickness, color, alpha);
-		_container = new Entity().add(new Sprite());
+		var containerSprite = new Sprite();
+		containerSprite.pointerEnabled = false;
+		_container = new Entity().add(containerSprite);
 	}	
 	
 	override public function onStart() 
