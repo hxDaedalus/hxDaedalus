@@ -5,12 +5,16 @@ import hxDaedalus.graphics.ISimpleDrawingContext;
 @:access(hxDaedalus.graphics.flambe.GraphicsComponent)
 class SimpleDrawingContext implements ISimpleDrawingContext
 {
-	private var fillStyles:Array<{color:Int, alpha:Float}> = [];
+	var savedColor:Int;
+	var savedAlpha:Float;
+	var inFillingMode:Bool;
 	
 	public var graphics(default, null):GraphicsComponent;
 
 	public function new(graphics:GraphicsComponent) {
-		fillStyles.push({color:graphics._color, alpha:graphics._alpha});
+		savedColor = graphics._color;
+		savedAlpha = graphics._alpha;
+		inFillingMode = false;
 		this.graphics = graphics;
 	}
 	
@@ -24,15 +28,17 @@ class SimpleDrawingContext implements ISimpleDrawingContext
 	}
 	
 	public function beginFill(color:Int, ?alpha:Float = 1):Void {
-		fillStyles.push({color:graphics._color, alpha:graphics._alpha});
-		fillStyles.push({color:color, alpha:alpha});
+		if (!inFillingMode) {
+			savedColor = graphics._color;
+			savedAlpha = graphics._alpha;
+		}
+		lineStyle(graphics._thickness, color, alpha);
+		inFillingMode = true;
 	}
 	
 	public function endFill():Void {
-		fillStyles.pop();
-		var style = fillStyles.pop();
-		graphics._color = style.color;
-		graphics._alpha = style.alpha;
+		lineStyle(graphics._thickness, savedColor, savedAlpha);
+		inFillingMode = false;
 	}
 	
 	inline public function moveTo(x:Float, y:Float):Void {
@@ -43,21 +49,11 @@ class SimpleDrawingContext implements ISimpleDrawingContext
 		graphics.lineTo(x, y);
 	}
 	
-	public function drawCircle(cx:Float, cy:Float, radius:Float):Void {
-		if (fillStyles.length > 0) {
-			var style = fillStyles[fillStyles.length - 1];
-			graphics._color = style.color;
-			graphics._alpha = style.alpha;
-		}
+	inline public function drawCircle(cx:Float, cy:Float, radius:Float):Void {
 		graphics.drawCircle(cx, cy, radius);
 	}
 	
-	public function drawRect(x:Float, y:Float, width:Float, height:Float):Void {
-		if (fillStyles.length > 0) {
-			var style = fillStyles[fillStyles.length - 1];
-			graphics._color = style.color;
-			graphics._alpha = style.alpha;
-		}
+	inline public function drawRect(x:Float, y:Float, width:Float, height:Float):Void {
 		graphics.drawRect(x, y, width, height);
 	}
 }
