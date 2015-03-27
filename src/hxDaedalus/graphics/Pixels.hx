@@ -114,26 +114,43 @@ abstract Pixels(PixelsData)
 
 #end
 
-#if (snow || luxe) // in snow/luxe texture bytes are in RGBA format
+#if (snow || luxe) // in snow/luxe texture bytes are in RGBA format (and must account for power_of_two sizes)
 	
-	@:from static public function fromSnowTexture(texture:phoenix.Texture) {
+	@:from static public function fromLuxeTexture(texture:phoenix.Texture) {
 		var pixels = new Pixels(texture.width, texture.height, true);
 		pixels.format = PixelFormat.RGBA;
 		
+		var pot_w = texture.width_actual;
 		var data:snow.io.typedarray.Uint8Array = texture.asset.image.data;
 		
-		for (i in 0...pixels.bytes.length) {
-			pixels.bytes.set(i, data[i]);
+		var i = 0;
+		for (y in 0...pixels.height) {
+			for (x in 0...pixels.width) {
+				var pos:Int = (x << 2) + (y << 2) * pot_w;
+				pixels.bytes.set(i++, data[pos + 0]);
+				pixels.bytes.set(i++, data[pos + 1]);
+				pixels.bytes.set(i++, data[pos + 2]);
+				pixels.bytes.set(i++, data[pos + 3]);
+			}
 		}
 		
 		return pixels;
 	}
 	
-	public function applyToSnowTexture(texture:phoenix.Texture) {
+	public function applyToLuxeTexture(texture:phoenix.Texture) {
+		
+		var pot_w = texture.width_actual;
 		var data:snow.io.typedarray.Uint8Array = texture.asset.image.data;
 		
-		for (i in 0...this.bytes.length) {
-			data[i] = this.bytes.get(i);
+		var i = 0;
+		for (y in 0...this.height) {
+			for (x in 0...this.width) {
+				var pos:Int = (x << 2) + (y << 2) * pot_w;
+				data[pos + 0] = this.bytes.get(i++);
+				data[pos + 1] = this.bytes.get(i++);
+				data[pos + 2] = this.bytes.get(i++);
+				data[pos + 3] = this.bytes.get(i++);
+			}
 		}
 		texture.reset();  // rebind texture
 	}
