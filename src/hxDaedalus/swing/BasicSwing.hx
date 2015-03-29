@@ -1,7 +1,7 @@
 package hxDaedalus.swing;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import java.javax.swing.JFrame;
+import java.javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.event.KeyEvent;

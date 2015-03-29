@@ -3,7 +3,7 @@ package hxDaedalus.swing;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import javax.swing.JPanel;
+import java.javax.swing.JPanel;
 
 class Surface extends JPanel
 {
@@ -11,7 +11,7 @@ class Surface extends JPanel
     public var paintFunction: Graphics2D -> Void;
     public function new(){ super( true ); }
     
-	@:overload public function paintComponent( g: Graphics ){
+	@:overload override public function paintComponent( g: Graphics ){
 		super.paintComponent( g );
         var g2D: Graphics2D = cast g;
         var rHint = RenderingHints;
