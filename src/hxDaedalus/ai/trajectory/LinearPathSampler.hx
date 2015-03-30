@@ -145,9 +145,8 @@ class LinearPathSampler{
             updateEntity();
             return true;
         }
-        var remainingDist : Float;
-        var dist : Float;
-        remainingDist = _samplingDistance;
+        var remainingDist : Float = _samplingDistance;
+        var dist : Float = 0;
         while( true ){
             var pathPrev = _path[ _iPrev ];
             var pathPrev1 = _path[ _iPrev + 1 ];
@@ -189,9 +188,8 @@ class LinearPathSampler{
             updateEntity();
             return true;
         }
-        var remainingDist : Float;
-        var dist : Float;
-        remainingDist = _samplingDistance;
+        var remainingDist : Float = _samplingDistance;
+        var dist : Float = 0;
         while (true)
         {
             var pathNext = _path[ _iNext ];
