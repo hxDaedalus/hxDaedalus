@@ -29,6 +29,7 @@ abstract Pixels(PixelsData)
 	}
 	
 	/** Byte value at `i` position, as if the data were in ARGB format. */
+	@:arrayAccess
 	inline public function getByte(i:Int) {
 		return this.bytes.get((i & ~CHANNEL_MASK) + this.format.channelMap[i & CHANNEL_MASK]);
 	}
@@ -57,6 +58,7 @@ abstract Pixels(PixelsData)
 	}
 	
 	/** Sets the byte value at `i` pos, as if the data were in ARGB format. */
+	@:arrayAccess
 	inline public function setByte(i:Int, value:Int) {
 		this.bytes.set((i & ~CHANNEL_MASK) + this.format.channelMap[i & CHANNEL_MASK], value);
 	}
@@ -89,6 +91,21 @@ abstract Pixels(PixelsData)
 		this.bytes.set((pos + this.format.B), b);
 	}
 	
+	/** Fills the specified rect area, with `value` expressed in ARGB format. Doesn't do any bound checking. */
+	public function fillRect(x:Int, y:Int, width:Int, height:Int, value:Int):Void {
+		var pos = (y * this.width + x) << 2;
+		
+		var stridePixels = new Pixels(width, 1, true);
+		stridePixels.format = this.format;
+		var stride = width << 2;
+		
+		for (x in 0...width) stridePixels.setPixel32(x, 0, value);
+		for (y in 0...height) {
+			this.bytes.blit(pos, stridePixels.bytes, 0, stride);
+			pos += this.width << 2;
+		}		
+	}
+	
 	public function clone():Pixels {
 		var clone:Pixels = new Pixels(this.width, this.height, true);
 		clone.bytes.blit(0, this.bytes, 0, this.bytes.length);
@@ -114,45 +131,45 @@ abstract Pixels(PixelsData)
 
 #end
 
-#if (snow || luxe) // in snow/luxe texture bytes are in RGBA format (and must account for power_of_two sizes)
+#if (snow || luxe) // in snow/luxe texture bytes are in RGBA format (and must account for padded sizes when submitting)
 	
 	@:from static public function fromLuxeTexture(texture:phoenix.Texture) {
-		var pixels = new Pixels(texture.width, texture.height, true);
+		var pixels = new Pixels(texture.width, texture.height, false);
 		pixels.format = PixelFormat.RGBA;
 		
-		var pot_w = texture.width_actual;
-		var data:snow.io.typedarray.Uint8Array = texture.asset.image.data;
+		var data = new snow.api.buffers.Uint8Array(texture.width * texture.height * 4);
+		texture.fetch(data);
+		pixels.bytes = data.toBytes();
 		
-		var i = 0;
-		for (y in 0...pixels.height) {
-			for (x in 0...pixels.width) {
-				var pos:Int = (x << 2) + (y << 2) * pot_w;
-				pixels.bytes.set(i++, data[pos + 0]);
-				pixels.bytes.set(i++, data[pos + 1]);
-				pixels.bytes.set(i++, data[pos + 2]);
-				pixels.bytes.set(i++, data[pos + 3]);
-			}
+		return pixels;
+	}
+	
+	@:from static public function fromLuxeAssetImage(assetImage:snow.types.Types.AssetImage) {
+		var image:snow.types.Types.ImageInfo = assetImage.image;
+		var pixels = new Pixels(image.width, image.height, true);
+		pixels.format = PixelFormat.RGBA;
+		
+		var data = image.pixels.toBytes();
+		var stride = image.width * 4;
+		
+		for (y in 0...image.height) {
+			pixels.bytes.blit(y * stride, data, y * image.width_actual * 4, stride);
 		}
 		
 		return pixels;
 	}
 	
 	public function applyToLuxeTexture(texture:phoenix.Texture) {
+		var data = Bytes.alloc(texture.width_actual * texture.height_actual * 4);
 		
-		var pot_w = texture.width_actual;
-		var data:snow.io.typedarray.Uint8Array = texture.asset.image.data;
+		var padded_width = texture.width_actual;
+		var stride = this.width * 4;
 		
-		var i = 0;
 		for (y in 0...this.height) {
-			for (x in 0...this.width) {
-				var pos:Int = (x << 2) + (y << 2) * pot_w;
-				data[pos + 0] = this.bytes.get(i++);
-				data[pos + 1] = this.bytes.get(i++);
-				data[pos + 2] = this.bytes.get(i++);
-				data[pos + 3] = this.bytes.get(i++);
-			}
+			data.blit(y * padded_width * 4, this.bytes, y * stride, stride);
 		}
-		texture.reset();  // rebind texture
+		
+		texture.submit(snow.api.buffers.Uint8Array.fromBytes(data));  // rebind texture
 	}
 #end
 
@@ -161,15 +178,16 @@ abstract Pixels(PixelsData)
 	@:from static public function fromBitmapData(bmd:flash.display.BitmapData) {
 	#if js	
 	
-		var pixels = new Pixels(bmd.width, bmd.height);
-		pixels.format = PixelFormat.ARGB;
+		var pixels = new Pixels(bmd.width, bmd.height, false);
+		pixels.format = PixelFormat.RGBA;
 		
-		// this seems faster than other alternatives using getPixels/getVector
-		for (y in 0...pixels.height) {
-			for (x in 0...pixels.width) {
-				pixels.setPixel32(x, y, bmd.getPixel32(x, y));
-			}
-		}
+		// force buffer creation
+		var image = @:privateAccess bmd.__image;
+		lime.graphics.utils.ImageCanvasUtil.convertToCanvas(image);
+		lime.graphics.utils.ImageCanvasUtil.createImageData(image);
+
+		var data = @:privateAccess bmd.__image.buffer.data;
+		pixels.bytes = Bytes.ofData(data.buffer);
 		
 	#else
 		
@@ -192,21 +210,17 @@ abstract Pixels(PixelsData)
 	public function applyToBitmapData(bmd:flash.display.BitmapData) {
 	#if js
 		
-		for (y in 0...this.height) {
-			for (x in 0...this.width) {
-				bmd.setPixel32(x, y, getPixel32(x, y));
-			}
-		}
+		var image = @:privateAccess bmd.__image;
+		image.dirty = true;
+		lime.graphics.utils.ImageCanvasUtil.sync(image);
 		
 	#else
 	
-		var ba = bmd.getPixels(bmd.rect);
-		
-		#if (openfl && !flash)
-			ba.blit(0, this.bytes, 0, this.bytes.length);
+		#if flash
+			var ba = this.bytes.getData();
+			ba.endian = flash.utils.Endian.BIG_ENDIAN;
 		#else
-			ba.position = 0;
-			ba.writeBytes(this.bytes.getData());
+			var ba = openfl.utils.ByteArray.fromBytes(this.bytes);
 		#end
 		
 		ba.position = 0;
@@ -232,8 +246,6 @@ abstract Pixels(PixelsData)
 	}
 	
 	public function applyToBufferedImage(image:java.awt.image.BufferedImage) {
-		var imageType = image.getType();
-		
 		var buffer = new java.NativeArray<Int>(this.bytes.length);
 		for (i in 0...buffer.length) buffer[i] = this.bytes.get(i);
 		
@@ -302,6 +314,7 @@ class PixelFormat {
 	
 	static public var ARGB(default, null):PixelFormat;
 	static public var RGBA(default, null):PixelFormat;
+	static public var BGRA(default, null):PixelFormat;
 	
 	public var channelMap(default, null):Array<Channel>;
 	
@@ -310,6 +323,7 @@ class PixelFormat {
 	static function __init__():Void {
 		ARGB = new PixelFormat(CH_0, CH_1, CH_2, CH_3, "ARGB");
 		RGBA = new PixelFormat(CH_3, CH_0, CH_1, CH_2, "RGBA");
+		BGRA = new PixelFormat(CH_3, CH_2, CH_1, CH_0, "BGRA");
 	}
 	
 	public function new(a:Channel, r:Channel, g:Channel, b:Channel, name:String = "PixelFormat"):Void {
@@ -349,75 +363,4 @@ class PixelFormat {
 	var CH_3 = 3;
 	
 	@:op(A + B) static function add(a:Int, b:Channel):Int;
-}
-
-class Converter
-{
-	/** Converts from ARGB to RGBA. If `outBytesRGBA` is null then `inBytesARGB` will be converted in place. */
-	static public function ARGB2RGBA(inBytesARGB:Bytes, ?outBytesRGBA:Bytes):Void {
-		var convertInPlace = outBytesRGBA == null;
-		
-		if (!convertInPlace) {
-			for (i in 0...inBytesARGB.length) {
-				var pos = (i % 4) != 0 ? i - 1 : i + 3;
-				outBytesRGBA.set(pos, inBytesARGB.get(i));
-			}
-		} else {
-			outBytesRGBA = inBytesARGB;
-			
-			for (i in 0...inBytesARGB.length >> 2) {
-				var pos = i << 2;
-				var a = inBytesARGB.get(pos + 0);
-				var r = inBytesARGB.get(pos + 1);
-				var g = inBytesARGB.get(pos + 2);
-				var b = inBytesARGB.get(pos + 3);
-				
-				outBytesRGBA.set(pos + 3, a);
-				outBytesRGBA.set(pos + 0, r);
-				outBytesRGBA.set(pos + 1, g);
-				outBytesRGBA.set(pos + 2, b);
-			}
-		}
-	}
-	
-	/** Converts from ARGB to RGBA. If `outBytesARGB` is null then `inBytesRGBA` will be converted in place. */
-	static public function RGBA2ARGB(inBytesRGBA:Bytes, ?outBytesARGB:Bytes):Void {
-		var convertInPlace = outBytesARGB == null;
-		
-		if (!convertInPlace) {
-			for (i in 0...inBytesRGBA.length) {
-				var pos = (i % 4) <= 3 ? i + 1 : i - 3;
-				outBytesARGB.set(pos, inBytesRGBA.get(i));
-			}
-		} else {
-			outBytesARGB = inBytesRGBA;
-			
-			for (i in 0...inBytesRGBA.length >> 2) {
-				var pos = i << 2;
-				var a = inBytesRGBA.get(pos + 3);
-				var r = inBytesRGBA.get(pos + 0);
-				var g = inBytesRGBA.get(pos + 1);
-				var b = inBytesRGBA.get(pos + 2);
-				
-				outBytesARGB.set(pos + 0, a);
-				outBytesARGB.set(pos + 1, r);
-				outBytesARGB.set(pos + 2, g);
-				outBytesARGB.set(pos + 3, b);
-			}
-		}
-	}
-	
-#if java
-
-	/** Converts `inImage` into a new image of `imageType` format. */
-	static public function convertBufferedImage(inImage:java.awt.image.BufferedImage, imageType:Int):java.awt.image.BufferedImage
-	{
-		var outImage = new java.awt.image.BufferedImage(inImage.getWidth(), inImage.getHeight(), imageType);
-		var g2d = outImage.createGraphics();
-		g2d.drawImage(inImage, 0, 0, null);
-		g2d.dispose();
-		
-		return outImage;
-	}
-#end
 }
