@@ -50,7 +50,7 @@ class SimpleDrawingContext implements ISimpleDrawingContext
 		graphics.lineTo(x, y);
 	}
 
-	inline 	public function curveTo( cx: Float, cy: Float, ax: Float, ay: Float ):Void {
+	inline 	public function quadTo( cx: Float, cy: Float, ax: Float, ay: Float ):Void {
 			var p0 = { x: _prevX, y: _prevY };
 			var p1 = { x: cx, y: cy };
 			var p2 = { x: ax, y: ay }
