@@ -9,7 +9,6 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.geom.GeneralPath;
 import hxDaedalus.data.math.MathPoints;
-import hxDaedalus.iterators.Iterator0_1;
 
 class SimpleDrawingContext implements ISimpleDrawingContext
 {
