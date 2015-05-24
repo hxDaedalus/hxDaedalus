@@ -105,7 +105,7 @@ class Mesh
     
     public function buildFromRecord(rec : String) : Void
     {
-        var positions : Array<Dynamic> = rec.split(";");
+        var positions = rec.split(";");
         var i : Int = 0;
         while (i < positions.length){
             insertConstraintSegment(Std.parseFloat(positions[i]), Std.parseFloat(positions[i + 1]), Std.parseFloat(positions[i + 2]), Std.parseFloat(positions[i + 3]));
