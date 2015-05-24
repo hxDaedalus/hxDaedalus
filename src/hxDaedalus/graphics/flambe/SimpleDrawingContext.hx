@@ -2,7 +2,6 @@ package hxDaedalus.graphics.flambe;
 
 import hxDaedalus.graphics.ISimpleDrawingContext;
 import hxDaedalus.data.math.MathPoints;
-import hxDaedalus.iterators.Iterator0_1;
 
 @:access(hxDaedalus.graphics.flambe.GraphicsComponent)
 class SimpleDrawingContext implements ISimpleDrawingContext
