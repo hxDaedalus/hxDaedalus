@@ -14,7 +14,7 @@ interface ISimpleDrawingContext
 
 	public function lineTo(x:Float, y:Float):Void;
 
-	public function curveTo( cx: Float, cy: Float, ax: Float, ay: Float ):Void;
+	public function quadTo( cx: Float, cy: Float, ax: Float, ay: Float ):Void;
 
 	public function drawCircle(cx:Float, cy:Float, radius:Float):Void;
 
