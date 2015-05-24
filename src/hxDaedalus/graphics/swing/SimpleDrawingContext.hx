@@ -54,27 +54,9 @@ class SimpleDrawingContext implements ISimpleDrawingContext
 		graphics.draw(path);
 	}
 
-	public function curveTo( cx: Float, cy: Float, ax: Float, ay: Float ):Void {
-		var p0 = { x: _prevX, y: _prevY };
-		var p1 = { x: cx, y: cy };
-		var p2 = { x: ax, y: ay }
-		var approxDistance = MathPoints.distance( p0, p1 ) + MathPoints.distance( p1, p2 );
-		var factor = 2;
-		var v:{x: Float, y:Float };
-		if( approxDistance == 0 ) approxDistance = 0.000001;
-		var step = Math.min( 1/(approxDistance*0.707), 0.2 );
-		var arr = [ p0, p1, p2 ];
-		var t = 0.0;
-		v = MathPoints.quadraticBezier( 0.0, arr );
-		lineTo( v.x, v.y );
-		t += step;
-		while( t < 1 ){
-			v = MathPoints.quadraticBezier( t, arr );
-			lineTo( v.x, v.y );
-			t+=step;
-		}
-		v = MathPoints.quadraticBezier( 1.0, arr );
-		lineTo( v.x, v.y );
+	public function quadTo( cx: Float, cy: Float, ax: Float, ay: Float ):Void {
+		path.quadTo(cx, cy, ax, ay);
+		graphics.draw(path);
 	}
 
 	public function drawCircle(cx:Float, cy:Float, radius:Float):Void {
