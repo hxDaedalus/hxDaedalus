@@ -26,3 +26,6 @@ Licence is MIT for the original and this port.
 [Video use on pc and mac can be seen on the haxe blog entry 301](http://haxe.io/roundups/301/)
 
 You may find useful to read through the wiki for the original as3 lib [here](https://code.google.com/p/daedalus-lib/w/list)
+
+The image used for this project 
+"Daedalus und Ikarus MK1888". Licensed under Public Domain via Wikimedia Commons - http://commons.wikimedia.org/wiki/File:Daedalus_und_Ikarus_MK1888.png#/media/File:Daedalus_und_Ikarus_MK1888.png
