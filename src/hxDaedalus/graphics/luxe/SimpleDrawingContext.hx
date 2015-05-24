@@ -3,7 +3,6 @@ package hxDaedalus.graphics.luxe;
 import hxDaedalus.graphics.ISimpleDrawingContext;
 import hxDaedalus.graphics.TargetCanvas;
 import hxDaedalus.data.math.MathPoints;
-import hxDaedalus.iterators.Iterator0_1;
 import luxe.Color;
 import luxe.Vector;
 
