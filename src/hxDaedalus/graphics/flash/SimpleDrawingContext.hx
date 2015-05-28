@@ -37,7 +37,7 @@ class SimpleDrawingContext implements ISimpleDrawingContext
 		graphics.lineTo(x, y);
 	}
 
-	inline public function curveTo(cx:Float, cy:Float, ax: Float, ay: Float):Void {
+	inline public function quadTo(cx:Float, cy:Float, ax: Float, ay: Float):Void {
 		graphics.curveTo(cx, cy, ax, ay);
 	}
 
