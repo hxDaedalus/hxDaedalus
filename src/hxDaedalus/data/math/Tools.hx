@@ -29,7 +29,7 @@ class Tools {
      * @param	vertices	triangulated vertices
      * @param	triangles	computed triangles (they index into the `vertices` array)
      */
-	static public function extractMeshFromShapes( shapes:Array<Array<Float>>, width:Int, height:Int, vertices:Array<Point2D>, triangles:Array<Int> ): Void {
+	static public function extractMeshFromShapes( shapes:Array<Array<Float>>, width:Int, height:Int, vertices:Array<Point2D>, triangles:Array<Int>, CCW: Bool = true ): Void {
 	   
 		// GRAPHS OF POTENTIAL SEGMENTS GENERATION
 		var graphs:Array<Graph> = new Array<Graph>();
@@ -51,9 +51,17 @@ class Tools {
 				segment = mesh.insertConstraintSegment(polygons[i][j], polygons[i][j+1], polygons[i][j+2], polygons[i][j+3]);
 				if( j == 0 ){
 					if( segment.edges[0].originVertex.pos.x == polygons[i][j] && segment.edges[0].originVertex.pos.y == polygons[i][j+1] ){
-						edges.push(segment.edges[0]);
+						if( CCW ){
+							edges.push(segment.edges[0]);
+						} else {
+							edges.push(segment.edges[0].oppositeEdge);
+						}
 					} else {
-						edges.push(segment.edges[0].oppositeEdge);
+						if( CCW ){
+							edges.push(segment.edges[0].oppositeEdge);
+						}else {
+							edges.push(segment.edges[0]);
+						}							
 					}
 				}
 				j += 2;
