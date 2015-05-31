@@ -38,7 +38,7 @@ class SimpleDrawingContext implements ISimpleDrawingContext
 	}
 
 	inline public function quadTo(cx:Float, cy:Float, ax: Float, ay: Float):Void {
-		graphics.quadraticCurveTo(cx, cy, ax, ay);
+		graphics.quadTo(cx, cy, ax, ay);
 	}
 
 	inline public function drawCircle(cx:Float, cy:Float, radius:Float):Void {
