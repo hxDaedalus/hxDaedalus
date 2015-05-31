@@ -103,7 +103,13 @@ class BasicCanvas
 		surface.closePath();
 		surface.stroke();
 	}
-    
+	
+    public function quadTo(cx:Float, cy:Float, ax: Float, ay: Float):Void {
+		surface.quadraticCurveTo(cx, cy, ax, ay);
+		surface.closePath();
+		surface.stroke();	
+	}
+	
     public function beginFill( col: Int, ?alpha:Float ){
 		if( alpha != null && alpha != 1.0 ){
 			var r = (col >> 16) & 0xFF;
