@@ -17,7 +17,7 @@ class ShapeSimplifier
 		var len = coords.length;
 		Debug.assertFalse((len & 1) != 0, "Wrong size");
 		
-		if (len <= 4) {
+		if (len <= 4 || epsilon < 1) {
 			return [].concat(coords);
 		}
 		
