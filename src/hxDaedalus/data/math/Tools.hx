@@ -23,13 +23,14 @@ class Tools {
     /**
      * Extracts a triangulated mesh from `shapes`.
 	 * 
-     * @param	shapes		coords of polys to triangulate (in CCW winding for non-holes, and CW winding for holes)
-     * @param	width		right boundary for x coords
-     * @param	height		bottom boundary for y coords
-     * @param	vertices	triangulated vertices
-     * @param	triangles	computed triangles (they index into the `vertices` array)
+     * @param	shapes			coords of polys to triangulate (in CCW winding for non-holes, and CW winding for holes)
+     * @param	width			right boundary for x coords
+     * @param	height			bottom boundary for y coords
+     * @param	vertices		triangulated vertices will be added to this array
+     * @param	triangles		computed triangles (indexing into `vertices`) will be added to this array
+	 * @param	invertWinding	if `true` the winding of the passed polygons will be interpreted as inverted (so CW for outer polys, and CCW for holes)
      */
-	static public function extractMeshFromShapes( shapes:Array<Array<Float>>, width:Int, height:Int, vertices:Array<Point2D>, triangles:Array<Int>, CCW: Bool = true ): Void {
+	static public function extractMeshFromShapes( shapes:Array<Array<Float>>, width:Int, height:Int, vertices:Array<Point2D>, triangles:Array<Int>, invertWinding: Bool = false ): Void {
 	   
 		// GRAPHS OF POTENTIAL SEGMENTS GENERATION
 		var graphs:Array<Graph> = new Array<Graph>();
@@ -51,13 +52,13 @@ class Tools {
 				segment = mesh.insertConstraintSegment(polygons[i][j], polygons[i][j+1], polygons[i][j+2], polygons[i][j+3]);
 				if( j == 0 ){
 					if( segment.edges[0].originVertex.pos.x == polygons[i][j] && segment.edges[0].originVertex.pos.y == polygons[i][j+1] ){
-						if( CCW ){
+						if(! invertWinding ){
 							edges.push(segment.edges[0]);
 						} else {
 							edges.push(segment.edges[0].oppositeEdge);
 						}
 					} else {
-						if( CCW ){
+						if(! invertWinding ){
 							edges.push(segment.edges[0].oppositeEdge);
 						}else {
 							edges.push(segment.edges[0]);
