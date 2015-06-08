@@ -11,36 +11,33 @@ import hxDaedalus.graphics.SimpleDrawingContext;
 import flash.display.BitmapData;
 import flash.display.Shape;
 import flash.geom.Point;
+import hxDaedalus.graphics.Pixels;
 
 class BitmapMesh
 {
-    
-    public static function buildFromBmpData(    bmpData:    BitmapData
-                                            ,   debugBmp:   BitmapData = null
+
+    public static function buildFromBmpData(    bmpData: Pixels
+                                            ,   debugBmp:   Pixels = null
                                             ,   debugShape: SimpleDrawingContext = null
-                                            ) : Mesh
+                                        ) : Mesh
     {
         var i : Int;
         var j : Int;
-        
+
         // OUTLINES STEP-LIKE SHAPES GENERATION
         var shapes : Array<Array<Float>> = Potrace.buildShapes(bmpData, debugBmp, debugShape);
-        
         // GRAPHS OF POTENTIAL SEGMENTS GENERATION
         var graphs : Array<Graph> = new Array<Graph>();
         for (i in 0...shapes.length){
             graphs.push(Potrace.buildGraph(shapes[i]));
-        }  // OPTIMIZED POLYGONS GENERATION  
-        
-        
-        
+        }  // OPTIMIZED POLYGONS GENERATION
+
+
         var polygons : Array<Array<Float>> = new Array<Array<Float>>();
         for (i in 0...graphs.length){
             polygons.push(Potrace.buildPolygon(graphs[i], debugShape));
-        }  // MESH GENERATION  
-        
-        
-        
+        }  // MESH GENERATION
+
         var mesh : Mesh = RectMesh.buildRectangle(bmpData.width, bmpData.height);
         for (i in 0...polygons.length){
             j = 0;
@@ -50,7 +47,6 @@ class BitmapMesh
             }
             mesh.insertConstraintSegment(polygons[i][0], polygons[i][1], polygons[i][j], polygons[i][j + 1]);
         }
-        
         return mesh;
     }
 
