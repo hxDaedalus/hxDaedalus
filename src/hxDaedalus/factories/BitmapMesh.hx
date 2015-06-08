@@ -7,7 +7,7 @@ import hxDaedalus.data.graph.GraphEdge;
 import hxDaedalus.data.graph.GraphNode;
 import hxDaedalus.data.math.Geom2D;
 import hxDaedalus.data.math.Potrace;
-
+import hxDaedalus.graphics.SimpleDrawingContext;
 import flash.display.BitmapData;
 import flash.display.Shape;
 import flash.geom.Point;
@@ -17,7 +17,7 @@ class BitmapMesh
     
     public static function buildFromBmpData(    bmpData:    BitmapData
                                             ,   debugBmp:   BitmapData = null
-                                            ,   debugShape: Shape = null
+                                            ,   debugShape: SimpleDrawingContext = null
                                             ) : Mesh
     {
         var i : Int;
