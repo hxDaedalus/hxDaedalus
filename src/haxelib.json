@@ -6,7 +6,7 @@
   "tags": ["flash","openfl","nme","js","java","canvas","swing","luxe","flambe"],
   "description":
       "Pathfinding 2D Library ported from AS3, openfl and flambe not working with RC2 at moment, java no longer compatible with haxe 3.1",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "releasenote":
       "Supports - Flash, JS Canvas, Java Swing, OpenFL/NME, Flambe, Luxe/Snowkit",
   "contributors": ["Justinfront"],
