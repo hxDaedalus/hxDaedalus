@@ -12,12 +12,12 @@ import hxDaedalus.data.Object;
 
 class Tools {
 
-    static public function extractMeshFromBitmap( pixels:Pixels, vertices:Array<Point2D>, triangles:Array<Int>): Void {
+    static public function extractMeshFromBitmap( pixels:Pixels, vertices:Array<Point2D>, triangles:Array<Int>): Mesh {
 	   
 		// OUTLINES STEP-LIKE SHAPES GENERATION
 		var shapes = Potrace.buildShapes( pixels );
 		
-		extractMeshFromShapes( shapes, pixels.width, pixels.height, vertices, triangles );
+		return extractMeshFromShapes( shapes, pixels.width, pixels.height, vertices, triangles );
     }
     
     /**
@@ -29,8 +29,10 @@ class Tools {
      * @param	vertices		triangulated vertices will be added to this array
      * @param	triangles		computed triangles (indexing into `vertices`) will be added to this array
 	 * @param	invertWinding	if `true` the winding of the passed polygons will be interpreted as inverted (so CW for outer polys, and CCW for holes)
+	 * 
+	 * @return the triangulated mesh,
      */
-	static public function extractMeshFromShapes( shapes:Array<Array<Float>>, width:Int, height:Int, vertices:Array<Point2D>, triangles:Array<Int>, invertWinding: Bool = false ): Void {
+	static public function extractMeshFromShapes( shapes:Array<Array<Float>>, width:Int, height:Int, vertices:Array<Point2D>, triangles:Array<Int>, invertWinding: Bool = false ): Mesh {
 	   
 		// GRAPHS OF POTENTIAL SEGMENTS GENERATION
 		var graphs:Array<Graph> = new Array<Graph>();
@@ -106,5 +108,7 @@ class Tools {
 		   
 			facesDone[ currFace ] = true;
 		}
+		
+		return mesh;
     }    
 }
