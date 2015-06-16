@@ -48,4 +48,22 @@ class SimpleDrawingContext implements ISimpleDrawingContext
 	inline public function drawRect(x:Float, y:Float, width:Float, height:Float):Void {
 		graphics.drawRect(x, y, width, height);
 	}
+
+	inline public function drawEquilaterialTri( x: Float, y: Float, radius: Float, direction: Float ):Void {
+		var third = (Math.PI * 2) / 3;
+		var points = new Array<Float>();
+		var x1: Float;
+		var y1: Float;
+		for( i in 0...3 ){
+			x1 = x + r * Math.cos( direction + i * third );
+			y1 = y + r * Math.sin( direction + i * third );
+			points.push( x1 );
+			points.push( y1 );
+		}
+		drawTri( points );
+	}
+
+	inline public function drawTri( points:Array<Float> ){
+		graphics.drawTri( points );
+	}
 }

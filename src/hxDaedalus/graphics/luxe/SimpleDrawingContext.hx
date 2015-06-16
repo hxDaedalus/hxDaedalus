@@ -5,8 +5,19 @@ import hxDaedalus.graphics.TargetCanvas;
 import hxDaedalus.data.math.MathPoints;
 import luxe.Color;
 import luxe.Vector;
+import phoenix.geometry.Geometry;
+
+//
+import phoenix.Batcher;
+import luxe.Input.Key;
+import luxe.Input.KeyEvent;
+import luxe.Sprite;
+import luxe.Vector;
+import phoenix.Texture;
 
 
+typedef DPoint2D = hxDaedalus.data.math.Point2D;
+typedef PVertex = phoenix.geometry.Vertex;
 class SimpleDrawingContext implements ISimpleDrawingContext
 {
 	public var graphics(default, null):TargetCanvas;
@@ -124,5 +135,42 @@ class SimpleDrawingContext implements ISimpleDrawingContext
 			color: _lineColor
 		});
 		graphics.push(geom);
+	}
+///
+	public function drawEquilaterialTri( x: Float, y: Float, radius: Float, direction: Float ):Void {
+		var third = (Math.PI * 2) / 3;
+		var points = new Array<Float>();
+		var x1: Float;
+		var y1: Float;
+		for( i in 0...3 ){
+			x1 = x + radius * Math.cos( direction + i * third );
+			y1 = y + radius * Math.sin( direction + i * third );
+			points.push( x1 );
+			points.push( y1 );
+		}
+		drawTri( points );
+	}
+
+	public inline static function vertexConverter( v: { x: Float, y: Float }, col: Color ):PVertex {
+		return new PVertex( new Vector( v.x, v.y ), col  );
+	}
+
+	public function drawTri( points:Array<Float> ){
+		var shape = new Geometry({
+			primitive_type:PrimitiveType.triangles,
+			batcher: Luxe.renderer.batcher
+		});
+		var i = 0;
+		var col = _fillColor;
+		shape.depth = -1;
+		while( i < points.length ){
+			if( i == 0 ){
+				moveTo( points[ i ], points[ i + 1 ] );
+			} else {
+				lineTo( points[ i ], points[ i + 1 ] );
+			}
+			shape.add( vertexConverter( { x: points[ i ], y: points[ i + 1 ] }, col ) );
+			i+=2;
+		}
 	}
 }

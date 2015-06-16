@@ -1,7 +1,6 @@
 package hxDaedalus.graphics.flambe;
 
 import hxDaedalus.graphics.ISimpleDrawingContext;
-import hxDaedalus.data.math.MathPoints;
 
 @:access(hxDaedalus.graphics.flambe.GraphicsComponent)
 class SimpleDrawingContext implements ISimpleDrawingContext
@@ -50,28 +49,9 @@ class SimpleDrawingContext implements ISimpleDrawingContext
 		graphics.lineTo(x, y);
 	}
 
-	inline 	public function quadTo( cx: Float, cy: Float, ax: Float, ay: Float ):Void {
-			var p0 = { x: _prevX, y: _prevY };
-			var p1 = { x: cx, y: cy };
-			var p2 = { x: ax, y: ay }
-			var approxDistance = MathPoints.distance( p0, p1 ) + MathPoints.distance( p1, p2 );
-			var factor = 2;
-			var v:{x: Float, y:Float };
-			if( approxDistance == 0 ) approxDistance = 0.000001;
-			var step = Math.min( 1/(approxDistance*0.707), 0.2 );
-			var arr = [ p0, p1, p2 ];
-			var t = 0.0;
-			v = MathPoints.quadraticBezier( 0.0, arr );
-			lineTo( v.x, v.y );
-			t += step;
-			while( t < 1 ){
-				v = MathPoints.quadraticBezier( t, arr );
-				lineTo( v.x, v.y );
-				t+=step;
-			}
-			v = MathPoints.quadraticBezier( 1.0, arr );
-			lineTo( v.x, v.y );
-		}
+	inline public function quadTo( cx: Float, cy: Float, ax: Float, ay: Float ):Void {
+		graphics.quadTo( cx, cy, ax, ay );
+	}
 
 	inline public function drawCircle(cx:Float, cy:Float, radius:Float):Void {
 		graphics.drawCircle(cx, cy, radius);
@@ -79,5 +59,23 @@ class SimpleDrawingContext implements ISimpleDrawingContext
 
 	inline public function drawRect(x:Float, y:Float, width:Float, height:Float):Void {
 		graphics.drawRect(x, y, width, height);
+	}
+
+	inline public function drawEquilaterialTri( x: Float, y: Float, radius: Float, direction: Float ):Void {
+		var third = (Math.PI * 2) / 3;
+		var points = new Array<Float>();
+		var x1: Float;
+		var y1: Float;
+		for( i in 0...3 ){
+			x1 = x + radius * Math.cos( direction + i * third );
+			y1 = y + radius * Math.sin( direction + i * third );
+			points.push( x1 );
+			points.push( y1 );
+		}
+		drawTri( points );
+	}
+
+	inline public function drawTri( points:Array<Float> ){
+		graphics.drawTri( points );
 	}
 }

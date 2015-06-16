@@ -51,12 +51,12 @@ class SimpleDrawingContext implements ISimpleDrawingContext
 
 	public function lineTo(x:Float, y:Float):Void {
 		path.lineTo(x, y);
-		graphics.draw(path);
+		graphics.draw( path );
 	}
 
 	public function quadTo( cx: Float, cy: Float, ax: Float, ay: Float ):Void {
 		path.quadTo(cx, cy, ax, ay);
-		graphics.draw(path);
+		graphics.draw( path );
 	}
 
 	public function drawCircle(cx:Float, cy:Float, radius:Float):Void {
@@ -70,5 +70,32 @@ class SimpleDrawingContext implements ISimpleDrawingContext
 	public function drawRect(x:Float, y:Float, width:Float, height:Float):Void {
 		graphics.fillRect(Std.int(x), Std.int(y), Std.int(width), Std.int(height));
 		graphics.drawRect(Std.int(x), Std.int(y), Std.int(width), Std.int(height));
+	}
+
+	public function drawEquilaterialTri( x: Float, y: Float, radius: Float, direction: Float ):Void {
+		var third = (Math.PI * 2) / 3;
+		var points = new Array<Float>();
+		var x1: Float;
+		var y1: Float;
+		for( i in 0...3 ){
+			x1 = x + radius * Math.cos( direction + i * third );
+			y1 = y + radius * Math.sin( direction + i * third );
+			points.push( x1 );
+			points.push( y1 );
+		}
+		drawTri( points );
+	}
+
+	public function drawTri( points:Array<Float> ){
+		var i = 0;
+		while( i < points.length ){
+			if( i == 0 ){
+				path.moveTo( points[ i ], points[ i + 1 ] );
+			} else {
+				path.lineTo( points[ i ], points[ i + 1 ] );
+			}
+			i+=2;
+		}
+		graphics.draw( path );
 	}
 }

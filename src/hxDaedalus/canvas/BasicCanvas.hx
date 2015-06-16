@@ -19,7 +19,7 @@ class BasicCanvas
     public var body: Element;
     public var onEnterFrame: Void -> Void;
     public var header: CanvasHeader;
-    
+
     public function new() {
         canvas = Browser.document.createCanvasElement();
         dom = cast canvas;
@@ -36,7 +36,7 @@ class BasicCanvas
         style.position = "absolute";
 		style.backgroundColor = header.bgColor;
 		surface.fillStyle = header.bgColor;
-        image = cast dom;        
+        image = cast dom;
         var s = Browser.document.createStyleElement();
         s.innerHTML = "@keyframes spin { from { transform:rotate( 0deg ); } to { transform:rotate( 360deg ); } }";
         Browser.document.getElementsByTagName("head")[0].appendChild( s );
@@ -45,27 +45,27 @@ class BasicCanvas
         var body = Browser.document.body;
         body.appendChild( dom );
     }
-    
+
     private function loop( tim: Float ):Bool
     {
         Browser.window.requestAnimationFrame( loop );
         if( onEnterFrame != null ) onEnterFrame();
         return true;
     }
-    
+
     public function clear():Void {
-		surface.clearRect ( 0, 0 
+		surface.clearRect ( 0, 0
         , header.width
         , header.height );
     }
-    
+
     public function drawCircle( x: Float, y: Float, radius: Float ):Void {
         surface.beginPath();
         surface.arc( x, y, radius, 0, 2*Math.PI, false );
         surface.stroke();
         surface.closePath();
     }
-	
+
 	public function drawRect(x:Float, y:Float, width:Float, height:Float)
 	{
         surface.beginPath();
@@ -76,7 +76,22 @@ class BasicCanvas
         surface.stroke();
         surface.closePath();
 	}
-	
+
+    public function drawTri( points: Array<Float> ){
+        surface.beginPath();
+        var i = 0;
+        while( i < points.length ){
+			if( i == 0 ){
+				surface.moveTo( points[ i ], points[ i + 1 ] );
+			} else {
+				surface.lineTo( points[ i ], points[ i + 1 ] );
+			}
+			i+=2;
+		}
+        surface.stroke();
+        surface.closePath();
+    }
+
     public function lineStyle( wid: Float, col: Int, ?alpha: Float )
     {
         surface.lineWidth = wid;
@@ -90,26 +105,26 @@ class BasicCanvas
         	surface.strokeStyle = '#' + StringTools.hex( col, 6 );
 		}
     }
-    
+
 	public function moveTo(x : Float, y : Float)
 	{
 		surface.beginPath();
 		surface.moveTo(x, y);
 	}
-    
+
 	public function lineTo(x : Float, y : Float)
 	{
 		surface.lineTo(x, y);
 		surface.closePath();
 		surface.stroke();
 	}
-	
+
     public function quadTo(cx:Float, cy:Float, ax: Float, ay: Float):Void {
 		surface.quadraticCurveTo(cx, cy, ax, ay);
 		surface.closePath();
-		surface.stroke();	
+		surface.stroke();
 	}
-	
+
     public function beginFill( col: Int, ?alpha:Float ){
 		if( alpha != null && alpha != 1.0 ){
 			var r = (col >> 16) & 0xFF;
@@ -119,10 +134,10 @@ class BasicCanvas
 		} else {
 			surface.fillStyle = '#' + StringTools.hex( col, 6 );
 		}
-		
+
         surface.beginPath();
     }
-    
+
     public function endFill():Void {
         surface.stroke();
         surface.closePath();
