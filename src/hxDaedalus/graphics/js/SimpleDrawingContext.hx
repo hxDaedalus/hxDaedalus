@@ -55,8 +55,8 @@ class SimpleDrawingContext implements ISimpleDrawingContext
 		var x1: Float;
 		var y1: Float;
 		for( i in 0...3 ){
-			x1 = x + r * Math.cos( direction + i * third );
-			y1 = y + r * Math.sin( direction + i * third );
+			x1 = x + radius * Math.cos( direction + i * third );
+			y1 = y + radius * Math.sin( direction + i * third );
 			points.push( x1 );
 			points.push( y1 );
 		}

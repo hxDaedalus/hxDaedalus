@@ -18,8 +18,8 @@ class SimpleDrawingContext implements ISimpleDrawingContext
 	var path:GeneralPath;
 
 	public function new(graphics:BasicSwing) {
-		this.bounds = graphics.surface.getBounds();
-		this.path = new GeneralPath();
+		bounds = graphics.surface.getBounds();
+		path = new GeneralPath();
 	}
 
 	public function clear():Void {
