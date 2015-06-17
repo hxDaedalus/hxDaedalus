@@ -108,6 +108,23 @@ class BasicSvg {
 		return aTri;
 	}
 
+	public function createTri(  pointsArr:Array<Float>, line: Int, ?lineAlpha: Float = 1, ?fill: Int = -1, ?fillAlpha: Float = 1, w: Float = 1 ):SVGElement {
+		var aTri: SVGElement = cast Browser.document.createElementNS( svgNameSpace, 'polygon');
+		var points = '';
+		var x1: Float;
+		var y1: Float;
+		var i: Int = 0;
+		while( i < pointsArr.length ){
+			points += Std.string( pointsArr[i] ) + ',' + Std.string( pointsArr[i+1] ) + ' ';
+			i+=2;
+		}
+		aTri.setAttribute('points', points );
+		if( fill != -1 ) aTri.setAttribute( "fill", getColor( fill, fillAlpha ) );
+		aTri.setAttribute('stroke', getColor( line, lineAlpha ) );
+		aTri.setAttribute('stroke-width', Std.string( w ) );
+		return aTri;
+	}
+
 	public function changeFill( element: SVGElement, col: Int ):Void {
 		element.setAttribute( "fill", getColor( col ) );
 	}

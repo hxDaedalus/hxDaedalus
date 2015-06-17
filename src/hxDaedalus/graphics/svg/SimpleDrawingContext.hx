@@ -80,6 +80,26 @@ class SimpleDrawingContext implements ISimpleDrawingContext
 		graphics.add( geom );
 	}
 
+    public function drawEquilaterialTri( x: Float, y: Float, r: Float, direction: Float ):Void{
+        var fill = if( _inFillingMode ){
+            _fillColor;
+        } else {
+            -1;
+        }
+        var geom = graphics.createEquilateralTriangle( x, y, r, direction, _lineColor, _lineAlpha, _fillColor, _fillAlpha, _thickness );
+        graphics.add( geom );
+    }
+
+    public function drawTri( points: Array<Float> ):Void {
+        var fill = if( _inFillingMode ){
+            _fillColor;
+        } else {
+            -1;
+        }
+        var geom = graphics.createTri( points, _lineColor, _lineAlpha, _fillColor, _fillAlpha, _thickness );
+        graphics.add( geom );
+    }
+
 	public function drawCircle( cx: Float, cy: Float, radius: Float ): Void {
 		var fill = if( _inFillingMode ){
 			_fillColor;
