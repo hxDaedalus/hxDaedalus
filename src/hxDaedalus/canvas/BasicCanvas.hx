@@ -106,14 +106,12 @@ class BasicCanvas
 		}
     }
 
-	public function moveTo(x : Float, y : Float)
-	{
+	public function moveTo(x : Float, y : Float){
 		surface.beginPath();
 		surface.moveTo(x, y);
 	}
 
-	public function lineTo(x : Float, y : Float)
-	{
+	public function lineTo(x : Float, y : Float){
 		surface.lineTo(x, y);
 		surface.closePath();
 		surface.stroke();
@@ -121,7 +119,6 @@ class BasicCanvas
 
     public function quadTo(cx:Float, cy:Float, ax: Float, ay: Float):Void {
 		surface.quadraticCurveTo(cx, cy, ax, ay);
-		surface.closePath();
 		surface.stroke();
 	}
 
