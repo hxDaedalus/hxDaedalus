@@ -1,6 +1,8 @@
 package hxDaedalus.graphics;
 
-#if flambe
+#if format
+typedef SimpleDrawingContext = hxDaedalus.graphics.pixel.SimpleDrawingContext;
+#elseif flambe
 typedef SimpleDrawingContext = hxDaedalus.graphics.flambe.SimpleDrawingContext;
 #elseif (flash || openfl || nme)
 typedef SimpleDrawingContext = hxDaedalus.graphics.flash.SimpleDrawingContext;

@@ -12,4 +12,6 @@ typedef TargetCanvas = hxDaedalus.svg.BasicSvg;
 typedef TargetCanvas = hxDaedalus.canvas.BasicCanvas;
 #elseif java
 typedef TargetCanvas = hxDaedalus.swing.BasicSwing;
+#elseif format
+typedef TargetCanvas = hxDaedalus.graphics.pixel.BasicPixel;
 #end
