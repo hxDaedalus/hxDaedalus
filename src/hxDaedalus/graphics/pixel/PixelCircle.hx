@@ -1,8 +1,8 @@
 package hxDaedalus.graphics.pixel;
 import hxDaedalus.graphics.Pixels;
-
+import hxDaedalus.graphics.pixel.BresenHamPixels;
 class PixelCircle {
-    public var pixels: Pixels;
+    public var pixels: IPixels;
     public var cx: Float;
     public var cy: Float;
     public var minX: Int;
@@ -30,16 +30,18 @@ class PixelCircle {
         return radius2 >= dx*dx + dy*dy;
     }
 
-    public function fill( col: Int, alpha: Int ): Void
+    public function fill( col: Int, alpha: Float ): Void
     {
+        var a: Int = Std.int( alpha * 0xff );
         for( x in minX...maxX ){
             for( y in minY...maxY ){
-                if( hitTest( x, y ) ) pixels.setPixelColorAndAlpha( x, y, col, alpha );
+                if( hitTest( x, y ) ) pixels.setPixelColorAndAlpha( x, y, col, a );
             }
         }
     }
-    public function plot( col: Int, alpha: Int, wid: Float ): Void {
+    public function plot( col: Int, alpha: Float, wid: Float ): Void {
+        var a: Int = Std.int( alpha * 0xff );
         // maybe not correct circle
-        BresenHamPixels.plotCircle( pixels, cx, cy, radius, col, alpha );
+        BresenHamPixels.plotCircle( pixels, Std.int( cx ), Std.int( cy ), radius, col, a );
     }
 }

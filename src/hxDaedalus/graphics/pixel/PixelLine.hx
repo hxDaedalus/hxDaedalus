@@ -24,8 +24,8 @@ class PixelLine {
         y1 = y1_;
         width = width_;
         theta = Math.atan2( y1_ - y0_, x1_ - x0_ );
-        dy = w / Math.abs( Math.cos( theta ) );
-        dx = w / Math.abs( Math.sin( theta ) );
+        dy = width_ / Math.abs( Math.cos( theta ) );
+        dx = width_ / Math.abs( Math.sin( theta ) );
         maxX = Math.max( x0_, x1_ )+dx;
         minX = Math.min( x0_, x1_ )-dx;
         maxY = Math.max( y0_, y1_ )+dy;
@@ -42,13 +42,14 @@ class PixelLine {
 
     public function hitTest( x_: Float, y_: Float ): Bool {
         // check bounding box first.
-        if(!( x_ > minX && x_ < maxX && y_ > minY && y_ < maxY )) return;
+        if(!( x_ > minX && x_ < maxX && y_ > minY && y_ < maxY )) return false;
         var lineY = m*x_ + c;
         return ( lineY + dy > y_ ) && ( lineY - dy < y_ );
     }
 
-    public function plot( col: Int, alpha: Int ){
-        BresenHamPixels.plotLineWidth( pixels, x0, y0, x1, y1, width, col, alpha );
+    public function plot( col: Int, alpha: Float ){
+        var a: Int = Std.int( alpha * 0xff );
+        BresenHamPixels.plotLineWidth( pixels, Std.int( x0 ), Std.int( y0 ), Std.int( x1 ), Std.int( y1 ), width, col, a );
     }
 
 }

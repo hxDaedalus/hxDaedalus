@@ -91,7 +91,7 @@ class SimpleDrawingContext implements ISimpleDrawingContext
 			points.push( x1 );
 			points.push( y1 );
 		}
-		graphics.add( drawTri( points ) );
+		drawTri( points );
 	}
 
     public function drawTri( points: Array<Float> ):Void {

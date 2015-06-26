@@ -2,10 +2,10 @@ package hxDaedalus.graphics.pixel;
 import hxDaedalus.graphics.Pixels;
 class PixelTriangle {
     var pixels: Pixels;
-    var maxX: Float;
-    var minX: Float;
-    var maxY: Float;
-    var minY: Float;
+    var maxX: Int;
+    var minX: Int;
+    var maxY: Int;
+    var minY: Int;
 
     // triangle precalculations
     var s0: Float;
@@ -26,10 +26,10 @@ class PixelTriangle {
         var p1y = points_[3];
         var p2x = points_[4];
         var p2y = points_[5];
-        maxX = Math.max( Math.max( p0x, p1x ), p2x );
-        minX = Math.min( Math.min( p0x, p1x ), p2x );
-        maxY = Math.max( Math.max( p0y, p1y ), p2y );
-        minY = Math.min( Math.min( p0y, p1y ), p2y );
+        maxX = Std.int( Math.max( Math.max( p0x, p1x ), p2x ) );
+        minX = Std.int( Math.min( Math.min( p0x, p1x ), p2x ) );
+        maxY = Std.int( Math.max( Math.max( p0y, p1y ), p2y ) );
+        minY = Std.int( Math.min( Math.min( p0y, p1y ), p2y ) );
         s0 = p0y*p2x - p0x*p2y;
         sx = p2y - p0y;
         sy = p0x - p2x;
@@ -48,14 +48,16 @@ class PixelTriangle {
         return (s + t) < A;
     }
 
-    public function fill( color: Int, alpha: Int ):Void {
+    public function fill( col: Int, alpha: Float ):Void {
+        var a: Int = Std.int( alpha * 0xff );
         for( x in minX...maxX ){
             for( y in minY...maxY ){
-                if( hitTest( x, y ) ) pixels.setPixelColorAndAlpha( x, y, color, alpha );
+                if( hitTest( x, y ) ) pixels.setPixelColorAndAlpha( x, y, col, a );
             }
         }
     }
-    public function plot( col: Int, alpha: Int, wid: Float ): Void {
+    public function plot( col: Int, alpha: Float, wid: Float ): Void {
+        var a: Int = Std.int( alpha * 0xff );
         // to implement
         //BresenHamPixels.plotLine( pixels, , col, alpha );
         //BresenHamPixels.plotLine( pixels, , col, alpha );
