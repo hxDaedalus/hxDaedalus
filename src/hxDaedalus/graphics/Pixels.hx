@@ -113,15 +113,15 @@ abstract Pixels(PixelsData)
 	}
 
 		/** Fills the specified rect area, with `value` expressed in ARGB format. Doesn't do any bound checking. */
-		public function fillRectColorAndPixel(x:Int, y:Int, width:Int, height:Int, col:Int, alpha: Int):Void {
+		public function fillRectColorAndPixel( x: Int, y: Int, wid: Int, hi: Int, col: Int, alpha: Int ):Void {
 			var pos = (y * this.width + x) << 2;
 
-			var stridePixels = new Pixels(width, 1, true);
+			var stridePixels = new Pixels( wid, 1, true);
 			stridePixels.format = this.format;
-			var stride = width << 2;
+			var stride = wid << 2;
 
-			for (x in 0...width) stridePixels.setPixelColorAndAlpha(x, 0, col, alpha );
-			for (y in 0...height) {
+			for (x in 0...wid) stridePixels.setPixelColorAndAlpha(x, 0, col, alpha );
+			for (y in 0...hi) {
 				this.bytes.blit(pos, stridePixels.bytes, 0, stride);
 				pos += this.width << 2;
 			}
@@ -145,31 +145,52 @@ abstract Pixels(PixelsData)
 	public function clone():Pixels {
 		var clone:Pixels = new Pixels(this.width, this.height, true);
 		clone.bytes.blit(0, this.bytes, 0, this.bytes.length);
+		clone.format = this.format;
 		return clone;
 	}
 
 	static public function fromBytes(bytes:Bytes, width:Int, height:Int, ?format:PixelFormat):Pixels {
 		var pixels = new Pixels(width, height, false);
 		if (format == null) format = PixelFormat.ARGB;
+		trace( 'pixels ' + pixels );
 		pixels.bytes = bytes;
 		return pixels;
 	}
 
-#if (sys && format)	// convert from png, bmp and gif data using `HaxeFoundation/format` lib (underlying bytes in BGRA format)
-
+	inline public function convertTo(format:PixelFormat):Pixels {
+		return convert(cast this, format, true);
+	}
+	static public function convert(pixels:Pixels, toFormat:PixelFormat, inPlace:Bool = false):Pixels {
+		var res = inPlace ? pixels : pixels.clone();
+		if (toFormat == pixels.format) return res;
+		var i = 0;
+		while (i < pixels.count) {
+			var pos = i << 2;
+			var a = pixels.getByte(pos + 0);
+			var r = pixels.getByte(pos + 1);
+			var g = pixels.getByte(pos + 2);
+			var b = pixels.getByte(pos + 3);
+			res.bytes.set(pos + toFormat.A, a);
+			res.bytes.set(pos + toFormat.R, r);
+			res.bytes.set(pos + toFormat.G, g);
+			res.bytes.set(pos + toFormat.B, b);
+			i++;
+		}
+		res.format = toFormat;
+		return res;
+	}
+#if (format) // convert from png, bmp and gif data using `HaxeFoundation/format` lib (underlying bytes in BGRA format)
 	@:from static public function fromPNGData(data:format.png.Data) {
 		var header = format.png.Tools.getHeader(data);
 		var bytes = format.png.Tools.extract32(data);
 		var pixels = new Pixels(header.width, header.height, false);
 		pixels.bytes = bytes;
+		trace( 'pixels ' + pixels );
 		pixels.format = PixelFormat.BGRA;
-
 		return pixels;
 	}
-
 	@:from static public function fromBMPData(data:format.bmp.Data) {
 		var pixels = new Pixels(data.header.width, data.header.height, true);
-
 		for (i in 0...pixels.count) {
 			var srcPos = i * 3;
 			var dstPos = i * 4;
@@ -177,23 +198,19 @@ abstract Pixels(PixelsData)
 			pixels.bytes.set(dstPos + 3, 0xFF); // alpha
 		}
 		pixels.format = PixelFormat.BGRA;
-
 		return pixels;
 	}
-
 	static public function fromGIFData(data:format.gif.Data, frameIndex:Int = 0, full:Bool = true) {
 		var pixels:Pixels;
-
 		if (full) {
 			pixels = new Pixels(data.logicalScreenDescriptor.width, data.logicalScreenDescriptor.height, false);
-			pixels.bytes = format.gif.Tools.extractFullBGRA(data, frameIndex);
+		    pixels.bytes = format.gif.Tools.extractFullBGRA(data, frameIndex);
 		} else {
 			var frame = format.gif.Tools.frame(data, frameIndex);
 			pixels = new Pixels(frame.width, frame.height, false);
 			pixels.bytes = format.gif.Tools.extractBGRA(data, frameIndex);
 		}
 		pixels.format = PixelFormat.BGRA;
-
 		return pixels;
 	}
 #end
@@ -375,16 +392,16 @@ private class PixelsData
 	inline static public var BYTES_PER_PIXEL:Int = 4;
 
 	/** Total number of pixels. */
-	public var count(default, null):Int;
+	public var count(default, default):Int;
 
 	/** Bytes representing the pixels (in `format` pixel format). */
-	public var bytes(default, null):Bytes;
+	public var bytes(default, default):Bytes;
 
 	/** Width of the source image. */
-	public var width(default, null):Int;
+	public var width(default, default):Int;
 
 	/** Height of the source image. */
-	public var height(default, null):Int;
+	public var height(default, default):Int;
 
 	/** Internal pixel format. */
 	public var format:PixelFormat;

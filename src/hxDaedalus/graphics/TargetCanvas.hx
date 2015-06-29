@@ -1,6 +1,8 @@
 package hxDaedalus.graphics;
 
-#if flambe
+#if format
+typedef TargetCanvas = hxDaedalus.graphics.pixel.BasicPixel;
+#elseif flambe
 typedef TargetCanvas = hxDaedalus.graphics.flambe.GraphicsComponent;
 #elseif (flash || openfl || nme)
 typedef TargetCanvas = flash.display.Graphics;
@@ -12,6 +14,4 @@ typedef TargetCanvas = hxDaedalus.svg.BasicSvg;
 typedef TargetCanvas = hxDaedalus.canvas.BasicCanvas;
 #elseif java
 typedef TargetCanvas = hxDaedalus.swing.BasicSwing;
-#elseif format
-typedef TargetCanvas = hxDaedalus.graphics.pixel.BasicPixel;
 #end

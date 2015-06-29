@@ -19,6 +19,18 @@ class BresenHamPixels {
         pixels.setPixelColorAndAlpha( x, y, col, Std.int( 255*i ) );
     }
 
+    /*public static inline function setPixelAA(x:Int, y:Int, i:Int) {
+        if (x < 0 || x >= pixels.width || y < 0 || y >= pixels.height) return;
+        var a = 1 - i / 255;
+        var backColor = pixels.getPixel32(x, y);
+        var color:Pixel = 0xFF00FF00;
+        color.A = Std.int((1 - a) * backColor.A + (a) * color.A);
+        color.R = Std.int((1 - a) * backColor.R + (a) * color.R);
+        color.G = Std.int((1 - a) * backColor.G + (a) * color.G);
+        color.B = Std.int((1 - a) * backColor.B + (a) * color.B);
+        pixels.setPixel32(x, y, color);
+    }*/
+
     // Fully ported, untested
     public inline static function plotLine(     pixels:     IPixels
                                             ,   x0: Int,    y0: Int
@@ -36,7 +48,7 @@ class BresenHamPixels {
         while( true ){                                              // loop
             if( count > 5000 ) break;
             pixels.setPixelColorAndAlpha( x0, y0, col, alpha );
-            if( x0 == x1 || y0 == y1 ) break;
+            if( x0 == x1 && y0 == y1 ) break;
             e2 = 2*err;
             if( e2 >= dy ){                                         // e_xy+e_x > 0
                 err += dy;
@@ -763,14 +775,14 @@ class BresenHamPixels {
     // draw a black anti-aliased circle on white background
     public inline static function plotCircleAA( pixels:     IPixels
                                             ,   xm: Int,    ym: Int
-                                            ,   r: Int
+                                            ,   r: Float
                                             ,   col: Int,   alpha: Int ){
-        var x: Int = -r;
+        var x: Int = Std.int( -r );
         var y: Int = 0;           // II. quadrant from bottom left to top right
         var i: Int;
         var x2: Int;
         var e2: Int;
-        var err: Int = 2 - 2*r;                             // error of 1.step
+        var err: Int = Std.int( 2 - 2*r );                             // error of 1.step
         r = 1-err;
         do {
             i = Std.int( 255*Math.abs( err - 2*( x + y ) - 2 )/r );               // get blend value of pixel
@@ -1073,9 +1085,9 @@ class BresenHamPixels {
         var dx: Float;
         var dy: Float;
         var ex: Float;
-        var px: Float;
-        var py: Float;
-        var ed: Float;
+        var px: Float = 0.0;
+        var py: Float = 0.0;
+        var ed: Float = 0.0;
         var ip: Float;
         var EP: Float = 0.01;
 

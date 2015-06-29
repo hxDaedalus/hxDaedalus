@@ -16,11 +16,11 @@ class PixelCircle {
         pixels = pixels_;
         cx = cx_;
         cy = cy_;
+        radius = radius_;
         minX = Std.int( cx - radius );
         maxX = Std.int( cx + radius );
         minY = Std.int( cy - radius );
         maxY = Std.int( cy + radius );
-        radius = radius_;
         radius2 = radius_*radius_;
     }
 
@@ -42,6 +42,6 @@ class PixelCircle {
     public function plot( col: Int, alpha: Float, wid: Float ): Void {
         var a: Int = Std.int( alpha * 0xff );
         // maybe not correct circle
-        BresenHamPixels.plotCircle( pixels, Std.int( cx ), Std.int( cy ), radius, col, a );
+        BresenHamPixels.plotCircleAA( pixels, Std.int( cx ), Std.int( cy ), radius, col, a );
     }
 }

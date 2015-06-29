@@ -7,7 +7,7 @@ import hxDaedalus.data.math.MathPoints;
 
 class SimpleDrawingContext implements ISimpleDrawingContext
 {
-    public var graphics( default, null ): BasicPixel;
+    public var graphics( default, default ): BasicPixel;
 
 	var _prevX: Float = 0;
 	var _prevY: Float = 0;
@@ -72,7 +72,15 @@ class SimpleDrawingContext implements ISimpleDrawingContext
 		v = MathPoints.quadraticBezier( 1.0, arr );
 		lineTo( v.x, v.y );
 	}
+/*
 
+    public function quadTo( ax: Float, ay: Float, ex: Float, ey: Float ): Void {
+        var geom = graphics.createQuadratic( _prevX, _prevY, ax, ay, ex, ey, _lineColor, _thickness, _lineAlpha );
+        _prevX = ex;
+        _prevY = ey;
+        graphics.add( geom );
+    }
+*/
 	public function lineTo( x: Float, y: Float ): Void {
 		var geom = graphics.createLine( _prevX, _prevY, x, y, _lineColor, _thickness, _lineAlpha );
 		_prevX = x;

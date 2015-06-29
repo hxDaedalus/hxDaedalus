@@ -24,6 +24,12 @@ class BasicPixel {
 		return ERectangle( rect );
 	}
 
+	public function createQuadratic( sx: Float, sy: Float, ax: Float, ay: Float, ex: Float, ey: Float, line: Int, ?lineAlpha: Float = 1, w: Float = 1 ): PixelShapeEnum {
+		var quadratic = new PixelQuadratic( pixels, sx, sy, ax, ay, ex, ey, w );
+		quadratic.plot( line, lineAlpha );
+		return EQuadratic( quadratic );
+	}
+
 	public function createTri(  pointsArr:Array<Float>, line: Int, ?lineAlpha: Float = 1, ?fill: Int = -1, ?fillAlpha: Float = 1, w: Float = 1 ):PixelShapeEnum {
 		var aTri = new PixelTriangle( pixels, pointsArr );
 		if( fill != -1 ) aTri.fill( fill, fillAlpha );

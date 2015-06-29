@@ -6,5 +6,6 @@ enum PixelShapeEnum {
     EQuadratic( quatratic: PixelQuadratic );
     ETriangle( triangle: PixelTriangle );
     ERectangle( rectangle: PixelRectangle );
+    EQuad( quadratic: PixelQuadratic );
     ENull( );
 }

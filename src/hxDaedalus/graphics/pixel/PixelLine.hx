@@ -18,6 +18,7 @@ class PixelLine {
     var theta: Float;
 
     public function new( pixels_: Pixels, x0_:Float, y0_:Float, x1_:Float, y1_:Float, width_: Float ): Void{
+        pixels = pixels_;
         x0 = x0_;
         y0 = y0_;
         x1 = x1_;
@@ -49,7 +50,9 @@ class PixelLine {
 
     public function plot( col: Int, alpha: Float ){
         var a: Int = Std.int( alpha * 0xff );
-        BresenHamPixels.plotLineWidth( pixels, Std.int( x0 ), Std.int( y0 ), Std.int( x1 ), Std.int( y1 ), width, col, a );
+        //BresenHamPixels.plotLineWidth( pixels, Std.int( x0 ), Std.int( y0 ), Std.int( x1 ), Std.int( y1 ), width, col, a );
+        BresenHamPixels.plotLine( pixels, Std.int( x0 ), Std.int( y0 ), Std.int( x1 ), Std.int( y1 ), col, a );
+        //BresenHamPixels.plotLineAA( pixels, Std.int( x0 ), Std.int( y0 ), Std.int( x1 ), Std.int( y1 ), col, a );
     }
 
 }

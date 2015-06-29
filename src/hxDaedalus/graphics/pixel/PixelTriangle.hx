@@ -58,9 +58,14 @@ class PixelTriangle {
     }
     public function plot( col: Int, alpha: Float, wid: Float ): Void {
         var a: Int = Std.int( alpha * 0xff );
-        // to implement
-        //BresenHamPixels.plotLine( pixels, , col, alpha );
-        //BresenHamPixels.plotLine( pixels, , col, alpha );
-        //BresenHamPixels.plotLine( pixels, , col, alpha );
+        var p0x = points[0];
+        var p0y = points[1];
+        var p1x = points[2];
+        var p1y = points[3];
+        var p2x = points[4];
+        var p2y = points[5];
+        BresenHamPixels.plotLine( pixels, Std.int( p0x ), Std.int( p0y ), Std.int( p1x ), Std.int( p1y ), col, a );
+        BresenHamPixels.plotLine( pixels, Std.int( p1x ), Std.int( p1y ), Std.int( p2x ), Std.int( p2y ), col, a );
+        BresenHamPixels.plotLine( pixels, Std.int( p2x ), Std.int( p2y ), Std.int( p0x ), Std.int( p0y ), col, a );
     }
 }
