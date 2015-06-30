@@ -90,7 +90,6 @@ class SimpleDrawingContext implements ISimpleDrawingContext
 			p1: new Vector(x, y),
 			color: _lineColor
 		});
-		trace( 'lineTo' );
 		_prevX = x;
 		_prevY = y;
 		graphics.push(geom);
