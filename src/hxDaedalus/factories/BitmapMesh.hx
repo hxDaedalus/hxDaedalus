@@ -7,11 +7,11 @@ import hxDaedalus.data.graph.GraphEdge;
 import hxDaedalus.data.graph.GraphNode;
 import hxDaedalus.data.math.Geom2D;
 import hxDaedalus.data.math.Potrace;
-import hxDaedalus.graphics.SimpleDrawingContext;
-import flash.display.BitmapData;
-import flash.display.Shape;
-import flash.geom.Point;
-import hxDaedalus.graphics.Pixels;
+import wings.core.SimpleDrawingContext;
+//import flash.display.BitmapData;
+//import flash.display.Shape;
+//import flash.geom.Point;
+import hxPixels.Pixels;
 
 class BitmapMesh
 {
