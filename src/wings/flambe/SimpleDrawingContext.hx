@@ -1,6 +1,6 @@
 package wings.flambe;
 
-import wings.ISimpleDrawingContext;
+import wings.core.ISimpleDrawingContext;
 
 @:access(wings.flambe.GraphicsComponent)
 class SimpleDrawingContext implements ISimpleDrawingContext

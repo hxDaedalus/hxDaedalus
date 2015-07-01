@@ -7,7 +7,7 @@ import flambe.Entity;
 import flambe.math.FMath;
 import flambe.math.Point;
 import flambe.math.Rectangle;
-import hxDaedalus.data.math.MathPoints;
+import wings.data.MathPoints;
 
 /**
  * Only for debugging purposes. Uses FillSprites to draw all things
