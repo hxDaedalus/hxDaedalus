@@ -2,6 +2,7 @@ package wings.pixel;
 /// Curve Rasterizing Algorithm ///
 import wings.pixel.TPixels;
 import wings.pixel.Plot;
+import hxPixels.Pixels;
 
 // @author Zingl Alois
 // @date 17.12.2012
@@ -12,10 +13,10 @@ import wings.pixel.Plot;
 using wings.pixel.Plot;
 class Plot {
 
-    public inline static function setPixelAA( pixels: TPixels, x: Int, y: Int, i: Float, col: Int, alpha: Int ) {
+    /*public inline static function setPixelAA( pixels: TPixels, x: Int, y: Int, i: Float, col: Int, alpha: Int ) {
         i = 1 - i/alpha;
         setPixelColorAndAlpha( pixels, x, y, col, Std.int( 255*i ) );
-    }
+    }*/
 
     public inline static function setPixelColorAndAlpha( pixels: TPixels, x: Int, y: Int, col: Int, alpha: Int ) {
         var pos = (y * pixels.width + x) << 2;
@@ -32,17 +33,17 @@ class Plot {
     }
 
 
-    /*public static inline function setPixelAA(x:Int, y:Int, i:Int) {
+    public static inline function setPixelAA(pixels:TPixels, x:Int, y:Int, i:Float, color:Int, alpha:Int = 0xFF) {
         if (x < 0 || x >= pixels.width || y < 0 || y >= pixels.height) return;
         var a = 1 - i / 255;
         var backColor = pixels.getPixel32(x, y);
-        var color:Pixel = 0xFF00FF00;
+        var color:Pixel = color | (alpha << 24);
         color.A = Std.int((1 - a) * backColor.A + (a) * color.A);
         color.R = Std.int((1 - a) * backColor.R + (a) * color.R);
         color.G = Std.int((1 - a) * backColor.G + (a) * color.G);
         color.B = Std.int((1 - a) * backColor.B + (a) * color.B);
         pixels.setPixel32(x, y, color);
-    }*/
+    }
 
     // Fully ported, untested
     public inline static function plotLine(     pixels:     TPixels
@@ -161,18 +162,14 @@ class Plot {
         } while( x < 0 );
     }
 
-    // Possibly ported, untested
     // rectangular parameter enclosing the ellipse
     public inline static function plotEllipseRect(  pixels:     TPixels
                                                 ,   x0: Int,    y0: Int
                                                 ,   x1: Int,    y1: Int
                                                 ,   col: Int,   alpha: Int ){
-        var a: Float = Math.abs( x1 - x0 );
-        var b: Float = Math.abs( y1 - y0 );
-        var b_: Int = cast b;
-        ///// NOT SURE!!! /////
-        //var b1: Float = b&1;                    // diameter
-        var b1: Int =  b_&1;
+        var a: Int = Std.int(Math.abs( x1 - x0 ));
+        var b: Int = Std.int(Math.abs( y1 - y0 ));
+        var b1: Int = b & 1;           // diameter
         var dx: Float = 4*( 1.0 - a )*b*b;
         var dy: Float = 4*( b1 + 1 )*a*a;       // error increment
         var err: Float = dx + dy + b1*a*a;
@@ -186,7 +183,7 @@ class Plot {
         y0 += Std.int( ( b + 1 )/2 );
         y1 = y0 - b1;                           // starting pixel
         a = 8*a*a;
-        var b1_ = 8*b*b;
+        b1 = 8*b*b;
 
         do {
             setPixelColorAndAlpha( pixels, x1, y0, col, alpha ); //   I. Quadrant
@@ -202,7 +199,7 @@ class Plot {
             if (e2 >= dx || 2*err > dy) { // x step
                 x0++;
                 x1--;
-                err += dx += b1_;
+                err += dx += b1;
             }
         } while( x0 <= x1 );
 
@@ -784,7 +781,6 @@ class Plot {
         }
     }
 
-    // Issue porting, not sure what to do with setPixelAA
     // draw a black anti-aliased circle on white background
     public inline static function plotCircleAA( pixels:     TPixels
                                             ,   xm: Int,    ym: Int
@@ -828,17 +824,16 @@ class Plot {
         } while ( x < 0 );
     }
 
-    // Issues porting, b&1 is this ok?
     // draw a black anti-aliased rectangular ellipse on white background
     public static inline function plotEllipseRectAA( pixels:     TPixels
                                                 ,   x0: Int,    y0: Int
                                                 ,   x1: Int,    y1: Int
                                                 ,   col: Int,   alpha: Int ){
-        var a: Float = Math.abs( x1 - x0 );
-        var b: Float = Math.abs( y1 - y0 );
-        var b1: Float = Std.int( b )&1;                 // diameter
-        var dx: Float = 4*( a - 1.0 )*b*b;
-        var dy: Float = 4*( b1 + 1 )*a*a;            // error increment
+        var a: Int = Std.int(Math.abs( x1 - x0 ));
+        var b: Int = Std.int(Math.abs( y1 - y0 ));
+        var b1: Int = b & 1;                         // diameter
+        var dx: Float = 4.*( a - 1.0 )*b*b;
+        var dy: Float = 4.*( b1 + 1 )*a*a;            // error increment
         var ed: Float;
         var i: Float;
         var err: Float = b1*a*a - dx + dy;                        // error of 1.step
@@ -847,11 +842,11 @@ class Plot {
         if( a == 0 || b == 0 ) return plotLine( pixels, x0, y0, x1, y1, col, alpha );
         if( x0 > x1 ){ // if called with swapped points
             x0 = x1;
-            x1 += Std.int( a );
+            x1 += a;
         }
         if( y0 > y1 ) y0 = y1;                      // .. exchange them
-        y0 += Std.int(( b + 1 )/2);
-        y1 = Std.int( y0 - b1 );                               // starting pixel
+        y0 += ( b + 1 ) >> 1;
+        y1 = y0 - b1;                               // starting pixel
         a = 8*a*a;
         b1 = 8*b*b;
         while( true ){                             // approximate ed = sqrt( dx*dx + dy*dy )
@@ -871,7 +866,7 @@ class Plot {
             if( f = 2*err+dy >= 0 ){                  // x step, remember condition
                 if( x0 >= x1 ) break;
                 i = ed*( err + dx );
-                if( i < 255 ) {
+                if( i < 256 ) {
                     setPixelAA( pixels, x0, y0 + 1, i, col, alpha );
                     setPixelAA( pixels, x0, y1 - 1, i, col, alpha );
                     setPixelAA( pixels, x1, y0 + 1, i, col, alpha );
@@ -880,9 +875,9 @@ class Plot {
             }
             if( 2*err <= dx ){                                            // y step
                 i = ed*(dy-err);
-                if( i < 255 ){
+                if( i < 256 ){
                     setPixelAA( pixels, x0 + 1, y0, i, col, alpha );
-                    setPixelAA( pixels, x1 - 1 , y0, i, col, alpha );
+                    setPixelAA( pixels, x1 - 1, y0, i, col, alpha );
                     setPixelAA( pixels, x0 + 1, y1, i, col, alpha );
                     setPixelAA( pixels, x1 - 1, y1, i, col, alpha );
                 }
@@ -1238,14 +1233,14 @@ class Plot {
         var ed: Float = ( dx + dy == 0 )? 1 : Math.sqrt( dx*dx + dy*dy );
         wd = (wd+1)/2;
         while( true ) {                                    // pixel loop
-            setPixelColorAndAlpha( pixels, x0, y0, col, Std.int( Math.max( 0, 255*( Math.abs( err - dx + dy )/ed - wd + 1 ) )) );
+            setPixelAA( pixels, x0, y0, Std.int( Math.max( 0, 255*( Math.abs( err - dx + dy )/ed - wd + 1 )) ), col, alpha );
             e2 = err;
             x2 = x0;
             if( 2*e2 >= -dx ){ // x step
                 e2 += dy;
                 y2 = y0;
                 while( (e2 < ed*wd) && ((y1 != y2) || (dx > dy)) ){
-                    setPixelColorAndAlpha( pixels, x0, y2 += sy,col, Std.int( Math.max(0,255*(Math.abs(e2)/ed-wd+1)) ));
+                    setPixelAA( pixels, x0, y2 += sy, Std.int( Math.max(0, 255 * (Math.abs(e2) / ed - wd + 1)) ), col, alpha );
                     e2 += dx;
                 }
                 if( x0 == x1 ) break;
@@ -1256,7 +1251,7 @@ class Plot {
             if( 2*e2 <= dy ){ // y step
                 e2 = dx-e2;
                 while( ( e2 < ed*wd ) && ( (x1 != x2) || (dx < dy)) ){
-                    setPixelColorAndAlpha( pixels, x2 += sx, y0, col, Std.int( Math.max(0,255*(Math.abs(e2)/ed-wd+1)) ));
+                    setPixelAA( pixels, x2 += sx, y0, Std.int( Math.max(0, 255 * (Math.abs(e2) / ed - wd + 1)) ) , col, alpha );
                     e2 += dy;
                 }
                 if( y0 == y1 ) break;
