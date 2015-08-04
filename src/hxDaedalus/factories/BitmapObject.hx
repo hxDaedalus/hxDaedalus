@@ -6,8 +6,8 @@ import hxDaedalus.data.Object;
 import hxDaedalus.data.graph.Graph;
 import hxDaedalus.data.math.Potrace;
 import hxDaedalus.debug.Debug;
-import hxDaedalus.graphics.SimpleDrawingContext;
-import hxDaedalus.graphics.Pixels;
+import wings.core.SimpleDrawingContext;
+import hxPixels.Pixels;
 
 class BitmapObject
 {
@@ -20,37 +20,37 @@ class BitmapObject
     {
         var i : Int;
         var j : Int;
-        
+
 		Debug.assertTrue(bmpData.width > 0 && bmpData.height > 0, 'Invalid `bmpData` size (${bmpData.width}, ${bmpData.height})');
-		
+
         // OUTLINES STEP-LIKE SHAPES GENERATION
         var shapes : Array<Array<Float>> = Potrace.buildShapes(bmpData, debugBmp, debugShape);
-        
+
 		// SIMPLIFY SHAPES (REDUCE NUMBER OF POINTS)
 		if (simplificationEpsilon >= 1) {
 			for (i in 0...shapes.length) {
 				shapes[i] = ShapeSimplifier.simplify(shapes[i], simplificationEpsilon);
 			}
 		}
-		
+
         // GRAPHS OF POTENTIAL SEGMENTS GENERATION
         var graphs = new Array<Graph>();
         for (i in 0...shapes.length){
             graphs.push( Potrace.buildGraph(shapes[i]) );
-        }  
-		
-        // OPTIMIZED POLYGONS GENERATION  
+        }
+
+        // OPTIMIZED POLYGONS GENERATION
         var polygons : Array<Array<Float>> = new Array<Array<Float>>();
         for (i in 0...graphs.length){
             polygons.push(Potrace.buildPolygon(graphs[i], debugShape));
-        }   
-        
-        // OBJECT GENERATION  
+        }
+
+        // OBJECT GENERATION
         var obj : Object = new Object();
         for (i in 0...polygons.length){
             j = 0;
             while (j < polygons[i].length - 2)
-            {   
+            {
                 obj.coordinates.push(polygons[i][j]);
                 obj.coordinates.push(polygons[i][j + 1]);
                 obj.coordinates.push(polygons[i][j + 2]);
@@ -60,9 +60,9 @@ class BitmapObject
             obj.coordinates.push(polygons[i][0]);
             obj.coordinates.push(polygons[i][1]);
             obj.coordinates.push(polygons[i][j]);
-            obj.coordinates.push(polygons[i][j + 1]);        
+            obj.coordinates.push(polygons[i][j + 1]);
         }
         return obj;
     }
-    
+
 }

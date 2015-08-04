@@ -6,8 +6,8 @@ import hxDaedalus.data.graph.Graph;
 import hxDaedalus.data.graph.GraphEdge;
 import hxDaedalus.data.graph.GraphNode;
 import hxDaedalus.data.math.Point2D;
-import hxDaedalus.graphics.SimpleDrawingContext;
-import hxDaedalus.graphics.Pixels;
+import wings.core.SimpleDrawingContext;
+import hxPixels.Pixels;
 
 class Potrace
 {
