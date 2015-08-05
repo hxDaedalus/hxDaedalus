@@ -1,4 +1,4 @@
--cmd rm hxDaedalus.zip
+#-cmd rm hxDaedalus.zip
 --next
 -cmd zip -r hxDaedalus.zip *
 ## need to get 7za and add to path for window
