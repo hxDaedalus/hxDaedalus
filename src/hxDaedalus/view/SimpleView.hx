@@ -12,6 +12,8 @@ import hxDaedalus.iterators.FromVertexToHoldingFaces;
 import hxDaedalus.iterators.FromVertexToIncomingEdges;
 import wings.core.TargetCanvas;
 import wings.core.SimpleDrawingContext;
+import hxDaedalus.data.Face;
+import hxDaedalus.iterators.FromFaceToInnerEdges;
 
 class SimpleView
 {
@@ -35,6 +37,11 @@ class SimpleView
 	public var entitiesWidth:Float = 1;
 	public var entitiesAlpha:Float = .75;
 
+    public var faceColor: Int = 0xff00ff;
+    public var faceWidth: Float = 1;
+    public var faceAlpha: Float = .5;
+    public var faceToEdgeIter = new FromFaceToInnerEdges();
+    
     public var graphics(default, null): SimpleDrawingContext;
 
     #if java
@@ -65,6 +72,22 @@ class SimpleView
 			_vertices.addChild(tf);
 		#end
 	}
+    
+    public function drawFace(face: Face ) : Void {
+        faceToEdgeIter.fromFace = face;
+		graphics.beginFill(faceColor, faceAlpha);
+        graphics.lineStyle(faceWidth, faceColor, faceAlpha);
+        var count = 0;
+        var edge;
+        while( true ){
+            edge = faceToEdgeIter.next();
+            if( edge == null ) break;
+            if( count == 0 ) graphics.moveTo( edge.originVertex.pos.x, edge.originVertex.pos.y );
+            graphics.lineTo( edge.destinationVertex.pos.x, edge.destinationVertex.pos.y );
+            count++;
+        }
+        graphics.endFill();
+    }
 
 	public function drawEdge(edge : Edge) : Void
 	{
@@ -81,7 +104,7 @@ class SimpleView
 			graphics.lineTo(edge.destinationVertex.pos.x, edge.destinationVertex.pos.y);
 		}
 	}
-
+    
     public function drawMesh(mesh:Mesh, cleanBefore : Bool = false):Void
 	{
         if (cleanBefore) graphics.clear();
@@ -91,10 +114,9 @@ class SimpleView
 
     public function drawEntity(entity:EntityAI, cleanBefore:Bool = false):Void
 	{
-        if (cleanBefore) graphics.clear();
-
+        if (cleanBefore)  graphics.clear();
         graphics.lineStyle(entitiesWidth, entitiesColor, entitiesAlpha);
-        graphics.beginFill(entitiesColor, entitiesAlpha);
+        graphics.beginFill( entitiesColor, entitiesAlpha);
         graphics.drawCircle(entity.x, entity.y, entity.radius);
         graphics.endFill();
     }
@@ -102,7 +124,7 @@ class SimpleView
     public function drawEntities(vEntities:Array<EntityAI>, cleanBefore:Bool = false):Void
 	{
         if (cleanBefore) graphics.clear();
-
+        
         for (i in 0...vEntities.length) {
             drawEntity(vEntities[i], false);
         }
@@ -115,7 +137,6 @@ class SimpleView
         if (path.length == 0) return;
 
         graphics.lineStyle(pathsWidth, pathsColor, pathsAlpha);
-
         graphics.moveTo(path[0], path[1]);
         var i = 2;
         while (i < path.length) {
