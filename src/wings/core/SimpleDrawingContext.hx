@@ -1,9 +1,9 @@
 package wings.core;
 
-#if format
-typedef SimpleDrawingContext = wings.pixel.SimpleDrawingContext;
-#elseif flambe
+#if flambe
 typedef SimpleDrawingContext = wings.flambe.SimpleDrawingContext;
+#elseif format
+typedef SimpleDrawingContext = wings.pixel.SimpleDrawingContext;
 #elseif (flash || openfl || nme)
 typedef SimpleDrawingContext = wings.flash.SimpleDrawingContext;
 #elseif luxe

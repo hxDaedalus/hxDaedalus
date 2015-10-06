@@ -6,7 +6,6 @@ import hxDaedalus.data.Face;
 import hxDaedalus.data.math.Point2D;
 import hxDaedalus.data.Mesh;
 import hxDaedalus.data.Vertex;
-import wings.core.SimpleDrawingContext;
 import hxDaedalus.iterators.FromMeshToVertices;
 import hxDaedalus.iterators.FromVertexToHoldingFaces;
 import hxDaedalus.iterators.FromVertexToIncomingEdges;
