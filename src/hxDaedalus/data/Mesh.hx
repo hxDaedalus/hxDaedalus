@@ -1018,16 +1018,14 @@ class Mesh
                 edges = eLeft_Right.fromConstraintSegments[i].edges;
                 index = edges.indexOf(eLeft_Right);
                 if (index != -1) {
-                    //TODO: check logic of insert
                     edges.splice( index, 1 );
                     edges.insert( index, eLeft_Center );
                     edges.insert( index+1, eCenter_Right );
                 } else { 
-                    var index2 = edges.indexOf(eRight_Left );
-                    //TODO: check logic of insert
-                    edges.splice( index2, 1);
-                    edges.insert( index2, eRight_Center );
-                    edges.insert( index2, eCenter_Left );
+                    index = edges.indexOf(eRight_Left );
+                    edges.splice( index, 1);
+                    edges.insert( index, eRight_Center );
+                    edges.insert( index+1, eCenter_Left );
                 }
             }
             
