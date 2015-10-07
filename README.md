@@ -5,21 +5,23 @@ hxDaedalus
 This is a Haxe cross target version of the as3 Daedalus-lib you can find the original library here:
 https://code.google.com/p/daedalus-lib/
 
-Examples for OpenFL, NME, Flash, c++, js, neko, android can be found at the following repositories: 
+Examples for OpenFL, NME, Luxe, Flash, c++, js, neko, android can be found at the following repositories: 
 
-[hxDaedalus-Examples](https://github.com/Justinfront/hxDaedalus-Examples)
+[hxDaedalus-Examples](https://github.com/hxDaedalus/hxDaedalus-Examples)
 
-[hxDaedalus-NME-OpenFl-Examples](https://github.com/Justinfront/hxDaedalus-NME-OpenFL-Examples)
+[hxDaedalus-NME-OpenFl-Examples](https://github.com/hxDaedalus/hxDaedalus-NME-OpenFL-Examples)
+
+[hxDaedalus-luxe-examples](https://github.com/hxDaedalus/hxDaedalus-luxe-examples)
 
 You can view and play with the javascript html examples via raw github in your browser.
 
-[Basic](http://rawgit.com/Justinfront/hxDaedalus-Examples/master/hxDaedalus-Examples/web/DaedalusBasic.html)
+[Basic](http://rawgit.com/hxDaedalus/hxDaedalus-Examples/master/hxDaedalus-Examples/web/DaedalusBasic.html)
 
-[Pathfinding](http://rawgit.com/Justinfront/hxDaedalus-Examples/master/hxDaedalus-Examples/web/DaedalusPathfinding.html)
+[Pathfinding](http://rawgit.com/hxDaedalus/hxDaedalus-Examples/master/hxDaedalus-Examples/web/DaedalusPathfinding.html)
 
-[Galapagos Islands](https://rawgit.com/Justinfront/hxDaedalus-Examples/master/hxDaedalus-Examples/web/DaedalusBitmapPathfinding.html)
+[Galapagos Islands](https://rawgit.com/hxDaedalus/hxDaedalus-Examples/master/hxDaedalus-Examples/web/DaedalusBitmapPathfinding.html)
 
-[Maze](http://rawgit.com/Justinfront/hxDaedalus-Examples/master/hxDaedalus-Examples/web/GridMazeDemo.html)
+[Maze](http://rawgit.com/hxDaedalus/hxDaedalus-Examples/master/hxDaedalus-Examples/web/GridMazeDemo.html)
 
 Licence is MIT for the original and this port.
 
