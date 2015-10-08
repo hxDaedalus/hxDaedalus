@@ -108,8 +108,11 @@ class SimpleView
     public function drawMesh(mesh:Mesh, cleanBefore : Bool = false):Void
 	{
         if (cleanBefore) graphics.clear();
-
-		mesh.traverse(drawVertex, drawEdge);
+		
+		var all = mesh.getVerticesAndEdges();
+		
+		for (v in all.vertices) drawVertex(v);
+		for (e in all.edges) drawEdge(e);
     }
 
     public function drawEntity(entity:EntityAI, cleanBefore:Bool = false):Void

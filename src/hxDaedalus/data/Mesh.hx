@@ -1575,8 +1575,9 @@ class Mesh
         }
     }
 	
-	public function traverse(onVertex : Vertex->Void, onEdge : Edge->Void) : Void 
+	public function getVerticesAndEdges() : { vertices:Array<Vertex>, edges:Array<Edge> }
 	{
+		var res = { vertices:[], edges:[] };
         var vertex : Vertex;
         var incomingEdge : Edge;
         var holdingFace : Face;
@@ -1595,25 +1596,23 @@ class Mesh
             if (!vertexIsInsideAABB(vertex, this)) 
                 continue;  
             
-			onVertex(vertex);
+			res.vertices.push(vertex);
             
             iterEdges.fromVertex = vertex;
             while ((incomingEdge = iterEdges.next()) != null)
             {
                 if (!dictVerticesDone[incomingEdge.originVertex]) 
                 {
-					onEdge(incomingEdge);
+					res.edges.push(incomingEdge);
                 }
             }
         }
+		return res;
 	}
     
-    public function vertexIsInsideAABB(vertex : Vertex, mesh : Mesh) : Bool 
+    inline public function vertexIsInsideAABB(vertex : Vertex, mesh : Mesh) : Bool 
 	{
-        if (vertex.pos.x < 0 || vertex.pos.x > mesh.width || vertex.pos.y < 0 || vertex.pos.y > mesh.height) 
-            return false
-        else 
-			return true;
+        return !(vertex.pos.x < 0 || vertex.pos.x > mesh.width || vertex.pos.y < 0 || vertex.pos.y > mesh.height); 
     }
 }
 
