@@ -64,7 +64,6 @@ class ImageLoader
 	private function store( image: ImageElement, name: String, e: Event )
 	{
 		count--;
-		trace( 'store ' + name + ' ' + count );
 		images.set( name, image );
 		if( count == 0 )
 		{
