@@ -9,6 +9,7 @@ import hxDaedalus.debug.Debug;
 import wings.core.SimpleDrawingContext;
 import hxPixels.Pixels;
 
+@:expose
 class BitmapObject
 {
     public function new(){}

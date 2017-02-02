@@ -4,6 +4,7 @@ import wings.jsCanvas.BasicCanvas;
 import wings.core.ISimpleDrawingContext;
 
 
+@:expose
 class SimpleDrawingContext implements ISimpleDrawingContext
 {
 	public var graphics(default, null):BasicCanvas;

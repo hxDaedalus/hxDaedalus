@@ -10,6 +10,7 @@ import hxPixels.Pixels;
 import hxDaedalus.data.math.Point2D;
 import hxDaedalus.data.Object;
 
+@:expose
 class Tools {
 
     static public function extractMeshFromBitmap( pixels:Pixels, vertices:Array<Point2D>, triangles:Array<Int>): Mesh {

@@ -3,6 +3,7 @@ package hxDaedalus.data;
 import hxDaedalus.data.ConstraintShape;
 import hxDaedalus.data.Edge;
 
+@:expose
 class ConstraintSegment
 {
     public var id(get, never) : Int;

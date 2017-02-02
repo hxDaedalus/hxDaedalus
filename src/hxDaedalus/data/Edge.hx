@@ -2,6 +2,7 @@ package hxDaedalus.data;
 import hxDaedalus.data.Face;
 import hxDaedalus.data.Vertex;
 
+@:expose
 class Edge
 {
     public var id(get, never) : Int;

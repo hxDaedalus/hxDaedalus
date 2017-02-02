@@ -3,6 +3,7 @@ package hxDaedalus.data;
 
 import hxDaedalus.data.math.Matrix2D;
 
+@:expose
 class Object {
     public var id(get, never) : Int;
     public var pivotX(get, set) : Float;

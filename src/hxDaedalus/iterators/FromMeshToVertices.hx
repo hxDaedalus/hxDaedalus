@@ -3,6 +3,7 @@ import hxDaedalus.data.Face;
 import hxDaedalus.data.Mesh;
 import hxDaedalus.data.Vertex;
 
+@:expose
 class FromMeshToVertices {
     public var fromMesh(never, set) : Mesh;
     var _fromMesh : Mesh;

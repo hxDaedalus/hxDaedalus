@@ -7,6 +7,7 @@ import hxDaedalus.data.math.Geom2D;
 import hxDaedalus.debug.Debug;
 
 
+@:expose
 class PathFinder {
     
     public var entity: EntityAI;

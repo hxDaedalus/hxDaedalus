@@ -2,6 +2,8 @@ package hxDaedalus.iterators;
 import hxDaedalus.data.Edge;
 import hxDaedalus.data.Face;
 import hxDaedalus.data.Vertex;
+
+@:expose
 class FromVertexToHoldingFaces {
     public var fromVertex(never, set) : Vertex;
     var _fromVertex : Vertex;

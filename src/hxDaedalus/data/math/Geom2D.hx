@@ -32,6 +32,7 @@ switch( loc ){
 }
 */
 
+@:expose
 class Geom2D
 {
     

@@ -2,6 +2,7 @@ package hxDaedalus.data.math;
 
 import hxDaedalus.debug.Debug;
 
+@:expose
 class ShapeSimplifier
 {
 

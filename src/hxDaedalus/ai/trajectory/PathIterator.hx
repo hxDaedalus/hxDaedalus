@@ -3,6 +3,7 @@ package hxDaedalus.ai.trajectory;
 
 import hxDaedalus.ai.EntityAI;
 
+@:expose
 class PathIterator
 {
     public var entity(get, set) : EntityAI;

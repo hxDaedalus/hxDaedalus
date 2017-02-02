@@ -1,5 +1,9 @@
 package hxDaedalus.data.math;
+
 import hxDaedalus.data.math.Point2D;
+
+
+@:expose
 class Matrix2D {
     public var a: Float;
     public var b: Float;

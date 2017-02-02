@@ -1,6 +1,7 @@
 package hxDaedalus.data;
 
 
+@:expose
 class Face
 {
     public var id(get, never) : Int;

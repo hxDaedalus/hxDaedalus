@@ -2,6 +2,8 @@ package hxDaedalus.iterators;
 import hxDaedalus.data.Edge;
 import hxDaedalus.data.Face;
 import hxDaedalus.data.Vertex;
+
+@:expose
 class FromFaceToInnerVertices {
     public var fromFace( never, set ): Face;
     var _fromFace: Face;

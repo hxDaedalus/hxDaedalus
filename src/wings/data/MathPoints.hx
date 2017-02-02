@@ -1,4 +1,6 @@
 package wings.data;
+
+@:expose
 class MathPoints {
     public static inline function arcTan( p0: { x: Float, y: Float }
                                         , p1: { x: Float, y: Float }

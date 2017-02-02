@@ -13,6 +13,7 @@ import wings.core.SimpleDrawingContext;
 //import flash.geom.Point;
 import hxPixels.Pixels;
 
+@:expose
 class BitmapMesh
 {
 

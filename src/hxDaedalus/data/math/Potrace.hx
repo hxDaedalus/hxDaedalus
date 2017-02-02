@@ -9,6 +9,7 @@ import hxDaedalus.data.math.Point2D;
 import wings.core.SimpleDrawingContext;
 import hxPixels.Pixels;
 
+@:expose
 class Potrace
 {
 	inline  static var MAX_INT:Int = 0x7FFFFFFF;

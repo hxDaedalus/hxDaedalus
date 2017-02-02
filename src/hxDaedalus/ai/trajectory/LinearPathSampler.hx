@@ -4,6 +4,7 @@ package hxDaedalus.ai.trajectory;
 import hxDaedalus.debug.Debug;
 import hxDaedalus.ai.EntityAI;
 
+@:expose
 class LinearPathSampler{
     public var entity: EntityAI;
     public var x( get, never ): Float;

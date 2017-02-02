@@ -4,6 +4,7 @@ package hxDaedalus.iterators;
 import hxDaedalus.data.Edge;
 import hxDaedalus.data.Vertex;
 
+@:expose
 class FromVertexToOutgoingEdges
 {
     public var fromVertex(never, set) : Vertex;

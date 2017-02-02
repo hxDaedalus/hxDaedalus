@@ -3,6 +3,7 @@ package hxDaedalus.data.graph;
 import hxDaedalus.data.graph.GraphNode;
 import hxDaedalus.data.math.EdgeData;
 
+@:expose
 class GraphEdge
 {
     public var id( get, never ): Int;

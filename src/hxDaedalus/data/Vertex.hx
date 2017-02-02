@@ -1,6 +1,7 @@
 package hxDaedalus.data;
 import hxDaedalus.data.math.Point2D;
 
+@:expose
 class Vertex
 {
     public var id(get, never) : Int;

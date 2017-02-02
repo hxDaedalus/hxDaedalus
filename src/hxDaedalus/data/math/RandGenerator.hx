@@ -1,5 +1,6 @@
 package hxDaedalus.data.math;
 
+@:expose
 class RandGenerator
 {
     public var seed(get, set) : Int;

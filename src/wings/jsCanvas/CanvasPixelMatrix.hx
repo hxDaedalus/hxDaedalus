@@ -3,6 +3,7 @@ package wings.jsCanvas;
 import js.html.Uint8ClampedArray;
 import js.html.CanvasRenderingContext2D;
 
+@:expose
 class CanvasPixelMatrix{
 
 	var data: Uint8ClampedArray;

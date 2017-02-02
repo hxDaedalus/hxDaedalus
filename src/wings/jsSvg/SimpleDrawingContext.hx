@@ -5,6 +5,7 @@ import wings.jsSvg.BasicSvg;
 import wings.data.MathPoints;
 
 
+@:expose
 class SimpleDrawingContext implements ISimpleDrawingContext
 {
     public var graphics( default, null ): BasicSvg;
