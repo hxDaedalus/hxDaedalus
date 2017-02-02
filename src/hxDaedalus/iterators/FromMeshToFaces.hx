@@ -11,7 +11,7 @@ class FromMeshToFaces {
     
     public function new(){}
     
-    function setFromMesh( value: Mesh ): Mesh {
+    function set_fromMesh( value: Mesh ): Mesh {
         _fromMesh = value;
         _currIndex = 0;
         return value;
