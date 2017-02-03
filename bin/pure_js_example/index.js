@@ -187,11 +187,12 @@
       pathSampler.reset();                        // reset the path sampler to manage new generated path
     }
 
+	drawEntity();
+	
     if (pathSampler.get_hasNext()) {
       pathSampler.next(); // move entity to next sampled position
     }
 
-    drawEntity();
     window.requestAnimationFrame(onEnterFrame);
   }
 
