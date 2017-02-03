@@ -1,4 +1,4 @@
-(function() { 
+(window.onload = function() { 
   'use strict';
 
   // this implements parts of ISimpleDrawingContext in plain js (so it can be used by SimpleView)
