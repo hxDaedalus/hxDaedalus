@@ -1,6 +1,80 @@
-(function () { 
+(function() { 
   'use strict';
+
+  // this implements parts of ISimpleDrawingContext in plain js (so it can be used by SimpleView)
+  function DrawingContext(canvas) {
+
+    var self = this;
+
+    self.canvas = canvas;
+    self.width = canvas.width;
+    self.height = canvas.height;
+    self.context = canvas.getContext("2d");
+
+    var ctx = self.context;
+
+    function int2rgb(color) {
+      return { 
+        r: (color >> 16) & 0xFF,
+        g: (color >> 8) & 0xFF,
+        b: (color) & 0xFF
+      }
+    }
+
+    self.clear = function() {
+      ctx.clearRect(0, 0, self.width, self.height);
+    }
+
+    self.lineStyle = function(thickness, color, alpha) {
+      alpha = alpha || 1.;
+      var rgb = int2rgb(color);
+      ctx.lineWidth = thickness;
+      ctx.strokeStyle = 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',' + alpha + ')';
+    }
+
+    self.beginFill = function(color, alpha) {
+      alpha = alpha || 1.;
+      var rgb = int2rgb(color);
+      ctx.fillStyle = 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',' + alpha + ')';
+    }
+
+    self.endFill = function() {
+      ctx.stroke();
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    self.moveTo = function(x, y) {
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+    }
+
+    self.lineTo = function(x, y) {
+      ctx.lineTo(x, y);
+      ctx.closePath();
+      ctx.stroke();
+    }
+
+    self.drawCircle = function(cx, cy, radius) {
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, 0, 2 * Math.PI);
+      ctx.stroke();
+      ctx.closePath();
+    }
+
+    self.drawRect = function(x, y, width, height) {
+      ctx.beginPath();
+      ctx.moveTo( x, y );
+      ctx.lineTo(x + width, y);
+      ctx.lineTo(x + width, y + height);
+      ctx.lineTo(x, y + height);
+      ctx.stroke();
+      ctx.closePath();
+    }
+  }
   
+  
+
   function createCanvas(w, h, id) {
     var canvas = document.createElement('canvas');
     canvas.style.position = 'absolute';
@@ -11,6 +85,7 @@
     return canvas;
   }
 
+  // grab images from dom
   var backImage = document.querySelector('#galapagosColor');
   var bwImage = document.querySelector('#galapagosBW');
   var width = backImage.width;
@@ -58,14 +133,25 @@
   pathSampler.set_samplingDistance(10);
   pathSampler.set_path(path);
   
-  var newPath = false;
-
   function drawEntity() {
     context.beginPath();
     context.arc(entity.x, entity.y, entity.get_radius(), 0, 2 * Math.PI);
     context.strokeStyle = '#00ff00';
     context.stroke();
   }
+
+  // create a view and draw the mesh on top of background canvas
+  var drawingContext = new DrawingContext(backCanvas)
+  var view = new hxDaedalus.view.SimpleView();
+  view.graphics = { graphics: drawingContext };
+  view.drawMesh(mesh, false);
+  
+  // create a simple view on top of overlay
+  drawingContext = new DrawingContext(overlayCanvas)
+  view = new hxDaedalus.view.SimpleView();
+  view.graphics = { graphics: drawingContext };
+  
+  var newPath = false;
 
   function setupMouseEvents() {
     function onMouseUp(event) {
@@ -95,12 +181,13 @@
 
   function onEnterFrame() {
     if (newPath) {
-      context.clearRect(0, 0, width, height);     // clear overlay
+      drawingContext.clear();                     // clear overlay
       pathFinder.findPath(mouseX, mouseY, path);  // find new path
+      view.drawPath(path);                        // draw path
       pathSampler.reset();                        // reset the path sampler to manage new generated path
     }
 
-    if (pathSampler._hasNext) {
+    if (pathSampler.get_hasNext()) {
       pathSampler.next(); // move entity to next sampled position
     }
 
