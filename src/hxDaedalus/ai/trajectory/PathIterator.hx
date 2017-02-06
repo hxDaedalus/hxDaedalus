@@ -75,7 +75,7 @@ class PathIterator
      function set_path( value: Array<Float> ) : Array<Float>
     {
         _path = value;
-        _countMax = _path.length / 2;
+        _countMax = Std.int(_path.length / 2);
         reset();
         return value;
     }

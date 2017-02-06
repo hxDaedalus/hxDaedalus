@@ -20,6 +20,7 @@ import haxe.io.Bytes;
  * 
  * @author azrafe7
  */
+@:expose
 @:forward
 abstract Pixels(PixelsData)
 {
@@ -136,20 +137,39 @@ abstract Pixels(PixelsData)
 		if (toFormat == pixels.format) return res;
 		
 		var i = 0;
-		while (i < pixels.count) {
-			var pos = i << 2;
-			
-			var a = pixels.getByte(pos + 0);
-			var r = pixels.getByte(pos + 1);
-			var g = pixels.getByte(pos + 2);
-			var b = pixels.getByte(pos + 3);
-			
-			res.bytes.set(pos + toFormat.A, a);
-			res.bytes.set(pos + toFormat.R, r);
-			res.bytes.set(pos + toFormat.G, g);
-			res.bytes.set(pos + toFormat.B, b);
-			
-			i++;
+		var pos = 0;
+		
+		// fast path in case only B and R have to be swapped
+		if ((pixels.format == PixelFormat.BGRA && toFormat == PixelFormat.RGBA) ||
+			(pixels.format == PixelFormat.RGBA && toFormat == PixelFormat.BGRA))
+		{
+			while (i < pixels.count) {
+				
+				var r = pixels.getByte(pos + 1);
+				var b = pixels.getByte(pos + 3);
+				
+				res.bytes.set(pos + toFormat.R, r);
+				res.bytes.set(pos + toFormat.B, b);
+				
+				i++;
+				pos += 4;
+			}
+		} else {
+			while (i < pixels.count) {
+				
+				var a = pixels.getByte(pos + 0);
+				var r = pixels.getByte(pos + 1);
+				var g = pixels.getByte(pos + 2);
+				var b = pixels.getByte(pos + 3);
+				
+				res.bytes.set(pos + toFormat.A, a);
+				res.bytes.set(pos + toFormat.R, r);
+				res.bytes.set(pos + toFormat.G, g);
+				res.bytes.set(pos + toFormat.B, b);
+				
+				i++;
+				pos += 4;
+			}
 		}
 		
 		res.format = toFormat;
@@ -169,14 +189,10 @@ abstract Pixels(PixelsData)
 	}
 
 	@:from static public function fromBMPData(data:format.bmp.Data) {
-		var pixels = new Pixels(data.header.width, data.header.height, true);
-		
-		for (i in 0...pixels.count) {
-			var srcPos = i * 3;
-			var dstPos = i * 4;
-			pixels.bytes.blit(dstPos, data.pixels, srcPos, 3);
-			pixels.bytes.set(dstPos + 3, 0xFF); // alpha
-		}
+		var header = data.header;
+		var bytes = format.bmp.Tools.extractBGRA(data);
+		var pixels = new Pixels(header.width, header.height, false);
+		pixels.bytes = bytes;
 		pixels.format = PixelFormat.BGRA;
 		
 		return pixels;
@@ -234,7 +250,7 @@ abstract Pixels(PixelsData)
 	}
 	
 	@:from static public function fromLuxeAssetImage(assetImage:snow.types.Types.AssetImage) {
-		var image:snow.types.Types.ImageInfo = assetImage.image;
+		var image:snow.types.Types.ImageData = assetImage.image;
 		var pixels = new Pixels(image.width, image.height, true);
 		pixels.format = PixelFormat.RGBA;
 		
@@ -271,24 +287,40 @@ abstract Pixels(PixelsData)
 		pixels.format = PixelFormat.RGBA;
 		
 		// force buffer creation
-		var image = @:privateAccess bmd.__image;
+		var image = bmd.image;
 		lime.graphics.utils.ImageCanvasUtil.convertToCanvas(image);
 		lime.graphics.utils.ImageCanvasUtil.createImageData(image);
 		
-		var data = @:privateAccess bmd.__image.buffer.data;
+		var data = image.buffer.data;
 		pixels.bytes = Bytes.ofData(data.buffer);
 		
 	#else
 		
 		var pixels = new Pixels(bmd.width, bmd.height, false);
-		pixels.format = PixelFormat.ARGB;
-		
-		var ba = bmd.getPixels(bmd.rect);
-		
+
 		#if flash
+		
+			pixels.format = PixelFormat.ARGB;
+			
+			var ba = bmd.getPixels(bmd.rect);
 			pixels.bytes = Bytes.ofData(ba);
+			
+		#elseif (openfl_next || openfl >= "4.0.0")
+		
+			//trace("!flash openfl");
+			pixels.format = PixelFormat.BGRA;
+			
+			var data = @:privateAccess bmd.image.buffer.data.buffer.getData();
+			pixels.bytes = Bytes.ofData(data);
+			
 		#else
-			pixels.bytes = Bytes.ofData(ba.getData());
+		
+			//trace("!next openfl < 4.0.0");
+			pixels.format = PixelFormat.ARGB;
+			
+			var ba = bmd.getPixels(bmd.rect);
+			pixels.bytes = (ba);
+			
 		#end
 	
 	#end
@@ -299,30 +331,51 @@ abstract Pixels(PixelsData)
 	public function applyToBitmapData(bmd:flash.display.BitmapData) {
 	#if js
 		
-		var image = @:privateAccess bmd.__image;
+		var image = bmd.image;
 		
-		if (@:privateAccess image.buffer.__srcImageData == null) { // NOTE: find a way to speed this up
-			for (y in 0...this.height) {
-				for (x in 0...this.width) {
-					bmd.setPixel32(x, y, getPixel32(x, y));
-				}
-			}
-		} else {
+		#if (openfl < "4.0.0")
+		
+			lime.graphics.utils.ImageCanvasUtil.convertToData(image);
 			image.dirty = true;
-			lime.graphics.utils.ImageCanvasUtil.sync(image);
-		}
+			
+		#else
 		
+			image.buffer.data = lime.utils.UInt8Array.fromBytes(this.bytes);
+			image.type = lime.graphics.ImageType.DATA;
+			image.dirty = true;
+			image.version++;
+			
+		#end
+        
 	#else
 	
 		#if flash
+			
 			var ba = this.bytes.getData();
 			ba.endian = flash.utils.Endian.BIG_ENDIAN;
+			ba.position = 0;
+			bmd.setPixels(bmd.rect, ba);
+			
+		#elseif (openfl_next || openfl >= "4.0.0")
+			
+			//trace("!flash openfl");
+			bmd.image.buffer.data = openfl.utils.UInt8Array.fromBytes(this.bytes);
+			
+			#if (openfl >= "4.0.0")
+				
+				bmd.image.dirty = true;
+				bmd.image.version++;
+				
+			#end
+			
 		#else
+			
+			//trace("!next openfl < 4.0.0");
 			var ba = openfl.utils.ByteArray.fromBytes(this.bytes);
+			ba.position = 0;
+			bmd.setPixels(bmd.rect, ba);
+			
 		#end
-		
-		ba.position = 0;
-		bmd.setPixels(bmd.rect, ba);
 		
 	#end
 	}
@@ -379,7 +432,7 @@ private class PixelsData
 	/** Total number of pixels. */
 	public var count(default, null):Int;
 	
-	/** Bytes representing the pixels (in `format` pixel format). */
+	/** Bytes representing the pixels (in the raw format used by the original source). */
 	public var bytes(default, null):Bytes;
 	
 	/** Width of the source image. */
@@ -409,13 +462,20 @@ private class PixelsData
 	}
 }
 
+@:expose
+@:allow(hxPixels.Pixels)
 class PixelFormat {
 	
 	static public var ARGB(default, null):PixelFormat;
 	static public var RGBA(default, null):PixelFormat;
 	static public var BGRA(default, null):PixelFormat;
 	
-	public var channelMap(default, null):Array<Channel>;
+	/** Internal. Don't modify any of these. */
+	var channelMap:Array<Channel>;
+	var ch0:Int;
+	var ch1:Int;
+	var ch2:Int;
+	var ch3:Int;
 	
 	var name:String;
 	
@@ -425,29 +485,33 @@ class PixelFormat {
 		BGRA = new PixelFormat(CH_3, CH_2, CH_1, CH_0, "BGRA");
 	}
 	
-	public function new(a:Channel, r:Channel, g:Channel, b:Channel, name:String = "PixelFormat"):Void {
+	inline public function new(a:Channel, r:Channel, g:Channel, b:Channel, name:String = "PixelFormat"):Void {
 		this.channelMap = [a, r, g, b];
+		this.ch0 = a;
+		this.ch1 = r;
+		this.ch2 = g;
+		this.ch3 = b;
 		this.name = name;
 	}
 	
 	public var A(get, null):Int;
 	inline private function get_A():Int {
-		return channelMap[0];
+		return ch0;
 	}
 	
 	public var R(get, null):Int;
 	inline private function get_R():Int {
-		return channelMap[1];
+		return ch1;
 	}
 	
 	public var G(get, null):Int;
 	inline private function get_G():Int {
-		return channelMap[2];
+		return ch2;
 	}
 	
 	public var B(get, null):Int;
 	inline private function get_B():Int {
-		return channelMap[3];
+		return ch3;
 	}
 	
 	public function toString():String {
@@ -482,6 +546,7 @@ class PixelFormat {
  *    pixels.setPixel32(10, 10, pixel);`
  * 
  */
+@:expose
 @:forward
 abstract Pixel(Int) from Int to Int 
 {
