@@ -37,6 +37,8 @@ import js.html.Event;
 import js.html.Document;
 import js.Browser;
 typedef Hash<T> = haxe.ds.StringMap<T>;
+
+@:expose
 class ImageLoader
 {
 	public var images: Hash<ImageElement>;

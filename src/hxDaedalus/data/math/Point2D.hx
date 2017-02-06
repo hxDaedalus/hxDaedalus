@@ -1,4 +1,7 @@
 package hxDaedalus.data.math;
+
+
+@:expose
 class Point2D{
     public var length(get, never) : Float;
     public var x: Float;

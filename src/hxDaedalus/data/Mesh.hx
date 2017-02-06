@@ -11,6 +11,7 @@ import hxDaedalus.iterators.FromVertexToOutgoingEdges;
 import hxDaedalus.debug.Debug;
 
 
+@:expose
 class Mesh
 {
     public var height(get, never) : Float;

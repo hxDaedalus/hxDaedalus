@@ -1,6 +1,7 @@
 package hxDaedalus.data;
 
 
+@:expose
 class ConstraintShape{
     public var id( get, never ) : Int;
     public var segments : Array<ConstraintSegment>;

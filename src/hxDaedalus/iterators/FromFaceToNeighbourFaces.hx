@@ -1,6 +1,8 @@
 package hxDaedalus.iterators;
 import hxDaedalus.data.Edge;
 import hxDaedalus.data.Face;
+
+@:expose
 class FromFaceToNeighbourFaces {
     public var fromFace(never, set) : Face;
     var _fromFace : Face;

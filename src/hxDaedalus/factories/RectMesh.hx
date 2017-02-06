@@ -9,6 +9,7 @@ import hxDaedalus.data.Face;
 import hxDaedalus.data.Mesh;
 import hxDaedalus.data.Vertex;
 
+@:expose
 class RectMesh
 {
     

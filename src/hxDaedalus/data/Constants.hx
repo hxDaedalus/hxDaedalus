@@ -1,5 +1,6 @@
 package hxDaedalus.data;
 
+@:expose
 class Constants {
     public static inline var EPSILON = 0.01;
     public static inline var EPSILON_SQUARED = 0.0001;

@@ -1,5 +1,6 @@
 package wings.core;
 
+@:expose
 interface ISimpleDrawingContext
 {
 	public function clear(): Void;

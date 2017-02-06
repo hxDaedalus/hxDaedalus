@@ -9,6 +9,7 @@ import hxDaedalus.data.Vertex;
 import hxDaedalus.data.math.Point2D;
 import hxDaedalus.debug.Debug;
 
+@:expose
 class Funnel
 {
     public var radius(get, set) : Float;

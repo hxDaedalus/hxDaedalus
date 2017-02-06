@@ -1,4 +1,6 @@
 package hxDaedalus.data.math;
+
+@:expose
 class NodeData
 {
     public var index : Int;

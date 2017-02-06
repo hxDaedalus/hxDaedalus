@@ -1,4 +1,7 @@
 package hxDaedalus.data.math;
+
+
+@:expose
 class EdgeData
 {
     public var sumDistancesSquared : Float;

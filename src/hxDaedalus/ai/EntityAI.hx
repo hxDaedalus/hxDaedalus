@@ -3,6 +3,7 @@ package hxDaedalus.ai;
 
 import hxDaedalus.data.Object;
 
+@:expose
 class EntityAI
 {
     public var approximateObject(get, never) : Object;

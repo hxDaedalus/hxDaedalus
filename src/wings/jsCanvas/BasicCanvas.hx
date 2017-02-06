@@ -9,6 +9,7 @@ import js.html.Element;
 import js.html.BodyElement;
 import js.html.ImageElement;
 
+@:expose
 class BasicCanvas
 {
     public var surface: CanvasRenderingContext2D;

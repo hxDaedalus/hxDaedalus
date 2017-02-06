@@ -11,7 +11,7 @@ import hxDaedalus.debug.Debug;
 
 import haxe.ds.StringMap;
 
-
+@:expose
 class AStar {
     
     public var radius(get, set) : Float;

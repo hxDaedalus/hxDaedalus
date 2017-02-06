@@ -15,6 +15,7 @@ import wings.core.SimpleDrawingContext;
 import hxDaedalus.data.Face;
 import hxDaedalus.iterators.FromFaceToInnerEdges;
 
+@:expose
 class SimpleView
 {
 	public var edgesColor:Int = 0x999999;

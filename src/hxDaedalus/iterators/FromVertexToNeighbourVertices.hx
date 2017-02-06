@@ -1,6 +1,8 @@
 package hxDaedalus.iterators;
 import hxDaedalus.data.Edge;
 import hxDaedalus.data.Vertex;
+
+@:expose
 class FromVertexToNeighbourVertices {
     public var fromVertex( never, set ) : Vertex;
     var _fromVertex : Vertex;

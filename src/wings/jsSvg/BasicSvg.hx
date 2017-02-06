@@ -12,6 +12,7 @@ import js.html.BodyElement;
 import js.html.ImageElement;
 import wings.jsCanvas.CanvasHeader;
 
+@:expose
 class BasicSvg {
 	public static var svgNameSpace: String = "http://www.w3.org/2000/svg" ;
 	public var surface: CanvasRenderingContext2D;
