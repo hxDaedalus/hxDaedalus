@@ -1,9 +1,9 @@
 package wings.core;
 
-#if format
-typedef TargetCanvas = wings.pixel.BasicPixel;
-#elseif flambe
+#if flambe
 typedef TargetCanvas = wings.flambe.GraphicsComponent;
+#elseif format
+typedef TargetCanvas = wings.pixel.BasicPixel;
 #elseif (flash || openfl || nme)
 typedef TargetCanvas = flash.display.Graphics;
 #elseif luxe
