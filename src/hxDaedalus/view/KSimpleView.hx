@@ -76,7 +76,7 @@ class KSimpleView {
     }
     public function drawObject( g2: Graphics, o: Object, color: Int, alpha: Float ){
         var triangles = new Array<Triangle>();
-        Tools.extractObjectsTriangles( o, triangles );
+        Tools.extractObjectTriangles( o, triangles );
         g2.opacity = alpha;
         g2.color   = color;
         for( tri in triangles ) g2.fillTriangle( tri.a.x, tri.a.y, tri.b.x, tri.b.y, tri.c.x, tri.c.y );
