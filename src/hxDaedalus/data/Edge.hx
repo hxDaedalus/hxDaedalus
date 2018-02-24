@@ -1,7 +1,7 @@
 package hxDaedalus.data;
 import hxDaedalus.data.Face;
 import hxDaedalus.data.Vertex;
-
+import hxDaedalus.data.math.Triangle;
 @:expose
 class Edge
 {
@@ -20,7 +20,7 @@ class Edge
     public var rotLeftEdge(get, never) : Edge;
     public var rotRightEdge(get, never) : Edge;
     public var rightFace(get, never) : Face;
-
+    public var triangle( get, never ): Triangle;
     
      static var INC : Int = 0;
      var _id : Int;
@@ -45,11 +45,11 @@ class Edge
         return _id;
     }
     
-     function get_isReal(): Bool {
+    function get_isReal(): Bool {
         return _isReal;
     }
     
-     function get_isConstrained(): Bool {
+    function get_isConstrained(): Bool {
         return _isConstrained;
     }
     
@@ -107,31 +107,32 @@ class Edge
         fromConstraintSegments = null;
     }
     
-     function get_originVertex() : Vertex{return _originVertex;
+     function get_originVertex() : Vertex{ return _originVertex;
     }
-     function get_destinationVertex() : Vertex{return oppositeEdge.originVertex;
+     function get_destinationVertex() : Vertex{ return oppositeEdge.originVertex;
     }
 
-     function get_oppositeEdge() : Edge{return _oppositeEdge;
+     function get_oppositeEdge() : Edge{ return _oppositeEdge;
     }
-     function get_nextLeftEdge() : Edge{return _nextLeftEdge;
+     function get_nextLeftEdge() : Edge{ return _nextLeftEdge;
     }
-     function get_prevLeftEdge() : Edge{return _nextLeftEdge.nextLeftEdge;
+     function get_prevLeftEdge() : Edge{ return _nextLeftEdge.nextLeftEdge;
     }
-     function get_nextRightEdge() : Edge{return _oppositeEdge.nextLeftEdge.nextLeftEdge.oppositeEdge;
+     function get_nextRightEdge() : Edge{ return _oppositeEdge.nextLeftEdge.nextLeftEdge.oppositeEdge;
     }
-     function get_prevRightEdge() : Edge{return _oppositeEdge.nextLeftEdge.oppositeEdge;
+     function get_prevRightEdge() : Edge{ return _oppositeEdge.nextLeftEdge.oppositeEdge;
     }
-     function get_rotLeftEdge() : Edge{return _nextLeftEdge.nextLeftEdge.oppositeEdge;
+     function get_rotLeftEdge() : Edge{ return _nextLeftEdge.nextLeftEdge.oppositeEdge;
     }
-     function get_rotRightEdge() : Edge{return _oppositeEdge.nextLeftEdge;
+     function get_rotRightEdge() : Edge{ return _oppositeEdge.nextLeftEdge;
     }
-     function get_leftFace() : Face{return _leftFace;
+    function get_leftFace() : Face{ return _leftFace;
     }
-     function get_rightFace() : Face{return _oppositeEdge.leftFace;
+    function get_rightFace() : Face{ return _oppositeEdge.leftFace;
     }
-    
-    
+    public function get_triangle(): Triangle {
+        return new Triangle( originVertex, nextLeftEdge.originVertex, nextLeftEdge.destinationVertex );
+    }
     public function toString() : String
     {
         return "edge " + originVertex.id + " - " + destinationVertex.id;

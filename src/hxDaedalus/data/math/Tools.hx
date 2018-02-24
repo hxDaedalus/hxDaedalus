@@ -9,7 +9,7 @@ import hxDaedalus.factories.RectMesh;
 import hxPixels.Pixels;
 import hxDaedalus.data.math.Point2D;
 import hxDaedalus.data.Object;
-
+import hxDaedalus.data.math.Triangle;
 @:expose
 class Tools {
 
@@ -112,4 +112,24 @@ class Tools {
 
 		return mesh;
     }
+    static public function extractObjectTriangles( object: Object, triangles: Array<Triangle> ){
+        var facesDone = new Map<Face,Bool>();
+        var openFacesList = new Array<Face>();
+        for( i in 0...object.edges.length ) openFacesList.push( object.edges[ i ].rightFace );
+        var currFace:Face;
+        var tri: Triangle;
+        while( openFacesList.length > 0 ){
+            currFace = openFacesList.pop();
+            if( facesDone[ currFace ] ) continue;
+            if( currFace.isReal ) {
+                tri = Triangle.fromFace( currFace );
+                if( tri.isSolid() ) triangles.push( tri );
+            }
+            if( !currFace.edge.isConstrained) openFacesList.push(currFace.edge.rightFace);
+            if( !currFace.edge.nextLeftEdge.isConstrained ) openFacesList.push(currFace.edge.nextLeftEdge.rightFace);
+            if( !currFace.edge.prevLeftEdge.isConstrained ) openFacesList.push(currFace.edge.prevLeftEdge.rightFace);
+            facesDone[ currFace ] = true;
+        }
+    }
+    
 }

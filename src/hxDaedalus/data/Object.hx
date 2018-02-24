@@ -18,7 +18,8 @@ class Object {
     public var constraintShape(get, set) : ConstraintShape;
     public var hasChanged(get, set) : Bool;
     public var edges(get, never) : Array<Edge>;
-
+    public var polyPoints(never,set): Array<Float>;
+    public var multiPoints( never, set ): Array<Array<Float>>;
     
      static var INC : Int = 0;
      var _id : Int;
@@ -169,7 +170,66 @@ class Object {
         _hasChanged = true;
         return value;
     }
-    
+    public function clockWise(): Bool {
+        var count = 0;
+        var c = coordinates;
+        var x1: Float;
+        var y1: Float;
+        var x2: Float;
+        var y2: Float;
+        var signedArea2: Float = 0;
+        var len = c.length;
+        while( count < len ){
+            x1 = c[count];
+            y1 = c[count+1];
+            x2 = c[count+2];
+            y2 = c[count+3];
+            count+=4;
+            signedArea2 += (x1 * y2 - x2 * y1);
+        }
+        return signedArea2>0;
+    }
+    function set_multiPoints( arr: Array<Array<Float>> ): Array<Array<Float>> {
+        var shapeCoords = new Array<Float>();
+        var j: Int;
+        for( shape in arr ){
+            shapeCoords.push( shape[0] );
+            shapeCoords.push( shape[1] );
+            for( i in 2...shape.length ){
+                if( ( i )%2 == 0 && i > 2 ){
+                    shapeCoords.push( shape[ i - 2 ] );
+                    shapeCoords.push( shape[ i - 1 ] );
+                }
+                shapeCoords.push( shape[ i ] );
+            }
+            j = shape.length;
+            shapeCoords.push( shape[ j - 2 ] );
+            shapeCoords.push( shape[ j - 1 ] );
+            shapeCoords.push( shape[ 0 ] );
+            shapeCoords.push( shape[ 1 ] );
+        }
+        coordinates = shapeCoords;
+        return arr;
+    }
+    function set_polyPoints( shape: Array<Float> ):Array<Float> {
+        var shapeCoords = new Array<Float>();
+        shapeCoords.push( shape[0] );
+        shapeCoords.push( shape[1] );
+        for( i in 2...shape.length ){
+            if( ( i )%2 == 0 && i > 2 ) {
+                shapeCoords.push( shape[ i - 2 ]);
+                shapeCoords.push( shape[ i - 1 ] );
+            }
+            shapeCoords.push( shape[ i ] );
+        }
+        var i = shape.length;
+        shapeCoords.push( shape[ i - 2 ] );
+        shapeCoords.push( shape[ i - 1 ] );
+        shapeCoords.push( shape[ 0 ] );
+        shapeCoords.push( shape[ 1 ] );
+        coordinates = shapeCoords;
+        return shape;
+    }
      function get_coordinates(): Array<Float> {
         return _coordinates;
     }

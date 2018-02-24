@@ -5,12 +5,14 @@ import hxDaedalus.data.Face;
 import hxDaedalus.data.math.Point2D;
 import hxDaedalus.data.Mesh;
 import hxDaedalus.data.Vertex;
+import hxDaedalus.data.Object;
+import hxDaedalus.data.math.Triangle;
 import hxDaedalus.iterators.FromMeshToVertices;
 import hxDaedalus.iterators.FromVertexToHoldingFaces;
 import hxDaedalus.iterators.FromVertexToIncomingEdges;
 import hxDaedalus.data.Face;
 import hxDaedalus.iterators.FromFaceToInnerEdges;
-
+import hxDaedalus.data.math.Tools;
 import kha.Font;
 import kha.Color;
 import kha.Image;
@@ -72,7 +74,13 @@ class KSimpleView {
             // label( g2, p, new Point( vertex.pos.x + 5, vertex.pos.y + 5, font, fontSize, 0xFFFFFFFF, verticesAlpha );
         #end
     }
-    
+    public function drawObject( g2: Graphics, o: Object, color: Int, alpha: Float ){
+        var triangles = new Array<Triangle>();
+        Tools.extractObjectsTriangles( o, triangles );
+        g2.opacity = alpha;
+        g2.color   = color;
+        for( tri in triangles ) g2.fillTriangle( tri.a.x, tri.a.y, tri.b.x, tri.b.y, tri.c.x, tri.c.y );
+    }
     public function drawFace( g2: Graphics, face: Face ) : Void {
         faceToEdgeIter.fromFace = face;
         var count = 0;
@@ -94,10 +102,11 @@ class KSimpleView {
             lineP( g2, p0, p1, edgesColor, edgesAlpha, edgesWidth );
         }
     }
-    public function drawMesh( g2: Graphics, mesh: Mesh ): Void {
+    public function drawMesh( g2: Graphics, mesh: Mesh, ?objects: Array<Object> ): Void {
         var all = mesh.getVerticesAndEdges();
         for (v in all.vertices) drawVertex( g2, v );
         for (e in all.edges) drawEdge( g2, e );
+        // if( objects != null ) for ( o in objects ) drawObject( g2, o, 0xFF660000, 1 ); // uncomment for drawing objects 
     }
     public function drawEntity( g2: Graphics, entity: EntityAI ): Void {
         circle( g2, entity, entity.radius, entitiesColor, entitiesAlpha );
