@@ -5,6 +5,8 @@ hxDaedalus
 This is a Haxe cross target version of the as3 Daedalus-lib you can find the original library here:
 https://code.google.com/p/daedalus-lib/
 
+( You can find a Java gradle version of our port. https://github.com/implicit-invocation/jwalkable )
+
 Examples for OpenFL, NME, Luxe, Flash, c++, js, neko, android can be found at the following repositories: 
 
 [hxDaedalus-Examples](https://github.com/hxDaedalus/hxDaedalus-Examples)
