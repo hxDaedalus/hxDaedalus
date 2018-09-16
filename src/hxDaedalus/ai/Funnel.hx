@@ -172,45 +172,40 @@ class Funnel
         var endPoint :Point2D;
         startPoint = new Point2D(fromX, fromY);
         endPoint = new Point2D(toX, toY);
-        
-        if (listFaces.length == 1) 
-        {
-            resultPath.push(startPoint.x);
-            resultPath.push(startPoint.y);
-            resultPath.push(endPoint.x);
-            resultPath.push(endPoint.y);
-            return;
-        }  // useful  
-        
-        
-        
+
+        // useful
         var i : Int;
         var j : Int;
         var k : Int;
         var currEdge : Edge = null;
         var currVertex : Vertex = null;
         var direction : Int;
-        
-        // first we skip the first face and first edge if the starting point lies on the first interior edge:
-        
-        
-        // switch on intersection 
-		//TODO: check if this needs ENull (/not EEdge) checks
-        switch( Geom2D.isInFace(fromX, fromY, listFaces[0]) )
-        {
-            case EEdge( edge ):
-                if( listEdges[0] == edge )
-                {
-                    listEdges.shift();
-                    listFaces.shift();
-                }
-            case _:
-                // 
+
+        // fix for issue76
+        if (listFaces.length > 1) {
+            // first we skip the first face and first edge if the starting point lies on the first interior edge:
+            switch( Geom2D.isInFace(fromX, fromY, listFaces[0]) )
+            {
+                case EEdge( edge ):
+                    if( listEdges[0] == edge )
+                    {
+                        listEdges.shift();
+                        listFaces.shift();
+                    }
+                case _:
+                    // 
+            }
         }
+        if (listFaces.length == 1)
+        {
+            resultPath.push(startPoint.x);
+            resultPath.push(startPoint.y);
+            resultPath.push(endPoint.x);
+            resultPath.push(endPoint.y);
+            return;
+        }
+
         // our funnels, inited with starting point  
-        
-        
-        
         var funnelLeft = new Array<Point2D>();
         var funnelRight = new Array<Point2D>();
         funnelLeft.push(startPoint);
