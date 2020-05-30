@@ -50,4 +50,10 @@ class Point2D{
         var diffY : Float = y - p.y;
         return Math.sqrt( diffX*diffX + diffY*diffY );
     }
+
+    public function distanceSquaredTo( p: Point2D ): Float {
+        var diffX : Float = x - p.x;
+        var diffY : Float = y - p.y;
+        return diffX*diffX + diffY*diffY;
+    }
 }

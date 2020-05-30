@@ -177,8 +177,21 @@ class AStar {
                     
                     fromPoint.x = entryX[ curFace ];
                     fromPoint.y = entryY[ curFace ];
-                    entryPoint.x = ( innerEdge.originVertex.pos.x + innerEdge.destinationVertex.pos.x ) / 2;
-                    entryPoint.y = ( innerEdge.originVertex.pos.y + innerEdge.destinationVertex.pos.y ) / 2;
+
+                    // entryPoint will be the direct point of intersection between fromPoint and toXY if the edge innerEdge
+                    // intersects it
+                    var vw1 : Point2D = innerEdge.originVertex.pos;
+                    var vw2 : Point2D = innerEdge.destinationVertex.pos;
+                    if (!Geom2D.intersections2segments(fromPoint.x, fromPoint.y, toX, toY, vw1.x, vw1.y, vw2.x, vw2.y, entryPoint)) {
+                        // Recycle the entryPoint variable to create a Point2D(toX, toY)
+                        entryPoint.x = toX;
+                        entryPoint.y = toY;
+                        var vst = vw1.distanceSquaredTo(fromPoint) + vw1.distanceSquaredTo(entryPoint);
+                        var wst = vw2.distanceSquaredTo(fromPoint) + vw2.distanceSquaredTo(entryPoint);
+                        entryPoint.x = vst <= wst ? vw1.x : vw2.x;
+                        entryPoint.y = vst <= wst ? vw1.y : vw2.y;
+                    }
+
                     distancePoint.x = entryPoint.x - toX;
                     distancePoint.y = entryPoint.y - toY;
                     h = distancePoint.length;
