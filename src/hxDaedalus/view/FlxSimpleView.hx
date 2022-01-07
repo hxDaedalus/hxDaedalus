@@ -1,4 +1,4 @@
-package hxDaedalus.flx;
+package hxDaedalus.view;
 
 import flixel.util.FlxColor;
 import flixel.FlxSprite;
