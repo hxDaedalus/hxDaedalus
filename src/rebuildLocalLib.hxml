@@ -1,3 +1,6 @@
+# TODO:
+# moved haxelib.json need to modify this script to work with change.
+
 #-cmd rm hxDaedalus.zip
 --next
 -cmd zip -r hxDaedalus.zip *
