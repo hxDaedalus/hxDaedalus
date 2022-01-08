@@ -1,0 +1,13 @@
+
+{
+    "name"         : "hxDaedalus",
+    "url"          : "https://github.com/hxDaedalus/hxDaebalus",
+    "license"      : "MIT",
+    "tags"         : ["cross","flash","openfl","nme","js","java","canvas","swing","luxe","flambe","flixel","ceramic","kha"],
+    "description"  : "Pathfinding 2D Library ported from AS3 with polygonal-ai graph astar added.",
+    "version"      : "0.0.5",
+    "releasenote"  : "See https://github.com/hxDaedalus/hxDaedalus/blob/master/CHANGELOG.md",
+    "contributors" : ["Nanjizal/Justinfront, Azrafe7, Varstahl, Polygonal"],
+    "classPath"    : "src",
+    "dependencies" : {}
+}
