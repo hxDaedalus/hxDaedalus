@@ -1,6 +1,16 @@
 package hxPixels;
 
 import haxe.io.Bytes;
+import haxe.io.UInt8Array;
+import haxe.io.UInt32Array;
+
+#if (openfl && !nme)
+	#if (openfl >= "8.0.0")
+		typedef LimeImageCanvasUtil = lime._internal.graphics.ImageCanvasUtil;
+	#else
+		typedef LimeImageCanvasUtil = lime.graphics.utils.ImageCanvasUtil;
+	#end
+#end
 
 
 /**
@@ -22,9 +32,10 @@ import haxe.io.Bytes;
  */
 @:expose
 @:forward
+@:native("Pixels")
 abstract Pixels(PixelsData)
 {
-	static inline var CHANNEL_MASK:Int = 3;
+	static public inline var CHANNEL_MASK:Int = 3;
 	
 	/** 
 	 * Constructor. If `alloc` is false no memory will be allocated for `bytes`, 
@@ -36,13 +47,28 @@ abstract Pixels(PixelsData)
 	}
 	
 	/** Returns the byte value at `i` position, as if the data were in ARGB format. */
-	@:arrayAccess
 	inline public function getByte(i:Int) {
 		return this.bytes.get((i & ~CHANNEL_MASK) + this.format.channelMap[i & CHANNEL_MASK]);
 	}
 	
+	/**
+	 * Returns the raw pixel value (32-bits) at `i` position.
+	 *
+	 * NOTE: `i` is multiplied by 4, to align to pixel values (e.g. `getRawInt32(3)` returns the 4th pixel).
+	 */
+	@:arrayAccess
+	inline public function getRawInt32(i:Int) {
+		return this.bytes.getInt32(i << 2);
+	}
+	
+	/** Returns the raw pixel value (with alpha) at `x`,`y`, in the original source format. */
+	inline public function getRawPixel32(x:Int, y:Int):Pixel {
+		var pos = (y * this.width + x) << 2;
+		return this.bytes.getInt32(pos);
+	}
+	
 	/** Returns the pixel value (without alpha) at `x`,`y`, as if the data were in ARGB format. */
-	public function getPixel(x:Int, y:Int):Pixel {
+	inline public function getPixel(x:Int, y:Int):Pixel {
 		var pos = (y * this.width + x) << 2;
 		
 		var r = this.bytes.get(pos + this.format.R) << 16;
@@ -53,7 +79,7 @@ abstract Pixels(PixelsData)
 	}
 	
 	/** Returns the pixel value (with alpha) at `x`,`y`, as if the data were in ARGB format. */
-	public function getPixel32(x:Int, y:Int):Pixel {
+	inline public function getPixel32(x:Int, y:Int):Pixel {
 		var pos = (y * this.width + x) << 2;
 		
 		var a = this.bytes.get(pos + this.format.A) << 24;
@@ -65,13 +91,28 @@ abstract Pixels(PixelsData)
 	}
 	
 	/** Sets the byte value at `i` pos, as if the data were in ARGB format. */
-	@:arrayAccess
 	inline public function setByte(i:Int, value:Int) {
 		this.bytes.set((i & ~CHANNEL_MASK) + this.format.channelMap[i & CHANNEL_MASK], value);
 	}
 	
+	/**
+	 * Sets the raw pixel value (32-bits) at `i` position.
+	 *
+	 * NOTE: `i` is multiplied by 4, to align to pixel values (e.g. `setRawInt32(3, 0xFF010203)` sets the 4th pixel).
+	 */
+	@:arrayAccess
+	inline public function setRawInt32(i:Int, value:Int) {
+		this.bytes.setInt32(i << 2, value);
+	}
+	
+	/** Sets the raw pixel value (with alpha) at `x`,`y`, in the original source format. */
+	inline public function setRawPixel32(x:Int, y:Int, value:Int) {
+		var pos = (y * this.width + x) << 2;
+		return this.bytes.setInt32(pos, value);
+	}
+	
 	/** Sets the pixel value (without alpha) at `x`,`y`, with `value` expressed in RGB format. */
-	public function setPixel(x:Int, y:Int, value:Int) {
+	inline public function setPixel(x:Int, y:Int, value:Int) {
 		var pos = (y * this.width + x) << 2;
 		
 		var r = (value >> 16) & 0xFF;
@@ -84,7 +125,7 @@ abstract Pixels(PixelsData)
 	}
 	
 	/** Sets the pixel value (with alpha) at `x`,`y`, with `value` expressed in ARGB format. */
-	public function setPixel32(x:Int, y:Int, value:Int) {
+	inline public function setPixel32(x:Int, y:Int, value:Int) {
 		var pos = (y * this.width + x) << 2;
 		
 		var a = (value >> 24) & 0xFF;
@@ -122,7 +163,7 @@ abstract Pixels(PixelsData)
 
 	static public function fromBytes(bytes:Bytes, width:Int, height:Int, ?format:PixelFormat):Pixels {
 		var pixels = new Pixels(width, height, false);
-		if (format == null) format = PixelFormat.ARGB;
+		pixels.format = (format != null) ? format : PixelFormat.ARGB;
 		pixels.bytes = bytes;
 		return pixels;
 	}
@@ -278,18 +319,21 @@ abstract Pixels(PixelsData)
 	}
 #end
 
-#if (flash || openfl || nme || (flambe && flash))
+#if (!macro && (flash || openfl || nme || (flambe && flash)))
 
+	// NOTE: in openfl (and possibly nme) the texture pixels _might_ be in premultipliedAlpha format.
+	//       cfr. `bmd.image.buffer.premultiplied` (openfl) and `bmd.premultipliedAlpha` (nme)
+	
 	@:from static public function fromBitmapData(bmd:flash.display.BitmapData) {
-	#if js	
+	#if (js && !jsprime)
 	
 		var pixels = new Pixels(bmd.width, bmd.height, false);
 		pixels.format = PixelFormat.RGBA;
 		
 		// force buffer creation
 		var image = bmd.image;
-		lime.graphics.utils.ImageCanvasUtil.convertToCanvas(image);
-		lime.graphics.utils.ImageCanvasUtil.createImageData(image);
+		LimeImageCanvasUtil.convertToCanvas(image);
+		LimeImageCanvasUtil.createImageData(image);
 		
 		var data = image.buffer.data;
 		pixels.bytes = Bytes.ofData(data.buffer);
@@ -329,13 +373,13 @@ abstract Pixels(PixelsData)
 	}
 	
 	public function applyToBitmapData(bmd:flash.display.BitmapData) {
-	#if js
+	#if (js && !jsprime)
 		
 		var image = bmd.image;
 		
 		#if (openfl < "4.0.0")
 		
-			lime.graphics.utils.ImageCanvasUtil.convertToData(image);
+			LimeImageCanvasUtil.convertToData(image);
 			image.dirty = true;
 			
 		#else
@@ -351,6 +395,7 @@ abstract Pixels(PixelsData)
 	
 		#if flash
 			
+			//trace("flash");
 			var ba = this.bytes.getData();
 			ba.endian = flash.utils.Endian.BIG_ENDIAN;
 			ba.position = 0;
@@ -359,10 +404,11 @@ abstract Pixels(PixelsData)
 		#elseif (openfl_next || openfl >= "4.0.0")
 			
 			//trace("!flash openfl");
-			bmd.image.buffer.data = openfl.utils.UInt8Array.fromBytes(this.bytes);
+			bmd.image.buffer.data = lime.utils.UInt8Array.fromBytes(this.bytes);
 			
 			#if (openfl >= "4.0.0")
 				
+				//trace("!flash openfl >= 4");
 				bmd.image.dirty = true;
 				bmd.image.version++;
 				
@@ -408,16 +454,21 @@ abstract Pixels(PixelsData)
 #if js	// plain js - conversion from ImageData
 
 	@:from static public function fromImageData(image:js.html.ImageData) {
-		var pixels = new Pixels(image.width, image.height, true);
-		pixels.format = PixelFormat.ARGB;
+		var pixels = new Pixels(image.width, image.height, false);
+		pixels.format = PixelFormat.RGBA;
 		
-		var data = image.data;
+		var u8ClampedArray:js.html.Uint8ClampedArray = image.data;
 		
-		for (i in 0...data.byteLength) {
-			pixels.bytes.set(i, data[i]);
-		}
+		var u8Array = haxe.io.UInt8Array.fromData(cast u8ClampedArray);
+		pixels.bytes = u8Array.view.buffer;
 		
 		return pixels;
+	}
+	
+	public function applyToImageData(imageData:js.html.ImageData) {
+		var u8clampedArray = new js.html.Uint8ClampedArray(this.bytes.getData());
+		imageData.data.set(u8clampedArray);
+		return imageData;
 	}
 
 #end
@@ -433,7 +484,13 @@ private class PixelsData
 	public var count(default, null):Int;
 	
 	/** Bytes representing the pixels (in the raw format used by the original source). */
-	public var bytes(default, null):Bytes;
+	public var bytes(default, set):Bytes;
+	inline function set_bytes(bytes:Bytes):Bytes {
+		this.bytes = bytes;
+		this.uint8Array = UInt8Array.fromBytes(bytes);
+		this.uint32Array = UInt32Array.fromBytes(bytes);
+		return this.bytes;
+	}
 	
 	/** Width of the source image. */
 	public var width(default, null):Int;
@@ -444,8 +501,13 @@ private class PixelsData
 	/** Internal pixel format. */
 	public var format:PixelFormat;
 	
-	/** 
-	 * Constructor. If `alloc` is false no memory will be allocated for `bytes`, 
+	/** UInt8Array view over bytes. */
+	public var uint8Array:UInt8Array = null;
+	/** UInt32Array view over bytes. */
+	public var uint32Array:UInt32Array = null;
+	
+	/**
+	 * Constructor. If `alloc` is false no memory will be allocated for `bytes`,
 	 * but the other properties (width, height, count) will still be set.
 	 * 
 	 * `format` defaults to ARGB.
@@ -464,6 +526,7 @@ private class PixelsData
 
 @:expose
 @:allow(hxPixels.Pixels)
+@:allow(hxPixels.Pixel)
 class PixelFormat {
 	
 	static public var ARGB(default, null):PixelFormat;
@@ -472,10 +535,10 @@ class PixelFormat {
 	
 	/** Internal. Don't modify any of these. */
 	var channelMap:Array<Channel>;
-	var ch0:Int;
-	var ch1:Int;
-	var ch2:Int;
-	var ch3:Int;
+	var ch0:Channel;
+	var ch1:Channel;
+	var ch2:Channel;
+	var ch3:Channel;
 	
 	var name:String;
 	
@@ -483,6 +546,46 @@ class PixelFormat {
 		ARGB = new PixelFormat(CH_0, CH_1, CH_2, CH_3, "ARGB");
 		RGBA = new PixelFormat(CH_3, CH_0, CH_1, CH_2, "RGBA");
 		BGRA = new PixelFormat(CH_3, CH_2, CH_1, CH_0, "BGRA");
+	}
+	
+	/**
+	 * Rearranges the bytes of a pixel/Int in `fromFormat` to a new pixel in `toFormat`.
+	 *
+	 * E.g.:
+	 *
+	 *   `var argb:Pixel = 0xAA2266BB; // 0xaarrggbb
+	 *
+	 *    //                            <input>      <from>             <to>             <result>
+	 *    var same  = PixelFormat.convert(argb, PixelFormat.ARGB, PixelFormat.ARGB); // 0xAA2266BB
+	 *    var rgba  = PixelFormat.convert(same, PixelFormat.ARGB, PixelFormat.RGBA); // 0x2266BBAA
+	 *    var bgra  = PixelFormat.convert(rgba, PixelFormat.RGBA, PixelFormat.BGRA); // 0xBB6622AA
+	 *    var back  = PixelFormat.convert(bgra, PixelFormat.BGRA, PixelFormat.ARGB); // 0xAA2266BB
+	 *    var rgba2 = PixelFormat.convert(bgra, PixelFormat.BGRA, PixelFormat.RGBA); // 0x2266BBAA`
+	 *
+	 */
+	static public function convert(px:Pixel, fromFormat:PixelFormat, toFormat:PixelFormat):Pixel {
+		return
+			(((px >> (8 * (Pixels.CHANNEL_MASK - fromFormat.A))) & 0xFF) << (8 * (Pixels.CHANNEL_MASK - toFormat.A))) |
+			(((px >> (8 * (Pixels.CHANNEL_MASK - fromFormat.R))) & 0xFF) << (8 * (Pixels.CHANNEL_MASK - toFormat.R))) |
+			(((px >> (8 * (Pixels.CHANNEL_MASK - fromFormat.G))) & 0xFF) << (8 * (Pixels.CHANNEL_MASK - toFormat.G))) |
+			(((px >> (8 * (Pixels.CHANNEL_MASK - fromFormat.B))) & 0xFF) << (8 * (Pixels.CHANNEL_MASK - toFormat.B)));
+	}
+	
+	inline static public function getNativeFormatFor(target:TargetType):PixelFormat {
+		return switch (target) {
+			case FORMAT:
+				BGRA;
+			case FLASH, NME_FLASH, NME_DESKTOP, OPENFL_FLASH, FLAMBE_FLASH:
+				ARGB;
+			case OPENFL_DESKTOP:
+				BGRA;
+			case JS, OPENFL_JS, LUXE, FLAMBE_WEB:
+				RGBA;
+			case JAVA:
+				RGBA;
+			default:
+				throw "Unhandled target!";
+		}
 	}
 	
 	inline public function new(a:Channel, r:Channel, g:Channel, b:Channel, name:String = "PixelFormat"):Void {
@@ -494,23 +597,23 @@ class PixelFormat {
 		this.name = name;
 	}
 	
-	public var A(get, null):Int;
-	inline private function get_A():Int {
+	public var A(get, null):Channel;
+	inline private function get_A():Channel {
 		return ch0;
 	}
 	
-	public var R(get, null):Int;
-	inline private function get_R():Int {
+	public var R(get, null):Channel;
+	inline private function get_R():Channel {
 		return ch1;
 	}
 	
-	public var G(get, null):Int;
-	inline private function get_G():Int {
+	public var G(get, null):Channel;
+	inline private function get_G():Channel {
 		return ch2;
 	}
 	
-	public var B(get, null):Int;
-	inline private function get_B():Int {
+	public var B(get, null):Channel;
+	inline private function get_B():Channel {
 		return ch3;
 	}
 	
@@ -520,6 +623,9 @@ class PixelFormat {
 }
 
 @:enum abstract Channel(Int) to Int {
+	
+	static public var MASK = [0xFF000000, 0x00FF0000, 0x0000FF00, 0x000000FF];
+	
 	var CH_0 = 0;
 	var CH_1 = 1;
 	var CH_2 = 2;
@@ -542,20 +648,76 @@ class PixelFormat {
  * What you really want is probably:
  * 
  *   `var pixel = pixels.getPixel32(10, 10);
- *    pixel.R = 0xFF;
+ *    pixel.R = 0xFF;  // or pixel.fR = 1.0;
  *    pixels.setPixel32(10, 10, pixel);`
  * 
+ * Also note that, for performance reasons, no clamping is performed when setting values, i.e.:
+ * 
+ *   `pixel.B = 0xFFFF;`
+ * 
+ * is perfectly valid, but will probably result in unwanted behaviour.
  */
 @:expose
 @:forward
+@:native("Pixel")
 abstract Pixel(Int) from Int to Int 
 {
+	inline static public function fclamp(value:Float):Float {
+		if (value <= 0.) return 0.;
+		else if (value >= 1.) return 1.;
+		else return value;
+	}
+	
+	inline static public function iclamp(value:Int):Int {
+		if (value <= 0) return 0;
+		else if (value >= 255) return 255;
+		else return value;
+	}
+	
+	inline static public function iround(value:Float):Int {
+		return Std.int(value + .5);
+	}
+	
+	inline public function multiplyAlpha():Pixel {
+		var fA = (this:Pixel).fA;
+		return
+			(this & 0xFF000000) |
+			(iclamp(iround(fA * (this:Pixel).R)) << 16) |
+			(iclamp(iround(fA * (this:Pixel).G)) <<  8) |
+			(iclamp(iround(fA * (this:Pixel).B)));
+	}
+	
+	inline public function unmultiplyAlpha():Pixel {
+		var inv_fA = 1. / ((this:Pixel).fA + 0.00000001); // inc fA to avoid divide_by_zero special case
+		return
+			(this & 0xFF000000) |
+			(iclamp(iround(inv_fA * (this:Pixel).R)) << 16) |
+			(iclamp(iround(inv_fA * (this:Pixel).G)) <<  8) |
+			(iclamp(iround(inv_fA * (this:Pixel).B)));
+	}
+	
+	inline static public function create(a:Int, r:Int, g:Int, b:Int):Pixel {
+		return ((a & 0xFF) << 24) | ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | b;
+	}
+	
+	inline static public function fcreate(a:Float, r:Float, g:Float, b:Float):Pixel {
+		return create(Std.int(a * 255.), Std.int(r * 255.), Std.int(g * 255.), Std.int(b * 255.));
+	}
+	
+	inline public function getChannel(ch:Channel):Int {
+		return (this >> (8 * (Pixels.CHANNEL_MASK - ch))) & 0xFF;
+	}
+	
+	inline public function setChannel(ch:Channel, value:Int):Int {
+		this = (this & ~Channel.MASK[ch]) | (value << (8 * (Pixels.CHANNEL_MASK - ch)));
+		return value;
+	}
+	
 	public var A(get, set):Int;
 	inline private function get_A():Int {
 		return (this >> 24) & 0xFF;
 	}
 	inline private function set_A(a:Int):Int {
-		a = a & 0xFF;
 		this = (this & 0x00FFFFFF) | (a << 24);
 		return a;
 	}
@@ -565,7 +727,6 @@ abstract Pixel(Int) from Int to Int
 		return (this >> 16) & 0xFF;
 	}
 	inline private function set_R(r:Int):Int {
-		r = r & 0xFF;
 		this = (this & 0xFF00FFFF) | (r << 16);
 		return r;
 	}
@@ -575,7 +736,6 @@ abstract Pixel(Int) from Int to Int
 		return (this >> 8) & 0xFF;
 	}
 	inline private function set_G(g:Int):Int {
-		g = g & 0xFF;
 		this = (this & 0xFFFF00FF) | (g << 8);
 		return g;
 	}
@@ -585,11 +745,47 @@ abstract Pixel(Int) from Int to Int
 		return this & 0xFF;
 	}
 	inline private function set_B(b:Int):Int {
-		b = b & 0xFF;
 		this = (this & 0xFFFFFF00) | b;
 		return b;
 	}
-  
+	
+	// channels as floats (expected range is [0...1])
+	public var fA(get, set):Float;
+	inline private function get_fA():Float {
+		return (this : Pixel).A / 255.;
+	}
+	inline private function set_fA(a:Float):Float {
+		this = (this & 0x00FFFFFF) | (Std.int(a * 255) << 24);
+		return a;
+	}
+	
+	public var fR(get, set):Float;
+	inline private function get_fR():Float {
+		return (this : Pixel).R / 255.;
+	}
+	inline private function set_fR(r:Float):Float {
+		this = (this & 0xFF00FFFF) | (Std.int(r * 255) << 16);
+		return r;
+	}
+	
+	public var fG(get, set):Float;
+	inline private function get_fG():Float {
+		return (this : Pixel).G / 255.;
+	}
+	inline private function set_fG(g:Float):Float {
+		this = (this & 0xFFFF00FF) | (Std.int(g * 255) << 8);
+		return g;
+	}
+	
+	public var fB(get, set):Float;
+	inline private function get_fB():Float {
+		return (this : Pixel).B / 255.;
+	}
+	inline private function set_fB(b:Float):Float {
+		this = (this & 0xFFFFFF00) | (Std.int(b * 255));
+		return b;
+	}
+	
 	// forward operators from Int (same order used in std/Int32)
 	@:op(-A) function negate():Pixel;
 	@:op(++A) function preIncrement():Pixel;
@@ -677,4 +873,82 @@ abstract Pixel(Int) from Int to Int
 	@:op(A << B) static function shl(a:Pixel, b:Pixel):Pixel;
 	@:op(A << B) static function shlInt(a:Pixel, b:Int):Pixel;
 	@:op(A << B) static function intShl(a:Int, b:Pixel):Pixel;
+}
+
+@:enum abstract TargetType(String) {
+	var FLASH = "flash";
+	var FORMAT = "format";
+	var FLAMBE_FLASH = "flambe flash";
+	var FLAMBE_WEB = "flambe web";
+	var LUXE = "luxe";
+	var OPENFL_JS = "openfl js";
+	var OPENFL_DESKTOP = "openfl desktop";
+	var OPENFL_FLASH = "openfl flash";
+	var NME_DESKTOP = "nme desktop";
+	var NME_FLASH = "nme flash";
+	var JAVA = "java";
+	var JS = "js";
+	var UNKNOWN = "unknown";
+
+	static public inline function getCurrent():TargetType {
+	#if (flash && !(openfl || nme || flambe))
+		return FLASH;
+	#elseif (luxe || snow)
+		return LUXE;
+	#elseif flambe
+		#if (flash)
+			return FLAMBE_FLASH;
+		#else
+			return FLAMBE_WEB;
+		#end
+	#elseif (openfl && !nme)
+		#if (js)
+			return OPENFL_JS;
+		#elseif (neko || cpp)
+			return OPENFL_DESKTOP;
+		#elseif flash
+			return OPENFL_FLASH;
+		#else
+			return UNKNOWN;
+		#end
+	#elseif (nme)
+		#if (neko || cpp)
+			return NME_DESKTOP;
+		#elseif flash
+			return NME_FLASH;
+		#else
+			return UNKNOWN;
+		#end
+	#elseif java
+		return JAVA;
+	#elseif js
+		return JS;
+	#else
+		return UNKNOWN;
+	#end
+	}
+}
+
+@:enum abstract Endianness(Int) to Int {
+	var BIG = 0;
+	var LITTLE = 1;
+
+	static public var names = ["BIG_ENDIAN", "LITTLE_ENDIAN"];
+
+	/**
+	 * Get system endianness.
+	 *
+	 * NOTE: It _might_ differ from actual texture bytes implementation
+	 *       (e.g. flash usually uses BIG_ENDIAN even though the host system is LITTLE_ENDIAN).
+	 */
+	static public function getCurrent():Endianness {
+		var a:UInt32Array = UInt32Array.fromArray([0xDDCCBBAA]);
+		var b:UInt8Array = UInt8Array.fromBytes(a.view.buffer);
+		if (b[0] == 0xDD) return BIG;
+		else /*if (b[0] == 0xAA)*/ return LITTLE;
+	}
+
+	inline static public function getName(endian:Endianness) {
+		return names[endian];
+	}
 }
